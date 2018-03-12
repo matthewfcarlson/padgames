@@ -1,0 +1,9 @@
+{
+    "name": "codewords-game",
+    "version": "0.0.1",
+    "description": "A game based on the card game codenames",
+    "dependencies": {
+        "express": "^4.16.3",
+        "socket.io": "^2.0.4"
+    }
+}
