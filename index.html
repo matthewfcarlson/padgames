@@ -1,28 +1,95 @@
+<!doctype html>
 <html>
-    <head>
-        <title>Codewords</title>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    </head>
-    <body>
-        <ul id="messages"></ul>
-        <form action="">
-            <input id="m" autocomplete="off"/><button>Send</button>
-        </form>
-    </body>
 
-    <script>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Codewords</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container-fluid">
+            <div v-if="gameID != ''">
+                <div class="row" v-for="i in Math.ceil(words.length / 5)">
+                    <div class="col" v-for="code in words.slice((i - 1) * 5, i * 5)">Column {{code}}</div>
+                </div>
+                <button class="btn">Generate Words</button>
+            </div>
+
+            <div v-else class="container">
+                <h2>Join a game!</h2>
+                <ul class="list-group">
+                    <a v-for="game in gamelist" class="list-group-item" @click="JoinGame(game)">{{game}}</a>
+                </ul>
+                <hr/>
+                <input type="text" v-model="newGameName"/>
+                <button class="btn btn-block" @click="CreateGame">Create a game</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
     var socket = io();
-    $(function(){
+    /*$(function(){
        $('form').submit(function(){
            socket.emit('chat message',$("#m").val());
            $('#m').val('');
            return false;
        })
        socket.on("chat message", function(msg){
-           $("#messages").append($("<li>").test(msg));
+           $("#messages").append($("<li>").text(msg));
        }) 
+    });*/
+
+    var app = new Vue({
+        el: "#app",
+        data: {
+            gameID: "",
+            title: "I'm an even uglier signup page. Fix me!",
+            gamelist: [],
+            newGameName: "",
+            words: ["wii", "wee", "whee", "wae", "show", "you", "de", "wae"]            
+        },
+        methods: {
+            CreateGame: function () {
+                console.log("Creating a game");
+                if (this.newGameName == "") return;
+                socket.emit("create game", this.newGameName);
+            },
+            AddGame: function (game) {
+                this.gamelist.push(game);
+            },
+            JoinGame: function (game) {
+                console.log("Joining game"+game);
+                this.gameID = game;
+                socket.emit("join game",game);
+            }
+        }
     });
-    </script>
+    
+    socket.on("create game", app.AddGame);
+    socket.on("game list", function (gameList) {
+        console.log(gameList);
+        app.gamelist = app.gamelist.concat(gameList);
+    });
+    socket.on("word list", function(newwords) {
+        app.words = newwords;
+        console.log("Updating words");
+    });
+</script>
 
 </html>
