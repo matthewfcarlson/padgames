@@ -45,7 +45,7 @@
             <div v-if="gameID != '' && !isPhone">
                 <div class="text-center">Currently {{currentTurn}}'s turn</div>
                 <div class="row" v-for="i in Math.ceil(words.length / 5)">
-                    <div class="col text-center codeword" v-for="code,index in words.slice((i - 1) * 5, i * 5)">
+                    <div class="col text-center codeword" @click="GuessWord(index+((i-1)*5))" v-for="code,index in words.slice((i - 1) * 5, i * 5)">
                         <!--{{board[index+((i-1)*5)]}}-->
                         <div class="card panel-default">
                             <div class="card-header upsidedown">
@@ -137,6 +137,7 @@
             currentTurn: "red",
             words: [" ", " ", "Loading words", " ", " ", " "],
             board: [],
+            wordsGuessed: [],
             isPhone: (width < 500)
         },
         methods: {
@@ -152,6 +153,10 @@
                 console.log("Joining game" + game);
                 this.gameID = game;
                 socket.emit("join game", game);
+                for (var i=0;i<25;i++) this.wordsGuessed[i] = false;
+            },
+            GuessWord: function(index){
+                socket.emit("guess word",[this.gameID,index]);
             },
             EndGame: function () {
                 socket.emit("end game", this.gameID);
@@ -173,22 +178,25 @@
             MyColor: function () {
                 var board = this.board;
                 var currentColor = this.role;
+                var guesses = this.wordsGuessed;
                 return this.words.filter(function (value, index) {
-                    return board[index] == currentColor
+                    return board[index] == currentColor && !guesses[index]
                 });
             },
             TheirColor: function () {
                 var board = this.board;
                 var currentColor = OppositeColor(this.role);
+                var guesses = this.wordsGuessed;
                 return this.words.filter(function (value, index) {
-                    return board[index] == currentColor
+                    return board[index] == currentColor && !guesses[index]
                 });
             },
             DeathWord: function () {
                 var board = this.board;
                 var currentColor = "death";
+                var guesses = this.wordsGuessed;
                 return this.words.filter(function (value, index) {
-                    return board[index] == currentColor
+                    return board[index] == currentColor && !guesses[index]
                 });
             },
             NoColor: function () {
@@ -210,6 +218,10 @@
     socket.on("word list", function (newwords) {
         app.words = newwords;
         console.log("Updating words");
+    });
+    socket.on("guess word", function (guess) {
+        app.wordsGuessed[guess] = true;
+        console.log("Updating guesses");
     });
     socket.on("game board", function (newBoard) {
         app.board = newBoard;

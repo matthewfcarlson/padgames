@@ -75,6 +75,11 @@ io.on("connection", function(socket){
         gameList.push(msg);       
         
     });
+
+    socket.on("guess word", function(data){
+        console.log(data);
+        io.to(data[0]).emit("guess word",data[1]);
+    });
     socket.on("join game", function(msg){
         socket.join(msg);
         io.to(msg).emit("word list",boards[msg].words);
