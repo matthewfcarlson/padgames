@@ -70,6 +70,8 @@ io.on("connection", function(socket){
         boards[msg].board = GenerateBoardConfig("red");
         boards[msg].currentTurn = "red";
         boards[msg].words = GenerateWordList();
+        boards[msg].guesses = [];
+        for (var i=0;i<25;i++) boards[msg].guesses.push(false);
         io.emit('create game', msg);
         if (gameList.indexOf(msg) != -1) return;
         gameList.push(msg);       
@@ -78,6 +80,7 @@ io.on("connection", function(socket){
 
     socket.on("guess word", function(data){
         console.log(data);
+        boards[data[0]].guesses[data[1]] = true;
         io.to(data[0]).emit("guess word",data[1]);
     });
     socket.on("join game", function(msg){
@@ -85,6 +88,7 @@ io.on("connection", function(socket){
         io.to(msg).emit("word list",boards[msg].words);
         io.to(msg).emit("game board",boards[msg].board);
         io.to(msg).emit("end turn",boards[msg].currentTurn);
+        io.to(msg).emit("guesses",boards[msg].guesses);
     });
 
     socket.on("end turn", function(msg){

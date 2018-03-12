@@ -83,6 +83,10 @@
                 <ul>
                     <li v-for="word in NoColor">{{word}}</li>
                 </ul>
+                <h2>Guessed Words</h2>
+                <ul>
+                    <li v-for="word in Guessed">{{word}}</li>
+                </ul>
             </div>
 
             <div v-else class="container">
@@ -205,6 +209,13 @@
                 return this.words.filter(function (value, index) {
                     return board[index] == currentColor
                 });
+            },
+            Guessed: function () {
+                var board = this.board;
+                var guesses = this.wordsGuessed;
+                return this.words.filter(function (value, index) {
+                    return guesses[index]
+                });
             }
 
         }
@@ -219,9 +230,13 @@
         app.words = newwords;
         console.log("Updating words");
     });
+    socket.on("guesses", function (newGuesses) {
+        app.wordsGuessed = newGuesses;
+        console.log("Updating guesses", app.wordsGuessed);
+    });
     socket.on("guess word", function (guess) {
         app.wordsGuessed[guess] = true;
-        console.log("Updating guesses");
+        console.log("Updating guess for index "+guess);
     });
     socket.on("game board", function (newBoard) {
         app.board = newBoard;
