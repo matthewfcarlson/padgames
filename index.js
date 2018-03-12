@@ -1,11 +1,16 @@
-var app = require("express")();
+
+var express = require("express");
+var app = express();
+const path = require('path');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 
 app.get('/', function (req,res){
     //res.send("<h1>Hello World</h1>");
     res.sendFile(__dirname + "/index.html");
 });
+app.use(express.static(path.join(__dirname, 'public')));
 
 var gameList = [];
 
@@ -45,7 +50,7 @@ io.on("connection", function(socket){
     });
     
 });
-
-http.listen(3000, function (){
-    console.log("Listening on 3000");
+const port = process.env.PORT || 3000;
+http.listen(port, function (){
+    console.log("Listening on "+port);
 });

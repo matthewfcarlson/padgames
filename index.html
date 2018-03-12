@@ -26,7 +26,7 @@
                 <div class="row" v-for="i in Math.ceil(words.length / 5)">
                     <div class="col" v-for="code in words.slice((i - 1) * 5, i * 5)">Column {{code}}</div>
                 </div>
-                <button class="btn">Generate Words</button>
+                <button class="btn" @click="EndGame">End Game</button>
             </div>
 
             <div v-else class="container">
@@ -77,6 +77,14 @@
                 console.log("Joining game"+game);
                 this.gameID = game;
                 socket.emit("join game",game);
+            },
+            EndGame: function(){                
+                socket.emit("end game",this.gameID);
+                LeaveGame();
+                
+            },
+            LeaveGame: function(){                
+                this.gameID = "";
             }
         }
     });
@@ -90,6 +98,11 @@
         app.words = newwords;
         console.log("Updating words");
     });
+    socket.on("game board", function(newwords) {
+        app.words = newwords;
+        console.log("Updating words");
+    });
+    
 </script>
 
 </html>
