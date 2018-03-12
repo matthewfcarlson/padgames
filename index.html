@@ -17,16 +17,72 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <Style>
+        .upsidedown {
+
+            -webkit-transform: rotate(-180deg);
+            -moz-transform: rotate(-180deg);
+            -o-transform: rotate(-180deg);
+            transform: rotate(-180deg);
+            ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+
+        }
+
+        .upsidedown.card-header{
+            padding:0;
+        }
+        .codeword {
+            margin-top: 0.25em;
+        }
+        
+    </Style>
 </head>
 
 <body>
     <div id="app">
         <div class="container-fluid">
-            <div v-if="gameID != ''">
+            <div v-if="gameID != '' && !isPhone">
+                <div class="text-center">Currently {{currentTurn}}'s turn</div>
                 <div class="row" v-for="i in Math.ceil(words.length / 5)">
-                    <div class="col" v-for="code in words.slice((i - 1) * 5, i * 5)">Column {{code}}</div>
+                    <div class="col text-center codeword" v-for="code,index in words.slice((i - 1) * 5, i * 5)">
+                        <!--{{board[index+((i-1)*5)]}}-->
+                        <div class="card panel-default">
+                            <div class="card-header upsidedown">
+                                {{code}}
+                            </div>
+                            <div class="card-block"><b>{{code}}</b></div>
+                        </div>
+                    </div>
                 </div>
-                <button class="btn" @click="EndGame">End Game</button>
+                <hr/>
+                <button class="btn btn-danger btn-block btn-sm" @click="EndGame">End Game</button>
+            </div>
+            <div v-else-if="gameID != '' && role == ''" class="container">
+                <br/>
+                <h2>Pick your Team</h2>
+                <button class="btn btn-block" @click="SetColor('red')">Red</button>
+                <button class="btn btn-block" @click="SetColor('blue')">Blue</button>
+            </div>
+            <div v-else-if="gameID != ''" class="container">
+                <div class="text-center">Currently {{(role ==currentTurn)?"your":"not your"}} turn</div>
+                <button class="btn btn-block btn-info" @click="EndTurn">End Turn</button>
+                <h2>Your Words</h2>
+                <ul>
+                    <li v-for="word in MyColor">{{word}}</li>
+                </ul>
+                <h2>Their words</h2>
+                <ul>
+                    <li v-for="word in TheirColor">{{word}}</li>
+                </ul>
+                <h2>Death word</h2>
+                <ul>
+                    <li v-for="word in DeathWord">{{word}}</li>
+                </ul>
+                <h2>Neutral</h2>
+                <ul>
+                    <li v-for="word in NoColor">{{word}}</li>
+                </ul>
             </div>
 
             <div v-else class="container">
@@ -35,7 +91,7 @@
                     <a v-for="game in gamelist" class="list-group-item" @click="JoinGame(game)">{{game}}</a>
                 </ul>
                 <hr/>
-                <input type="text" v-model="newGameName"/>
+                <input type="text" v-model="newGameName" />
                 <button class="btn btn-block" @click="CreateGame">Create a game</button>
             </div>
         </div>
@@ -44,6 +100,18 @@
 
 <script>
     var socket = io();
+
+
+    var width = window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+
+    //TODO SET style automatically to scale to fit screens
+    var height = window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight;
+
+
     /*$(function(){
        $('form').submit(function(){
            socket.emit('chat message',$("#m").val());
@@ -55,14 +123,21 @@
        }) 
     });*/
 
+    function OppositeColor(color) {
+        return (color == "red") ? "blue" : "red";
+    }
+
     var app = new Vue({
         el: "#app",
         data: {
             gameID: "",
-            title: "I'm an even uglier signup page. Fix me!",
             gamelist: [],
             newGameName: "",
-            words: ["wii", "wee", "whee", "wae", "show", "you", "de", "wae"]            
+            role: "",
+            currentTurn: "red",
+            words: [" ", " ", "Loading words", " ", " ", " "],
+            board: [],
+            isPhone: (width < 500)
         },
         methods: {
             CreateGame: function () {
@@ -74,35 +149,75 @@
                 this.gamelist.push(game);
             },
             JoinGame: function (game) {
-                console.log("Joining game"+game);
+                console.log("Joining game" + game);
                 this.gameID = game;
-                socket.emit("join game",game);
+                socket.emit("join game", game);
             },
-            EndGame: function(){                
-                socket.emit("end game",this.gameID);
-                LeaveGame();
-                
+            EndGame: function () {
+                socket.emit("end game", this.gameID);
+                this.LeaveGame();
+
             },
-            LeaveGame: function(){                
+            LeaveGame: function () {
                 this.gameID = "";
+            },
+            SetColor: function (color) {
+                this.role = color;
+            },
+            EndTurn: function () {
+                if (this.currentTurn == this.role)
+                    socket.emit("end turn", this.gameID);
             }
+        },
+        computed: {
+            MyColor: function () {
+                var board = this.board;
+                var currentColor = this.role;
+                return this.words.filter(function (value, index) {
+                    return board[index] == currentColor
+                });
+            },
+            TheirColor: function () {
+                var board = this.board;
+                var currentColor = OppositeColor(this.role);
+                return this.words.filter(function (value, index) {
+                    return board[index] == currentColor
+                });
+            },
+            DeathWord: function () {
+                var board = this.board;
+                var currentColor = "death";
+                return this.words.filter(function (value, index) {
+                    return board[index] == currentColor
+                });
+            },
+            NoColor: function () {
+                var board = this.board;
+                var currentColor = "none";
+                return this.words.filter(function (value, index) {
+                    return board[index] == currentColor
+                });
+            }
+
         }
     });
-    
+
     socket.on("create game", app.AddGame);
     socket.on("game list", function (gameList) {
         console.log(gameList);
         app.gamelist = app.gamelist.concat(gameList);
     });
-    socket.on("word list", function(newwords) {
+    socket.on("word list", function (newwords) {
         app.words = newwords;
         console.log("Updating words");
     });
-    socket.on("game board", function(newwords) {
-        app.words = newwords;
-        console.log("Updating words");
+    socket.on("game board", function (newBoard) {
+        app.board = newBoard;
+        console.log("Updating board");
     });
-    
+    socket.on("end turn", function (newPlayerColor) {
+        app.currentTurn = newPlayerColor;
+    });
 </script>
 
 </html>
