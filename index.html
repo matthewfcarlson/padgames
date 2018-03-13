@@ -60,9 +60,9 @@
             background-color:blue;
         }
         .card.none{
-            border: 2px solid gold;
+            border: 2px solid yellow;
             color:white;
-            background-color:yellow;
+            background-color:gold;
         }
         .card.death{
             border: 2px solid black;
@@ -77,7 +77,7 @@
 
         }
         .card-block span {
-            font-size: 1.5vw;
+            font-size: 2vw;
 
         }
     </Style>
@@ -96,6 +96,9 @@
                                 <div class="card-header upsidedown" v-if="!wordsGuessed[index+((i-1)*5)]">
                                     {{code}}
                                 </div>
+                                <div v-else class="card-header upsidedown">
+                                        <span>{{board[index+((i-1)*5)]}}</span>
+                                    </div>
                                 <div class="card-block" :style="{ 'height': boxHeight}" v-if="!wordsGuessed[index+((i-1)*5)]">
                                     <b>{{code}}</b>
                                 </div>
