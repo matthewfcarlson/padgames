@@ -126,8 +126,8 @@
             <div v-else-if="gameID != '' && role == '' && winner == ''" class="container">
                 <br/>
                 <h2>Pick your Team</h2>
-                <button class="btn btn-block" @click="SetColor('red')">Red</button>
-                <button class="btn btn-block" @click="SetColor('blue')">Blue</button>
+                <button class="btn btn-block btn-danger" @click="SetColor('red')">Red</button>
+                <button class="btn btn-block btn-primary" @click="SetColor('blue')">Blue</button>
             </div>
             <div v-else-if="gameID != '' && winner == ''" class="container">
                 <div class="text-center">Currently {{(role ==currentTurn)?"your":"not your"}} turn</div>
@@ -307,8 +307,9 @@
             NoColor: function () {
                 var board = this.board;
                 var currentColor = "none";
+                var guesses = this.wordsGuessed;
                 return this.words.filter(function (value, index) {
-                    return board[index] == currentColor
+                    return board[index] == currentColor && !guesses[index]
                 });
             },
             Guessed: function () {
