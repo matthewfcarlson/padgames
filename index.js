@@ -184,13 +184,48 @@ io.on("connection", function(socket) {
       var index = gameList.indexOf(data[0]);
       boards[index] = null;
       gameList.splice(index, 1);
-    }
-    else if (boards[data[0]].board[data[1]] != boards[data[0]].currentTurn) {
+      socket.emit("game list", gameList);
+    } else if (boards[data[0]].board[data[1]] != boards[data[0]].currentTurn) {
       boards[data[0]].currentTurn =
         boards[data[0]].currentTurn == "blue" ? "red" : "blue";
       io.to(data[0]).emit("end turn", boards[data[0]].currentTurn);
       console.log("New turn: " + boards[data[0]].currentTurn);
+    } else {
+      //TODO check if there are any words left
+      var remainingRedWords = boards[data[0]].words.filter(function(
+        value,
+        index
+      ) {
+        if (boards[data[0]].guesses) return false;
+        if (boards[data[0]].board != "red") return false;
+        return true;
+      });
+      var remainingBlueWords = boards[data[0]].words.filter(function(
+        value,
+        index
+      ) {
+        if (boards[data[0]].guesses) return false;
+        if (boards[data[0]].board != "blue") return false;
+        return true;
+      });
+      if (remainingBlueWords.length == 0) {
+        boards[data[0]].winner = "blue";
+        io.to(data[0]).emit("game won", boards[data[0]].winner);
+        index = gameList.indexOf(data[0]);
+        boards[index] = null;
+        gameList.splice(index, 1);
+        socket.emit("game list", gameList);
+      }
+      if (remainingRedWords.length == 0) {
+        boards[data[0]].winner = "red";
+        io.to(data[0]).emit("game won", boards[data[0]].winner);
+        index = gameList.indexOf(data[0]);
+        boards[index] = null;
+        gameList.splice(index, 1);
+        socket.emit("game list", gameList);
+      }
     }
+    //TODO check
   });
   socket.on("join game", function(msg) {
     if (boards[msg] == null) {
