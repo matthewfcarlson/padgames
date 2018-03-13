@@ -109,6 +109,7 @@ function GenerateWordList() {
   var wordList = [];
   while (wordList.length < 25) {
     var newWord = nouns[Math.round(Math.random() * nouns.length)];
+    if (newWord == null) continue;
     if (wordList.indexOf(newWord) == -1) wordList.push(newWord);
   }
   return wordList;
