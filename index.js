@@ -196,18 +196,20 @@ io.on("connection", function(socket) {
         value,
         index
       ) {
-        if (boards[data[0]].guesses) return false;
-        if (boards[data[0]].board != "red") return false;
+        if (boards[data[0]].guesses[index] == true) return false;
+        if (boards[data[0]].board[index] != "red") return false;
         return true;
       });
       var remainingBlueWords = boards[data[0]].words.filter(function(
         value,
         index
       ) {
-        if (boards[data[0]].guesses) return false;
-        if (boards[data[0]].board != "blue") return false;
+        if (boards[data[0]].guesses[index] == true) return false;
+        if (boards[data[0]].board[index] != "blue") return false;
         return true;
       });
+      console.log(remainingBlueWords);
+      console.log(remainingRedWords);
       if (remainingBlueWords.length == 0) {
         boards[data[0]].winner = "blue";
         io.to(data[0]).emit("game won", boards[data[0]].winner);
