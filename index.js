@@ -5,12 +5,17 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http);
 
 const nouns = [
+  "atlantis",
   "alarm",
   "animal",
+  "apple",
   "aunt",
   "bait",
+  "ball",
   "balloon",
+  "banana",
   "bath",
+  "bathroom",
   "bead",
   "beam",
   "bean",
@@ -23,9 +28,12 @@ const nouns = [
   "chicken",
   "children",
   "crook",
+  "death",
   "deer",
   "dock",
   "doctor",
+  "dog",
+  "door",
   "downtown",
   "drum",
   "dust",
@@ -33,9 +41,13 @@ const nouns = [
   "family",
   "father",
   "fight",
+  "field",
   "flesh",
   "food",
+  "fox",
   "frog",
+  "frisbee",
+  "genius",
   "goose",
   "grade",
   "grandfather",
@@ -43,61 +55,85 @@ const nouns = [
   "grape",
   "grass",
   "hook",
+  "hot",
   "horse",
   "jail",
   "jam",
   "kiss",
   "kitten",
+  "ketchup",
   "light",
   "loaf",
   "lock",
+  "london",
   "lunch",
   "lunchroom",
   "meal",
   "mother",
   "notebook",
+  "novel",
+  "nurse",
   "owl",
   "pail",
   "parent",
   "park",
+  "pitch",
   "plot",
+  "phone",
+  "photo",
+  "picture",
   "rabbit",
+  "racket",
   "rake",
   "robin",
+  "ruby",
+  "rug",
   "sack",
   "sail",
+  "saint",
   "scale",
   "sea",
+  "seattle",
   "sister",
   "soap",
   "song",
   "spark",
   "space",
   "spoon",
+  "spork",
   "spot",
   "spy",
   "summer",
+  "television",
+  "thief",
   "tiger",
+  "tile",
   "toad",
   "town",
   "trail",
+  "tree",
   "tramp",
   "tray",
   "trick",
   "trip",
+  "turtle",
   "uncle",
   "vase",
   "winter",
+  "wake",
   "water",
   "week",
   "wheel",
   "wish",
+  "wind",
+  "window",
   "wool",
+  "wood",
   "yard",
   "zebra"
 ];
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   //res.send("<h1>Hello World</h1>");
   res.sendFile(__dirname + "/index.html");
 });
@@ -131,11 +167,11 @@ function shuffle(a) {
 function GenerateBoardConfig(firstPlayer) {
   var boardList = ["death"];
   //generate 6 blue
-  for (var i = 0; i < 6; i++) {
+  for (var i = 0; i < 8; i++) {
     boardList.push(OppositeColor(firstPlayer));
   }
   //generate 7 red
-  for (i = 0; i < 7; i++) {
+  for (i = 0; i < 9; i++) {
     boardList.push(firstPlayer);
   }
   while (boardList.length < 25) {
@@ -152,15 +188,15 @@ function OppositeColor(color) {
 
 var boards = {};
 
-io.on("connection", function(socket) {
+io.on("connection", function (socket) {
   //console.log("a user connected");
   socket.emit("game list", gameList);
-  socket.on("chat message", function(msg) {
+  socket.on("chat message", function (msg) {
     io.emit("chat message", msg);
     //socket.emit("chat message")
     console.log("message: " + msg);
   });
-  socket.on("create game", function(msg) {
+  socket.on("create game", function (msg) {
     boards[msg] = {};
     boards[msg].board = GenerateBoardConfig("red");
     boards[msg].currentTurn = "red";
@@ -172,7 +208,7 @@ io.on("connection", function(socket) {
     gameList.push(msg);
   });
 
-  socket.on("guess word", function(data) {
+  socket.on("guess word", function (data) {
     console.log(data);
     boards[data[0]].guesses[data[1]] = true;
     io.to(data[0]).emit("guess word", data[1]);
@@ -192,7 +228,7 @@ io.on("connection", function(socket) {
       console.log("New turn: " + boards[data[0]].currentTurn);
     } else {
       //TODO check if there are any words left
-      var remainingRedWords = boards[data[0]].words.filter(function(
+      var remainingRedWords = boards[data[0]].words.filter(function (
         value,
         index
       ) {
@@ -200,7 +236,7 @@ io.on("connection", function(socket) {
         if (boards[data[0]].board[index] != "red") return false;
         return true;
       });
-      var remainingBlueWords = boards[data[0]].words.filter(function(
+      var remainingBlueWords = boards[data[0]].words.filter(function (
         value,
         index
       ) {
@@ -229,7 +265,7 @@ io.on("connection", function(socket) {
     }
     //TODO check
   });
-  socket.on("join game", function(msg) {
+  socket.on("join game", function (msg) {
     if (boards[msg] == null) {
       socket.emit("error", "Game not found");
     }
@@ -242,14 +278,14 @@ io.on("connection", function(socket) {
     io.to(msg).emit("guesses", boards[msg].guesses);
   });
 
-  socket.on("end turn", function(msg) {
+  socket.on("end turn", function (msg) {
     boards[msg].currentTurn =
       boards[msg].currentTurn == "blue" ? "red" : "blue";
     io.to(msg).emit("end turn", boards[msg].currentTurn);
     console.log("New turn: " + boards[msg].currentTurn);
   });
 
-  socket.on("end game", function(msg) {
+  socket.on("end game", function (msg) {
     io.to(msg).emit("end game");
     //Todo destroy the game
     var index = gameList.indexOf(msg);
@@ -260,6 +296,6 @@ io.on("connection", function(socket) {
   });
 });
 const port = process.env.PORT || 3000;
-http.listen(port, function() {
+http.listen(port, function () {
   console.log("Listening on " + port);
 });
