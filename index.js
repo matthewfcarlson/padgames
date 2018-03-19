@@ -5,6 +5,9 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http);
 
 const nouns = [
+  "accent",
+  "affect",
+  "analysis",
   "atlantis",
   "alarm",
   "animal",
@@ -27,6 +30,7 @@ const nouns = [
   "camp",
   "chicken",
   "children",
+  "computer",
   "crook",
   "death",
   "deer",
@@ -37,11 +41,14 @@ const nouns = [
   "downtown",
   "drum",
   "dust",
+  "earth",
   "eye",
   "family",
+  "fate",
   "father",
   "fight",
   "field",
+  "fire",
   "flesh",
   "food",
   "fox",
@@ -73,6 +80,7 @@ const nouns = [
   "notebook",
   "novel",
   "nurse",
+  "odysseus",
   "owl",
   "pail",
   "parent",
@@ -129,6 +137,7 @@ const nouns = [
   "window",
   "wool",
   "wood",
+  "writer",
   "yard",
   "zebra"
 ];
