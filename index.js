@@ -13,6 +13,7 @@ const nouns = [
   "animal",
   "apple",
   "aunt",
+  "baby",
   "bait",
   "ball",
   "balloon",
@@ -23,6 +24,7 @@ const nouns = [
   "beam",
   "bean",
   "bedroom",
+  "bird",
   "boot",
   "bread",
   "brick",
@@ -31,6 +33,7 @@ const nouns = [
   "chicken",
   "children",
   "computer",
+  "coast",
   "crook",
   "death",
   "deer",
@@ -41,6 +44,7 @@ const nouns = [
   "downtown",
   "drum",
   "dust",
+  "eagle",
   "earth",
   "eye",
   "family",
@@ -55,12 +59,15 @@ const nouns = [
   "frog",
   "frisbee",
   "genius",
+  "ghost",
+  "gold",
   "goose",
   "grade",
   "grandfather",
   "grandmother",
   "grape",
   "grass",
+  "hawk",
   "hook",
   "hot",
   "horse",
@@ -90,6 +97,7 @@ const nouns = [
   "phone",
   "photo",
   "picture",
+  "project",
   "rabbit",
   "racket",
   "rake",
@@ -112,6 +120,7 @@ const nouns = [
   "spot",
   "spy",
   "summer",
+  "sun",
   "television",
   "thief",
   "tiger",
@@ -119,6 +128,7 @@ const nouns = [
   "toad",
   "town",
   "trail",
+  "train",
   "tree",
   "tramp",
   "tray",
@@ -154,7 +164,7 @@ function GenerateWordList() {
   var wordList = [];
   while (wordList.length < 25) {
     var newWord = nouns[Math.round(Math.random() * nouns.length)];
-    if (newWord == null) continue;
+    if (newWord == null || newWord == "") continue;
     if (wordList.indexOf(newWord) == -1) wordList.push(newWord);
   }
   return wordList;
