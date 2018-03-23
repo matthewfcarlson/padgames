@@ -1,12 +1,9 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <a
-          href="/sushi"
-          target="_blank"
-        >
+    <router-link to="/sushi">
           Play Sushi Go
-        </a>
+    </router-link>
     <h2>Essential Links</h2>
     <ul>
       <li>
