@@ -3,6 +3,7 @@ var app = express();
 const path = require("path");
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
+const history = require('connect-history-api-fallback');
 
 const nouns = [
   "accent",
@@ -156,9 +157,17 @@ app.get("/", function (req, res) {
   //res.send("<h1>Hello World</h1>");
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
+app.get("/index.html", function (req, res) {
+  //res.send("<h1>Hello World</h1>");
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
 
-//app.use("/static",path.join(__dirname,"../dist/static/"));
+app.use("/static",express.static(path.join(__dirname, '../dist/static')));
 app.use("/static",express.static(path.join(__dirname, 'static')));
+app.use(history({
+  disableDotRule: true,
+  verbose: true
+}));
 app.use("/static",express.static(path.join(__dirname, '../dist/static')));
 
 var gameList = [];
