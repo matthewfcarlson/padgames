@@ -23,10 +23,7 @@ routes.concat(GameRoutes);
 
 export default new Router({
   routes: routes,
-  hashbang: false,
   //abstract: true,
   history: true,
-  mode: 'history',
-  linkActiveClass: 'active',
-  transitionOnLoad: true,
+  mode: 'history'  
 });
