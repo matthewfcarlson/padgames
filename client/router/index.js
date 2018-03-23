@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '../components/HelloWorld'
+import NotFoundComponent from '../components/NotFound'
 import {
   GameRoutes
 } from '../../games/'
@@ -11,15 +12,16 @@ var routes = [{
     name: 'HelloWorld',
     component: HelloWorld
   },
-  {
-    path: '*',
-    component: NotFoundComponent
-  }
 
 ];
 
 console.log(GameRoutes);
 routes.concat(GameRoutes);
+//the 404 needs to go last
+routes.push( {
+  path: '*',
+  component: NotFoundComponent
+});
 
 export default new Router({
   routes: routes,
