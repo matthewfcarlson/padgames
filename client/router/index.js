@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '../components/HelloWorld'
-import GamesRoutes from '../../games'
+import {GameRoutes} from '../../games/'
 
 Vue.use(Router)
 var routes = [{
@@ -10,8 +10,8 @@ var routes = [{
   component: HelloWorld
 }];
 
-console.log(GamesRoutes);
-routes.concat(GamesRoutes);
+console.log(GameRoutes);
+routes.concat(GameRoutes);
 
 export default new Router({
   routes: routes

@@ -1,5 +1,6 @@
 import SushiClient from "./sushigo/client/App"
-export default GameRoutes[{
+
+export const GameRoutes = [{
     /* This is the format
     {
         path: '/',

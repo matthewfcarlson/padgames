@@ -157,10 +157,6 @@ app.get("/", function (req, res) {
   //res.send("<h1>Hello World</h1>");
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
-app.get("/index.html", function (req, res) {
-  //res.send("<h1>Hello World</h1>");
-  res.sendFile(path.join(__dirname, "../dist/index.html"));
-});
 
 app.use("/static",express.static(path.join(__dirname, '../dist/static')));
 app.use("/static",express.static(path.join(__dirname, 'static')));
@@ -168,6 +164,11 @@ app.use(history({
   disableDotRule: true,
   verbose: true
 }));
+app.get("/index.html", function (req, res) {
+  //res.send("<h1>Hello World</h1>");
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
+
 app.use("/static",express.static(path.join(__dirname, '../dist/static')));
 
 var gameList = [];
