@@ -7,10 +7,16 @@ import {
 
 Vue.use(Router)
 var routes = [{
-  path: '/',
-  name: 'HelloWorld',
-  component: HelloWorld
-}];
+    path: '/',
+    name: 'HelloWorld',
+    component: HelloWorld
+  },
+  {
+    path: '*',
+    component: NotFoundComponent
+  }
+
+];
 
 console.log(GameRoutes);
 routes.concat(GameRoutes);
@@ -20,7 +26,7 @@ export default new Router({
   hashbang: false,
   //abstract: true,
   history: true,
-  mode: 'html5',
+  mode: 'history',
   linkActiveClass: 'active',
   transitionOnLoad: true,
 });
