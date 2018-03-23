@@ -4,9 +4,11 @@
     "description": "Games based around websockets and bringing people together",
     "dependencies": {
         "express": "^4.16.3",
-        "vue": "^2.5.2",
         "socket.io": "^2.0.4",
-        "vue-router": "^3.0.1"
+        "vue": "^2.5.2",
+        "vue-router": "^3.0.1",
+        "vue-socket.io": "^2.1.1-b",
+        "vuex": "^3.0.1"
     },
     "scripts": {
         "start": "node server/index.js",
