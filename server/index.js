@@ -154,9 +154,12 @@ const nouns = [
 
 app.get("/", function (req, res) {
   //res.send("<h1>Hello World</h1>");
-  res.sendFile(__dirname + "/index.html");
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
-//app.use(express.static(path.join(__dirname, 'public')));
+
+//app.use("/static",path.join(__dirname,"../dist/static/"));
+app.use("/static",express.static(path.join(__dirname, 'static')));
+app.use("/static",express.static(path.join(__dirname, '../dist/static')));
 
 var gameList = [];
 
