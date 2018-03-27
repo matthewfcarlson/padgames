@@ -15,13 +15,13 @@ var routes = [{
 
 ];
 
-console.log(GameRoutes);
-routes.concat(GameRoutes);
+routes = routes.concat(GameRoutes);
 //the 404 needs to go last
 routes.push( {
   path: '*',
   component: NotFoundComponent
 });
+console.log(routes);
 
 export default new Router({
   routes: routes,

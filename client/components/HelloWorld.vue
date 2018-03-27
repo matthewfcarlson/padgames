@@ -1,3 +1,4 @@
+
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
@@ -85,13 +86,13 @@
     </ul>
   </div>
 </template>
-
+import {GameRoutes} from '../../games/'
 <script>
 export default {
   name: "HelloWorld",
   data() {
     return {
-      msg: "Welcome to Your Vue.js App"
+      games: GameRoutes,
     };
   }
 };

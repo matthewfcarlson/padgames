@@ -1,4 +1,4 @@
-import SushiClient from "./sushigo/client/App"
+import SushiClient from "./sushigo/client/Sushi"
 
 export const GameRoutes = [{
     /* This is the format
