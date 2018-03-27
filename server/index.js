@@ -159,7 +159,7 @@ app.get("/", function (req, res) {
 });
 
 app.use("/static",express.static(path.join(__dirname, '../dist/static')));
-app.use("/static",express.static(path.join(__dirname, 'static')));
+//app.use("/static",express.static(path.join(__dirname, 'static')));
 app.use(history({
   disableDotRule: true,
   verbose: true
