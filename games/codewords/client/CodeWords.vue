@@ -191,11 +191,11 @@ export default {
             this.winner = "";
             this.role = "";
             this.socket.emit("join game", game);
-            for (var i = 0; i < 25; i++) Vue.set(app.wordsGuessed, i, false);
+            for (var i = 0; i < 25; i++) Vue.set(this.wordsGuessed, i, false);
         },
         GuessWord: function (index) {
-            socket.emit("guess word", [this.gameID, index]);
-            Vue.set(app.wordsGuessed, index, true);
+            this.socket.emit("guess word", [this.gameID, index]);
+            Vue.set(this.wordsGuessed, index, true);
             if (this.board[index] != this.currentTurn)
                 this.currentTurn = OppositeColor(this.currentTurn);
         },
