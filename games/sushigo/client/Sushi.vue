@@ -4,7 +4,6 @@
     <pre>{{game}}</pre>
 
     <button @click="game.StartGame()">StartGame</button>
-    <button @click="game.SetDeck(50)">SetDeck</button>
     <button @click="game.AddPlayer('testing')">AddPlayer</button>
     <button @click="game.SetAsideCard(0,0)">GetFirstCard P1</button>
     <button @click="game.SetAsideCard(1,0)">GetFirstCard P2</button>

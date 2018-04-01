@@ -18,7 +18,7 @@ class Card {
 import Random from "random-js";
 
 export default class Game {
-  constructor() {
+  constructor(seed) {
     this.players = [];
     this.round = 0;
     this.playerHands = [];
@@ -28,6 +28,8 @@ export default class Game {
     this.isPlaying = false;
     this.playerScores = [];
     this.gameOver = false;
+    if (seed == undefined) seed = 50;
+    this.deckSeed = seed;
   }
 
   //get the whole deck
@@ -76,18 +78,39 @@ export default class Game {
       this.playersReady.push(false);
     }
 
+    this.SetDeck();
+
     this.round++;
   }
 
+  CalculateHandScore(playerIndex) {
+    var hand = this.playerRoundDeck[playerIndex];
+
+    return 5;
+  }
+
   EndRound() {
+    console.log("Round " + this.round + " is over");
     if (this.round == 3) {
       this.gameOver = true;
       this.isPlaying = false;
+      return;
     }
+
+    //figure out scores
+
+    for (var i = 0; i < this.players.length; i++) {
+      var score = this.CalculateHandScore(i);
+      console.log("Player " + i + " got points" + score);
+      this.playerScores[i] += score;
+    }
+
+    this.deckSeed += 7;
+    this.StartRound();
   }
 
   //this can set the deck to be used for this round
-  SetDeck(deckSeed) {
+  SetDeck() {
     //split the deck up by the number of players
     //in 2 player game 10 cards per player
     //3 player 9 cards
@@ -98,10 +121,10 @@ export default class Game {
     console.log(deck);
 
     var mt = Random.engines.mt19937();
-    if (deckSeed == undefined) {
+    if (this.deckSeed == undefined) {
       mt = mt.autoSeed();
       console.log("Using autoseed");
-    } else mt = mt.seed(deckSeed);
+    } else mt = mt.seed(this.deckSeed);
     Random.shuffle(mt, deck);
     console.log("after shuffle", deck);
     //take the number of cards needed
@@ -137,7 +160,7 @@ export default class Game {
       this.playerScores.push(0);
       this.playerRoundDeck.push([]);
     }
-
+    
     this.StartRound();
   }
 
@@ -160,6 +183,8 @@ export default class Game {
     //check to make sure we can play
     if (this.playersReady[playerIndex]) {
       //if we don't have a chopsticks to use
+      console.error("You have already grabbed a card");
+      return false;
     }
 
     this.playersReady[playerIndex] = true;
@@ -182,8 +207,9 @@ export default class Game {
     }, true);
   }
 
-  GetHandCardCount(){
-      return this.playerHands.map(value => value.length);
+  GetHandCardCount() {
+      console.log(this.playerHands);
+    return this.playerHands.map(value => value.length);
   }
 
   EndTurn() {
@@ -197,13 +223,20 @@ export default class Game {
       this.playersReady.push(false);
     }
 
+    var hand = this.playerHands.splice(0, 1);
+    this.playerHands.push(hand[0]);
+
     //todo check if there are cards left
     var handCounts = this.GetHandCardCount();
-    console.log("Hand Counts",handCounts);
+    console.log("Hand Counts", handCounts);
 
-
-    var hand = this.playerHands.splice(0,1);
-    this.playerHands.push(hand);    
-    
+    var maxHandCount = handCounts.reduce(function(prev, curr) {
+      return prev < curr ? curr : prev;
+    }, 0);
+    console.log("MAX: "+maxHandCount);
+    if (maxHandCount <= 1) {
+      this.EndRound();
+      //TODO: put the last cards into the player's deck round
+    }
   }
 }
