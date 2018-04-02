@@ -5,7 +5,8 @@
 
     <button @click="game.StartGame()">StartGame</button>
     <button @click="game.AddPlayer('testing')">AddPlayer</button>
-    <button @click="game.SetAsideCard(0,0)">GetFirstCard P1</button>
+    <button @click="PlayAll">PlayAll</button>
+    <button @click="game.SetAsideCard(0,0)">GetFirstCard P1</button>    
     <button @click="game.SetAsideCard(1,0)">GetFirstCard P2</button>
     <button @click="game.SetAsideCard(2,0)">GetFirstCard P3</button>
     
@@ -22,7 +23,14 @@ export default {
       msg: 'Sushi on the go',
       game: new Game()
     }
-  }
+  },
+  methods: {
+    PlayAll: function(){
+      for (var i=0;i<this.game.players.length;i++){
+        this.game.SetAsideCard(i,0);
+      }
+    }
+  },
 }
 </script>
 

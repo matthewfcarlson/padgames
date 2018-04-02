@@ -2,8 +2,8 @@
 class Card {
   constructor(name, value, type) {
     this.name = name;
-    if (type == undefined) type = name.toLowerCase();
-    this.type = type;
+    if (type == undefined) type = name;
+    this.type = type.toLowerCase();
     if (value == undefined) value = 0;
     this.value = value; //this can be an array - means you need multiple of this card to do this
 
@@ -16,6 +16,7 @@ class Card {
 }
 
 import Random from "random-js";
+import ScoreCards from "./cards";
 
 export default class Game {
   constructor(seed) {
@@ -28,7 +29,7 @@ export default class Game {
     this.isPlaying = false;
     this.playerScores = [];
     this.gameOver = false;
-    if (seed == undefined) seed = 50;
+    if (seed == undefined) seed = 25;
     this.deckSeed = seed;
   }
 
@@ -51,7 +52,7 @@ export default class Game {
 
     for (i = 0; i < 14; i++) deck.push(new Card("Sashimi"));
 
-    for (i = 0; i < 14; i++) deck.push(new Card("Sashimi"));
+    for (i = 0; i < 14; i++) deck.push(new Card("Dumplung"));
 
     for (i = 0; i < 12; i++) deck.push(new Card("Maki", 2));
     for (i = 0; i < 8; i++) deck.push(new Card("Maki", 3));
@@ -85,26 +86,47 @@ export default class Game {
 
   CalculateHandScore(playerIndex) {
     var hand = this.playerRoundDeck[playerIndex];
+    var score = 0;
+    var counter = 0;
+    while (hand.length > 0 && counter < 50) {
+      score += ScoreCard(this.playerRoundDeck, playerIndex, 0);
+      counter++;
+    }
+    if (counter > 40) {
+      console.error(
+        "We had an error figuring out how to score player's hand:" + playerIndex
+      );
+    }
 
-    return 5;
+    return score;
   }
 
   EndRound() {
     console.log("Round " + this.round + " is over");
+
+    //figure out scores
+
+    for (var i = 0; i < this.players.length; i++) {
+      //make sure we keep our cards like pudding
+      //console.log(this.playerRoundDeck[i]);
+      var keepCards = this.playerRoundDeck[i].filter(
+        value => value.discarded == false
+      );
+      //console.log(keepCards);
+
+      this.playerGameDeck[i] = this.playerGameDeck[i].concat(keepCards);
+    }
+
+    var scores = ScoreCards(this.playerRoundDeck);
+    for (var i = 0; i < this.players.length && i <= scores.length; i++) {
+      this.playerScores[i] += scores[i];
+    }
+
     if (this.round == 3) {
       this.gameOver = true;
       this.isPlaying = false;
       return;
     }
-
-    //figure out scores
-
-    for (var i = 0; i < this.players.length; i++) {
-      var score = this.CalculateHandScore(i);
-      console.log("Player " + i + " got points" + score);
-      this.playerScores[i] += score;
-    }
-
     this.deckSeed += 7;
     this.StartRound();
   }
@@ -118,7 +140,7 @@ export default class Game {
     //5 player = 7 cards
     //5+ = 7 cards
     var deck = this.GetDeck();
-    console.log(deck);
+    //console.log(deck);
 
     var mt = Random.engines.mt19937();
     if (this.deckSeed == undefined) {
@@ -126,7 +148,7 @@ export default class Game {
       console.log("Using autoseed");
     } else mt = mt.seed(this.deckSeed);
     Random.shuffle(mt, deck);
-    console.log("after shuffle", deck);
+    //console.log("after shuffle", deck);
     //take the number of cards needed
     var numPlayers = this.players.length;
     var cardsPerPlayer = 12 - numPlayers;
@@ -136,13 +158,13 @@ export default class Game {
     var numCards = numPlayers * cardsPerPlayer;
 
     deck = deck.slice(0, numCards);
-
+    this.playerHands = [];
     //sort the deck out to the players
     for (var i = 0; i < numPlayers; i++) {
       this.playerHands.push(deck.splice(0, cardsPerPlayer));
     }
 
-    console.log("hopefully no cards left", deck);
+    //console.log("hopefully no cards left", deck);
   }
 
   AddPlayer(name) {
@@ -159,8 +181,9 @@ export default class Game {
     for (var i = 0; i < this.players.length; i++) {
       this.playerScores.push(0);
       this.playerRoundDeck.push([]);
+      this.playerGameDeck.push([]);
     }
-    
+
     this.StartRound();
   }
 
@@ -208,7 +231,7 @@ export default class Game {
   }
 
   GetHandCardCount() {
-      console.log(this.playerHands);
+    console.log(this.playerHands);
     return this.playerHands.map(value => value.length);
   }
 
@@ -228,13 +251,17 @@ export default class Game {
 
     //todo check if there are cards left
     var handCounts = this.GetHandCardCount();
-    console.log("Hand Counts", handCounts);
 
     var maxHandCount = handCounts.reduce(function(prev, curr) {
       return prev < curr ? curr : prev;
     }, 0);
-    console.log("MAX: "+maxHandCount);
+
     if (maxHandCount <= 1) {
+      for (var i = 0; i < this.playerHands.length; i++) {
+        this.playerRoundDeck[i].push(this.playerHands[i].pop());
+      }
+      console.log(this.playerRoundDeck);
+      console.log(this.playerHands);
       this.EndRound();
       //TODO: put the last cards into the player's deck round
     }
