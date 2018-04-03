@@ -39,8 +39,10 @@ function Init(socket, io) {
   socket.on("join sushi game", function(playerName) {
     socket.join(gameRoom);
     if (playerName == null) playerName = "N/A";
+    socket.emit("set sushi player",currentGame.players.length);
     currentGame.AddPlayer(playerName);
     currentPlayerSockets.push(socket.id);
+    
     //socket.set("playerName", playerName);
 
     io.to(gameRoom).emit("set players", currentGame.players);
@@ -50,6 +52,15 @@ function Init(socket, io) {
     currentGame.StartGame();
     console.log("Starting game");
     io.to(gameRoom).emit("start game");
+  });
+
+  socket.on("pick sushi card", function(cardIndex){
+    var playerIndex = currentPlayerSockets.indexOf(socket.id);
+    if (index == -1){
+        console.error("Player ID is unknown",socket.id);
+    }
+    currentGame.SetAsideCard(playerIndex,cardIndex);
+    io.to(gameRoom).emit("pick sushi card",playerIndex,cardIndex);
   });
 }
 

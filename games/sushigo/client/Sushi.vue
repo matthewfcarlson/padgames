@@ -26,7 +26,8 @@ export default {
     return {
       isPhone: window.innerWidth <= 667,
       msg: "Sushi on the go",
-      game: new Game()
+      game: new Game(),
+      playerID: -1
     };
   },
   methods: {
@@ -37,6 +38,9 @@ export default {
     }, 
     StartGame: function(){
       this.$socket.emit('start sushi game');
+    },
+    PickCard: function(index){
+      this.$socket.emit("pick sushi card",index);
     }
   },
   
@@ -57,6 +61,13 @@ export default {
     "set deck seed": function(seed){
       this.game.deckSeed = seed;
     },
+    "set sushi player": function (id){
+      this.playerID = id;
+      console.log("We are player #"+id);
+    },
+    "pick sushi card": function(playerID,cardID){
+      this.game.SetAsideCard(playerID,cardID);
+    }
   }
 };
 </script>
