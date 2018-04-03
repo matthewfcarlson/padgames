@@ -15,10 +15,10 @@ class Card {
   //TODO define modular arch for defining how the different cards interact and how to calculate points
 }
 
-import Random from "random-js";
-import ScoreCards from "./cards";
+var Random = require("random-js");
+var ScoreCards = require("./cards");
 
-export default class Game {
+class Game {
   constructor(seed) {
     this.players = [];
     this.round = 0;
@@ -267,3 +267,5 @@ export default class Game {
     }
   }
 }
+
+module.exports = {Game};

@@ -114,7 +114,7 @@ function ScoreTempura(hands) {
   //console.log("ALL TEMPURA", tempuraCards);
   return scores;
 }
-export default function ScoreCards(hands) {
+function ScoreCards(hands) {
   //figure out the list of cards
   var scores = EmptyScore(hands);
   scores = AddScores(scores, ScoreMaki(hands));
@@ -130,3 +130,5 @@ function AddScores(score, newScore) {
   }
   return score;
 }
+
+module.exports = {ScoreCards};

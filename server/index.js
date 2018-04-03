@@ -3,7 +3,7 @@ var app = express();
 const path = require("path");
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
-const history = require('connect-history-api-fallback');
+const history = require("connect-history-api-fallback");
 
 const nouns = [
   "accent",
@@ -153,23 +153,25 @@ const nouns = [
   "zebra"
 ];
 
-app.get("/", function (req, res) {
+app.get("/", function(req, res) {
   //res.send("<h1>Hello World</h1>");
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-app.use("/static",express.static(path.join(__dirname, '../dist/static')));
+app.use("/static", express.static(path.join(__dirname, "../dist/static")));
 //app.use("/static",express.static(path.join(__dirname, 'static')));
-app.use(history({
-  disableDotRule: true,
-  verbose: true
-}));
-app.get("/index.html", function (req, res) {
+app.use(
+  history({
+    disableDotRule: true,
+    verbose: true
+  })
+);
+app.get("/index.html", function(req, res) {
   //res.send("<h1>Hello World</h1>");
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-app.use("/static",express.static(path.join(__dirname, '../dist/static')));
+app.use("/static", express.static(path.join(__dirname, "../dist/static")));
 
 var gameList = [];
 
@@ -220,15 +222,18 @@ function OppositeColor(color) {
 
 var boards = {};
 
-io.on("connection", function (socket) {
+var SushiGo = require("../games/sushigo/server/sushi");
+
+io.on("connection", function(socket) {
+  SushiGo.Init(socket,io);
   //console.log("a user connected");
   socket.emit("game list", gameList);
-  socket.on("chat message", function (msg) {
+  socket.on("chat message", function(msg) {
     io.emit("chat message", msg);
     //socket.emit("chat message")
     console.log("message: " + msg);
   });
-  socket.on("create game", function (msg) {
+  socket.on("create game", function(msg) {
     boards[msg] = {};
     boards[msg].board = GenerateBoardConfig("red");
     boards[msg].currentTurn = "red";
@@ -240,7 +245,7 @@ io.on("connection", function (socket) {
     gameList.push(msg);
   });
 
-  socket.on("guess word", function (data) {
+  socket.on("guess word", function(data) {
     console.log(data);
     boards[data[0]].guesses[data[1]] = true;
     io.to(data[0]).emit("guess word", data[1]);
@@ -260,7 +265,7 @@ io.on("connection", function (socket) {
       console.log("New turn: " + boards[data[0]].currentTurn);
     } else {
       //TODO check if there are any words left
-      var remainingRedWords = boards[data[0]].words.filter(function (
+      var remainingRedWords = boards[data[0]].words.filter(function(
         value,
         index
       ) {
@@ -268,7 +273,7 @@ io.on("connection", function (socket) {
         if (boards[data[0]].board[index] != "red") return false;
         return true;
       });
-      var remainingBlueWords = boards[data[0]].words.filter(function (
+      var remainingBlueWords = boards[data[0]].words.filter(function(
         value,
         index
       ) {
@@ -297,7 +302,7 @@ io.on("connection", function (socket) {
     }
     //TODO check
   });
-  socket.on("join game", function (msg) {
+  socket.on("join game", function(msg) {
     if (boards[msg] == null) {
       socket.emit("error", "Game not found");
     }
@@ -310,14 +315,14 @@ io.on("connection", function (socket) {
     io.to(msg).emit("guesses", boards[msg].guesses);
   });
 
-  socket.on("end turn", function (msg) {
+  socket.on("end turn", function(msg) {
     boards[msg].currentTurn =
       boards[msg].currentTurn == "blue" ? "red" : "blue";
     io.to(msg).emit("end turn", boards[msg].currentTurn);
     console.log("New turn: " + boards[msg].currentTurn);
   });
 
-  socket.on("end game", function (msg) {
+  socket.on("end game", function(msg) {
     io.to(msg).emit("end game");
     //Todo destroy the game
     var index = gameList.indexOf(msg);
@@ -328,6 +333,6 @@ io.on("connection", function (socket) {
   });
 });
 const port = process.env.PORT || 3000;
-http.listen(port, function () {
+http.listen(port, function() {
   console.log("Listening on " + port);
 });
