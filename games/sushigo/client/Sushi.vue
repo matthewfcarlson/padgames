@@ -1,6 +1,8 @@
 <template>
   <div class="game-content">
     <div v-if="!isPhone">
+      The whole game board goes here
+      {{game.playerScores}}
     </div>
     
     <div class="hello" v-else-if="isPhone && playerID == -1">
@@ -10,11 +12,21 @@
     </div>
     <div class="hello" v-else-if="isPhone && playerID != -1">
       <h1>{{ msg }} Player {{playerID}}</h1>
-      <pre>{{game}}</pre>
+      
+      <pre v-if="game.isPlaying == true">
+        <div v-if="game.playerHands != undefined && game.playerHands[playerID] != undefined">
+          <ul>
+            <li v-for="card,index in game.playerHands[playerID]" v-bind:key="index" @click="PickCard(index)"> 
+                {{card.name}} {{card.value}} {{index}}
+            </li>
+          </ul> 
+        </div>
+      </pre>
 
-      <button @click="StartGame">StartGame</button>
+      <button v-if="!game.isPlaying" @click="StartGame">StartGame</button>
       <button @click="PickCard(0)">PlayAll</button>
       <button @click="ResetGame">Reset Game</button>    
+      <pre>{{game}}</pre>
       
     </div>
     <div v-else>

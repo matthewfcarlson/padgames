@@ -111,7 +111,7 @@ function Init(socket, io) {
 
   socket.on("pick sushi card", function(cardIndex) {
     var playerIndex = currentPlayerSockets.indexOf(socket.id);
-    if (index == -1) {
+    if (playerIndex == -1) {
       console.error("Player ID is unknown", socket.id);
     }
     currentGame.SetAsideCard(playerIndex, cardIndex);
