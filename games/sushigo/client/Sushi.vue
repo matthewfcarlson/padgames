@@ -61,6 +61,7 @@ export default {
       this.$socket.emit("start sushi game");
     },
     PickCard: function(index) {
+      console.log("Client is picking card #" + index);
       this.$socket.emit("pick sushi card", index);
     },
     JoinGame: function() {

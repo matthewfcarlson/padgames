@@ -260,8 +260,8 @@ class Game {
       for (var i = 0; i < this.playerHands.length; i++) {
         this.playerRoundDeck[i].push(this.playerHands[i].pop());
       }
-      console.log(this.playerRoundDeck);
-      console.log(this.playerHands);
+      //console.log(this.playerRoundDeck);
+      //console.log(this.playerHands);
       this.EndRound();
       //TODO: put the last cards into the player's deck round
     }
