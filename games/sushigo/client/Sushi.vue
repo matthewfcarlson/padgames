@@ -1,8 +1,11 @@
 <template>
   <div class="game-content">
     <div v-if="!isPhone">
+      {{game.players}}
       The whole game board goes here
       {{game.playerScores}}
+      <hr/>
+      {{game}}
     </div>
     
     <div class="hello" v-else-if="isPhone && playerID == -1">
