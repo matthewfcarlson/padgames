@@ -1,16 +1,25 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <pre>{{game}}</pre>
+  <div class="game-content">
+    <div v-if="!isPhone">
+    </div>
+    
+    <div class="hello" v-else-if="isPhone && playerID == -1">
+      <h2>Please Input Your Name</h2>
+      <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
+      <button @click="JoinGame">Join Game</button>
+    </div>
+    <div class="hello" v-else-if="isPhone && playerID != -1">
+      <h1>{{ msg }} Player {{playerID}}</h1>
+      <pre>{{game}}</pre>
 
-    <button @click="StartGame">StartGame</button>
-    <button @click="game.AddPlayer('testing')">AddPlayer</button>
-    <button @click="PlayAll">PlayAll</button>
-    <button @click="game.SetAsideCard(0,0)">GetFirstCard P1</button>    
-    <button @click="game.SetAsideCard(1,0)">GetFirstCard P2</button>
-    <button @click="game.SetAsideCard(2,0)">GetFirstCard P3</button>
-    
-    
+      <button @click="StartGame">StartGame</button>
+      <button @click="PickCard(0)">PlayAll</button>
+      <button @click="ResetGame">Reset Game</button>    
+      
+    </div>
+    <div v-else>
+      Unknown state
+    </div>
   </div>
 </template>
 
@@ -18,8 +27,8 @@
 import { Game } from "../common/game";
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
-Vue.use(VueSocketio,window.location.origin);
-console.log("Connecting to "+window.location.origin);
+Vue.use(VueSocketio, window.location.origin);
+console.log("Connecting to " + window.location.origin);
 export default {
   name: "Sushies",
   data() {
@@ -27,46 +36,50 @@ export default {
       isPhone: window.innerWidth <= 667,
       msg: "Sushi on the go",
       game: new Game(),
-      playerID: -1
+      playerID: -1,
+      connected: false,
+      playerName: ""
     };
   },
   methods: {
-    PlayAll: function() {
-      for (var i = 0; i < this.game.players.length; i++) {
-        this.game.SetAsideCard(i, 0);
-      }
-    }, 
-    StartGame: function(){
-      this.$socket.emit('start sushi game');
+    ResetGame: function() {
+      this.$socket.emit("reset sushi game");
     },
-    PickCard: function(index){
-      this.$socket.emit("pick sushi card",index);
+    StartGame: function() {
+      this.$socket.emit("start sushi game");
+    },
+    PickCard: function(index) {
+      this.$socket.emit("pick sushi card", index);
+    },
+    JoinGame: function() {
+      this.$socket.emit("join sushi game", this.playerName);
     }
   },
-  
+
   sockets: {
     connect: function() {
       console.log("socket connected");
-      this.$socket.emit('join sushi game', "Test Player"+Math.floor(Math.random()*10));
+      this.connected = true;
     },
     "set players": function(newPlayer) {
-      this.$set(this.game,"players",newPlayer);
+      this.$set(this.game, "players", newPlayer);
     },
     "start game": function() {
       this.game.StartGame();
     },
     "reset game": function() {
       this.game = new Game(); //might need a vue.set here
+      this.playerID = -1;
     },
-    "set deck seed": function(seed){
+    "set deck seed": function(seed) {
       this.game.deckSeed = seed;
     },
-    "set sushi player": function (id){
+    "set sushi player": function(id) {
       this.playerID = id;
-      console.log("We are player #"+id);
+      console.log("We are player #" + id);
     },
-    "pick sushi card": function(playerID,cardID){
-      this.game.SetAsideCard(playerID,cardID);
+    "pick sushi card": function(playerID, cardID) {
+      this.game.SetAsideCard(playerID, cardID);
     }
   }
 };

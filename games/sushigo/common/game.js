@@ -52,7 +52,7 @@ class Game {
 
     for (i = 0; i < 14; i++) deck.push(new Card("Sashimi"));
 
-    for (i = 0; i < 14; i++) deck.push(new Card("Dumplung"));
+    for (i = 0; i < 14; i++) deck.push(new Card("Dumpling"));
 
     for (i = 0; i < 12; i++) deck.push(new Card("Maki", 2));
     for (i = 0; i < 8; i++) deck.push(new Card("Maki", 3));
