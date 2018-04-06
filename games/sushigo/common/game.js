@@ -71,6 +71,19 @@ class Game {
     return deck;
   }
 
+  SyncGame(game){
+    this.round = game.round;
+    this.deckSeed = game.deckSeed;
+    this.gameOver = game.gameOver;
+    this.isPlaying = game.isPlaying;
+    this.players = game.players;
+    this.playerHands = game.playerHands;
+    this.scores = game.scores;
+    this.playersReady = game.playersReady;
+    this.playerRoundDeck = game.playerRoundDeck;
+    this.playerGameDeck = game.playerGameDeck;
+  }
+
   StartRound() {
     this.playerRoundDeck = [];
     this.playersReady = [];
@@ -187,17 +200,24 @@ class Game {
     this.StartRound();
   }
 
+  //determines whether a player has chopsticks
+  HasChopsticks(playerIndex){
+    return false;
+  }
+
   //set aside the card of a player
-  SetAsideCard(playerIndex, cardIndex) {
+  SetAsideCard(playerIndex, cardIndexs) {
     //called by the server?
     //check if they have a chopsticks in their roundDeck
 
-    console.log("Drawing card at" + cardIndex + " for player " + playerIndex);
+    console.log("Drawing card at" + cardIndexs + " for player " + playerIndex);
     if (
+      cardIndexs == undefined ||
       this.isPlaying == false ||
       this.gameOver == true ||
       this.players.length <= playerIndex ||
-      cardIndex >= this.playerHands[playerIndex].length
+      cardIndexs.length >= 3 ||
+      (cardIndexs.length == 2 && !this.HasChopsticks(playerIndex))
     ) {
       console.error("Invalid parameter");
       return false;
@@ -215,8 +235,14 @@ class Game {
     //get the card I need
     var card = this.playerHands[playerIndex][cardIndex];
     this.playerRoundDeck[playerIndex].push(card);
-    this.playerHands[playerIndex].splice(cardIndex, 1);
-    console.log("Setting aside for player " + playerIndex, card);
+    if (cardIndexs.length == 2){
+
+    }
+    else {
+      var cardIndex = cardIndexs[0];
+      this.playerHands[playerIndex].splice(cardIndex, 1);
+      console.log("Setting aside for player " + playerIndex, card);
+    }
 
     if (this.HasEveryonePlayed()) {
       console.log("Everyone has played!");
@@ -231,7 +257,7 @@ class Game {
   }
 
   GetHandCardCount() {
-    console.log(this.playerHands);
+    //console.log(this.playerHands);
     return this.playerHands.map(value => value.length);
   }
 

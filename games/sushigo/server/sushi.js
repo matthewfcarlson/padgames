@@ -62,9 +62,15 @@ function Init(socket, io) {
     //var playerName = socket.get("playerName");
     var index = currentPlayerSockets.indexOf(socket.id);
     if (index != -1 && !currentGame.isPlaying) {
-      currentPlayerSockets.splice(index, 1);
+      currentPlayerSockets[index].splice(index, 1);
       var playerName = currentGame.players.splice(index, 1);
       console.log("Disconnecting " + playerName + "@" + index);
+    } else if (index != -1) {
+      currentPlayerSockets[index] = null;
+      console.log(
+        "Disconnecting socket for player " + socket.id,
+        currentPlayerSockets
+      );
     } else {
       console.log(
         "Disconnecting an unknown socket " + socket.id,
@@ -78,6 +84,9 @@ function Init(socket, io) {
     currentGame.deckSeed = Math.floor(Math.random() * 100000);
     io.to(gameRoom).emit("reset game", currentGame.deckSeed);
   });
+  socket.on("sync sushi game", function() {
+    socket.emit("sync sushi game", currentGame);
+  });
   socket.on("join sushi game", function(playerName) {
     socket.join(gameRoom);
 
@@ -87,12 +96,14 @@ function Init(socket, io) {
         currentGame.AddPlayer(playerName);
         currentPlayerSockets.push(socket.id);
         console.log("Adding player " + playerName);
-      } else {
+      } else if (currentPlayerSockets[existingName] == null){
         socket.emit("set players", currentGame.players);
         socket.emit("set sushi player", existingName);
-        socket.emit("start game");
+        socket.emit("sync sushi game", currentGame);
         //TODO figure out how to transmit whole game state
         currentPlayerSockets[existingName] = socket.id;
+      } else {
+        console.log("Player is trying to join twice!");
       }
     }
 
@@ -104,7 +115,7 @@ function Init(socket, io) {
   socket.on("start sushi game", function(playerName) {
     currentGame.StartGame();
     console.log("Starting game");
-    
+
     io.to(gameRoom).emit("start game");
     CheckPlayers(io);
   });

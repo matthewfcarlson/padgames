@@ -5,30 +5,35 @@
       The whole game board goes here
       {{game.playerScores}}
       <hr/>
-      {{game}}
+      <pre>{{game}}</pre>
+      <button @click="isPhone = true">Play as a player</button>
     </div>
     
-    <div class="hello" v-else-if="isPhone && playerID == -1">
+    <div class="container-fluid" v-else-if="isPhone && playerID == -1">
       <h2>Please Input Your Name</h2>
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
-      <button @click="JoinGame">Join Game</button>
+      <button @click="JoinGame" class="btn btn-success">Join Game</button>
     </div>
-    <div class="hello" v-else-if="isPhone && playerID != -1">
+    <div class="container-fluid" v-else-if="isPhone && playerID != -1">
       <h1>{{ msg }} Player {{playerID}}</h1>
       
-      <pre v-if="game.isPlaying == true">
-        <div v-if="game.playerHands != undefined && game.playerHands[playerID] != undefined">
-          <ul>
-            <li v-for="card,index in game.playerHands[playerID]" v-bind:key="index" @click="PickCard(index)"> 
-                {{card.name}} {{card.value}} {{index}}
-            </li>
-          </ul> 
+      <div v-if="game.isPlaying == true">
+        <div v-if="game.playerHands != undefined && game.playerHands[playerID] != undefined" class="row">
+          
+          <div class="card sushi-card col-sm" v-for="card,index in game.playerHands[playerID]" v-bind:key="index" @click="PickCard(index)">
+            <!--img class="card-img-top" alt="Card image cap"-->
+            <div class="card-body">
+              <p class="card-text"> {{card.name}} {{card.value}}</p>
+            </div>
+          </div>
         </div>
-      </pre>
+      </div>
+      {{pickedCard}}
 
       <button v-if="!game.isPlaying" @click="StartGame">StartGame</button>
-      <button @click="PickCard(0)">PlayAll</button>
-      <button @click="ResetGame">Reset Game</button>    
+      <button v-if="!game.isPlaying && playerID == 0" @click="AddAI">Add AI</button>
+      <button @click="ReadyToPick">Play</button>
+      <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
       <pre>{{game}}</pre>
       
     </div>
@@ -53,6 +58,7 @@ export default {
       game: new Game(),
       playerID: -1,
       connected: false,
+      pickedCard: [],
       playerName: ""
     };
   },
@@ -65,7 +71,26 @@ export default {
     },
     PickCard: function(index) {
       console.log("Client is picking card #" + index);
-      this.$socket.emit("pick sushi card", index);
+      var currentPickedIndex = this.pickedCard.indexOf(index);
+      if (currentPickedIndex != -1) {
+        this.pickedCard.splice(currentPickedIndex, 1);
+      } else if (this.game.HasChopsticks(this.playerID)) {
+        console.error("I'm not sure what to do in this case");
+        if (this.pickedCard.length >= 1)
+          this.pickedCard.splice(0, this.pickedCard.length);
+        this.pickedCard.push(index);
+      } else {
+        if (this.pickedCard.length >= 1)
+          this.pickedCard.splice(0, this.pickedCard.length);
+        this.pickedCard.push(index);
+      }
+    },
+    AddAI: function() {},
+    ReadyToPick: function(index) {
+      if (this.pickedCard.length > 0) {
+        this.$socket.emit("pick sushi card", this.pickedCard);
+        this.pickedCard.splice(0, this.pickedCard.length);
+      }
     },
     JoinGame: function() {
       this.$socket.emit("join sushi game", this.playerName);
@@ -76,6 +101,11 @@ export default {
     connect: function() {
       console.log("socket connected");
       this.connected = true;
+      if (!this.isPhone) this.$socket.emit("sync sushi game");
+    },
+    "sync sushi game": function(newGame) {
+      console.log("We got a new state for the sushi game", newGame);
+      this.game.SyncGame(newGame);
     },
     "set players": function(newPlayer) {
       this.$set(this.game, "players", newPlayer);
@@ -117,5 +147,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.sushi-card {
+  font-size: 12pt;
 }
 </style>
