@@ -59,8 +59,8 @@ class Game {
     for (i = 0; i < 8; i++) deck.push(new Card("Maki", 3));
     for (i = 0; i < 6; i++) deck.push(new Card("Maki", 1));
 
-    for (i = 0; i < 10; i++) deck.push(new Card("Salmon Nigiri", 3, "nigiri"));
-    for (i = 0; i < 5; i++) deck.push(new Card("Squid Nigiri", 2, "nigiri"));
+    for (i = 0; i < 10; i++) deck.push(new Card("Salmon Nigiri", 2, "nigiri"));
+    for (i = 0; i < 5; i++) deck.push(new Card("Squid Nigiri", 3, "nigiri"));
     for (i = 0; i < 5; i++) deck.push(new Card("Egg Nigiri", 1, "nigiri"));
 
     for (i = 0; i < 10; i++) deck.push(new Card("Pudding", false));
@@ -68,6 +68,16 @@ class Game {
     for (i = 0; i < 6; i++) deck.push(new Card("Wasabi"));
 
     for (i = 0; i < 4; i++) deck.push(new Card("Chopsticks"));
+
+    //Tempaki = most gets 4 pts, least gets -4 if multiple, it splits
+    //Uramaki = first player to get 10 gets 8 points, next gets 5, next gets 2
+    //Edamame = 1 pt per player who has one
+    //Eel - 1 eel = -3, 2+ eel = 7
+    //Onigiri - unique shapes
+    //Miso - if more than one miso is played in one turn, it will discarded
+    //Tofu - 1 = 2, 2 = 6, 3+ = 0
+    //Green tea ice cream -dessert
+    //fruit - dessert
 
     return deck;
   }
@@ -104,7 +114,7 @@ class Game {
     var score = 0;
     var counter = 0;
     while (hand.length > 0 && counter < 50) {
-      score += ScoreCard(this.playerRoundDeck, playerIndex, 0);
+      score += ScoreCards(this.playerRoundDeck, playerIndex, 0);
       counter++;
     }
     if (counter > 40) {
@@ -227,11 +237,11 @@ class Game {
     }
 
     //check to make sure we can play
-    /*if (this.playersReady[playerIndex]) {
+    if (this.playersReady[playerIndex]) {
       //if we don't have a chopsticks to use
       console.error("You have already grabbed a card");
       return false;
-    }*/
+    }
     //check to make sure they haven't already played
 
     this.playersReady[playerIndex] = true;

@@ -5,7 +5,7 @@
       The whole game board goes here
       {{game.playerScores}}
       <hr/>
-      <pre>{{game}}</pre>
+      <pre class="hidden-sm">{{game}}</pre>
       <button @click="isPhone = true">Play as a player</button>
     </div>
     
@@ -144,7 +144,7 @@ export default {
     },
     "pick sushi card": function(playerID) {
       console.log("Player " + playerID + " is ready!");
-      this.game.playersReady[playerID] = true;
+      Vue.set(this.game.playersReady, playerID, true)
     },
     "pick sushi cards": function(cardIDs) {
       console.log("All players have played!", cardIDs);

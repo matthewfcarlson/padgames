@@ -129,6 +129,11 @@ function Init(socket, io) {
       return;
     }
     var currentTurn = currentGame.turnNumber;
+
+    while(currentPlayerSelections[playerIndex] != null){
+      console.error(playerIndex+" player has already tried to pick a card");
+      return;
+    }
     if (!currentGame.SetAsideCard(playerIndex, cardIndex)) {
       console.error("Unable to pick this card for "+playerIndex,cardIndex);
       return;
