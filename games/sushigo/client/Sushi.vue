@@ -136,7 +136,7 @@ export default {
       this.cardsSetAside = false;
       this.pickedCard.splice(0, this.pickedCard.length);
       var self = this;
-      cardIDs.forEach(element, index => {
+      cardIDs.forEach((element, index) => {
         console.log("Setting aside cards for player " + index, element);
         self.game.SetAsideCard(index, element);
       });
