@@ -17,7 +17,13 @@
     <div class="container-fluid" v-else-if="isPhone && playerID != -1">
       <h1>{{ msg }} Player {{playerID}}</h1>
       
+      
       <div v-if="game.isPlaying == true">
+        <div class="nav">
+          <span v-for="player, index in game.players">
+              <i class="fas fa-user" v-if="index == playerID"> </i> {{player}} {{game.playersReady[index]}} 
+          </span>  
+        </div>
         <div v-if="game.playerHands != undefined && game.playerHands[playerID] != undefined" class="row">
           
           <div class="card sushi-card col-sm" v-for="card,index in game.playerHands[playerID]" v-bind:key="index" @click="PickCard(index)">
@@ -146,12 +152,9 @@ export default {
       this.pickedCard.splice(0, this.pickedCard.length);
       var self = this;
       //set everyone to not ready
-      this.game.playersReady[index] = self.game.playersReady[index].map(
-        x => false
-      );
+      this.game.playersReady = self.game.playersReady.map(x => false);
       cardIDs.forEach((element, index) => {
         console.log("Setting aside cards for player " + index, element);
-
         self.game.SetAsideCard(index, element);
       });
       //this.game.SetAsideCard(playerID, cardID);
