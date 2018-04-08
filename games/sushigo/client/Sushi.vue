@@ -27,8 +27,17 @@
             </div>
           </div>
         </div>
+        <div v-if="game.playerHands != undefined && game.playerRoundDeck[playerID] != undefined" class="row">
+          
+          <div class="card sushi-card col-sm" v-for="card,index in game.playerRoundDeck[playerID]" v-bind:key="index">
+            <!--img class="card-img-top" alt="Card image cap"-->
+            <div class="card-body">
+              <p class="card-text"> {{card.name}} {{card.value}}</p>
+            </div>
+          </div>
+        </div>
       </div>
-      {{pickedCard}}
+      {{pickedCard}} {{cardsSetAside}}
 
       <button v-if="!game.isPlaying && playerID == 0" @click="StartGame">StartGame</button>
       <button v-if="!game.isPlaying && playerID == 0" @click="AddAI">Add AI</button>
@@ -167,5 +176,9 @@ a {
   font-size: 11pt;
   padding-left: 0;
   padding-right: 0;
+}
+.sushi-card .card-body{
+  padding:0.25rem;
+  text-align: center;
 }
 </style>
