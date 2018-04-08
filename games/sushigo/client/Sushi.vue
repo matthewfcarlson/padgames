@@ -137,7 +137,7 @@ export default {
       console.log("We are player #" + id);
     },
     "pick sushi card": function(playerID) {
-      console.log("Player "+playerID+" is ready!");
+      console.log("Player " + playerID + " is ready!");
       this.game.playersReady[playerID] = true;
     },
     "pick sushi cards": function(cardIDs) {
@@ -145,8 +145,13 @@ export default {
       this.cardsSetAside = false;
       this.pickedCard.splice(0, this.pickedCard.length);
       var self = this;
+      //set everyone to not ready
+      this.game.playersReady[index] = self.game.playersReady[index].map(
+        x => false
+      );
       cardIDs.forEach((element, index) => {
         console.log("Setting aside cards for player " + index, element);
+
         self.game.SetAsideCard(index, element);
       });
       //this.game.SetAsideCard(playerID, cardID);
@@ -177,8 +182,8 @@ a {
   padding-left: 0;
   padding-right: 0;
 }
-.sushi-card .card-body{
-  padding:0.25rem;
+.sushi-card .card-body {
+  padding: 0.25rem;
   text-align: center;
 }
 </style>
