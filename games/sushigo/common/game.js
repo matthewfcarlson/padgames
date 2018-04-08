@@ -227,11 +227,12 @@ class Game {
     }
 
     //check to make sure we can play
-    if (this.playersReady[playerIndex]) {
+    /*if (this.playersReady[playerIndex]) {
       //if we don't have a chopsticks to use
       console.error("You have already grabbed a card");
       return false;
-    }
+    }*/
+    //check to make sure they haven't already played
 
     this.playersReady[playerIndex] = true;
 
