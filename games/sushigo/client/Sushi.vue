@@ -30,11 +30,11 @@
       </div>
       {{pickedCard}}
 
-      <button v-if="!game.isPlaying" @click="StartGame">StartGame</button>
+      <button v-if="!game.isPlaying && playerID == 0" @click="StartGame">StartGame</button>
       <button v-if="!game.isPlaying && playerID == 0" @click="AddAI">Add AI</button>
-      <button @click="ReadyToPick">Play</button>
-      <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
+      <button @click="ReadyToPick">Play</button>      
       <pre>{{game}}</pre>
+      <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
       
     </div>
     <div v-else>
@@ -57,6 +57,7 @@ export default {
       msg: "Sushi on the go",
       game: new Game(),
       playerID: -1,
+      cardsSetAside: false,
       connected: false,
       pickedCard: [],
       playerName: ""
@@ -89,7 +90,8 @@ export default {
     ReadyToPick: function(index) {
       if (this.pickedCard.length > 0) {
         this.$socket.emit("pick sushi card", this.pickedCard);
-        this.pickedCard.splice(0, this.pickedCard.length);
+
+        this.cardsSetAside = true;
       }
     },
     JoinGame: function() {
@@ -106,6 +108,7 @@ export default {
     "sync sushi game": function(newGame) {
       console.log("We got a new state for the sushi game", newGame);
       this.game.SyncGame(newGame);
+      this.$set(this.game, "playerHands", newGame.playerHands);
     },
     "set players": function(newPlayer) {
       this.$set(this.game, "players", newPlayer);
@@ -124,8 +127,20 @@ export default {
       this.playerID = id;
       console.log("We are player #" + id);
     },
-    "pick sushi card": function(playerID, cardID) {
-      this.game.SetAsideCard(playerID, cardID);
+    "pick sushi card": function(playerID) {
+      console.log("Player "+playerID+" is ready!");
+      this.game.playersReady[playerID] = true;
+    },
+    "pick sushi cards": function(cardIDs) {
+      console.log("All players have played!", cardIDs);
+      this.cardsSetAside = false;
+      this.pickedCard.splice(0, this.pickedCard.length);
+      var self = this;
+      cardIDs.forEach(element, index => {
+        console.log("Setting aside cards for player " + index, element);
+        self.game.SetAsideCard(index, element);
+      });
+      //this.game.SetAsideCard(playerID, cardID);
     }
   }
 };
@@ -149,6 +164,8 @@ a {
   color: #42b983;
 }
 .sushi-card {
-  font-size: 12pt;
+  font-size: 11pt;
+  padding-left: 0;
+  padding-right: 0;
 }
 </style>

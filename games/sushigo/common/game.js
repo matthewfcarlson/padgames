@@ -31,6 +31,7 @@ class Game {
     this.gameOver = false;
     if (seed == undefined) seed = 25;
     this.deckSeed = seed;
+    this.turnNumber = 0;
   }
 
   //get the whole deck
@@ -71,7 +72,7 @@ class Game {
     return deck;
   }
 
-  SyncGame(game){
+  SyncGame(game) {
     this.round = game.round;
     this.deckSeed = game.deckSeed;
     this.gameOver = game.gameOver;
@@ -82,6 +83,7 @@ class Game {
     this.playersReady = game.playersReady;
     this.playerRoundDeck = game.playerRoundDeck;
     this.playerGameDeck = game.playerGameDeck;
+    this.turnNumber = game.turnNumber;
   }
 
   StartRound() {
@@ -190,6 +192,7 @@ class Game {
     if (this.players.length <= 1) return false;
     if (this.isPlaying || this.gameOver) return false;
     this.isPlaying = true;
+    this.turnNumber = 1;
     //set all the scores to zero
     for (var i = 0; i < this.players.length; i++) {
       this.playerScores.push(0);
@@ -201,7 +204,7 @@ class Game {
   }
 
   //determines whether a player has chopsticks
-  HasChopsticks(playerIndex){
+  HasChopsticks(playerIndex) {
     return false;
   }
 
@@ -233,13 +236,14 @@ class Game {
     this.playersReady[playerIndex] = true;
 
     //get the card I need
-    var card = this.playerHands[playerIndex][cardIndex];
-    this.playerRoundDeck[playerIndex].push(card);
-    if (cardIndexs.length == 2){
 
-    }
-    else {
+    if (cardIndexs.length == 2) {
+      console.error("Chopsticks aren't implemented");
+      return false;
+    } else {
       var cardIndex = cardIndexs[0];
+      var card = this.playerHands[playerIndex][cardIndex];
+      this.playerRoundDeck[playerIndex].push(card);
       this.playerHands[playerIndex].splice(cardIndex, 1);
       console.log("Setting aside for player " + playerIndex, card);
     }
@@ -247,7 +251,9 @@ class Game {
     if (this.HasEveryonePlayed()) {
       console.log("Everyone has played!");
       this.EndTurn();
+      
     }
+    return true;
   }
 
   HasEveryonePlayed() {
@@ -282,6 +288,8 @@ class Game {
       return prev < curr ? curr : prev;
     }, 0);
 
+    this.turnNumber++;
+
     if (maxHandCount <= 1) {
       for (var i = 0; i < this.playerHands.length; i++) {
         this.playerRoundDeck[i].push(this.playerHands[i].pop());
@@ -294,4 +302,4 @@ class Game {
   }
 }
 
-module.exports = {Game};
+module.exports = { Game };

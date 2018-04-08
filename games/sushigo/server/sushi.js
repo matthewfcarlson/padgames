@@ -12,6 +12,7 @@ function findClientsSocketByRoomId(roomId) {
 var SushiGo = require("../common/game");
 
 var currentGame = new SushiGo.Game();
+var currentPlayerSelections = [];
 var gameRoom = "sushi game";
 
 currentGame.deckSeed = Math.floor(Math.random() * 100000);
@@ -57,12 +58,13 @@ function CheckPlayers(io) {
   }
 }
 
+
 function Init(socket, io) {
   socket.on("disconnect", function() {
     //var playerName = socket.get("playerName");
     var index = currentPlayerSockets.indexOf(socket.id);
     if (index != -1 && !currentGame.isPlaying) {
-      currentPlayerSockets[index].splice(index, 1);
+      currentPlayerSockets.splice(index, 1);
       var playerName = currentGame.players.splice(index, 1);
       console.log("Disconnecting " + playerName + "@" + index);
     } else if (index != -1) {
@@ -96,7 +98,7 @@ function Init(socket, io) {
         currentGame.AddPlayer(playerName);
         currentPlayerSockets.push(socket.id);
         console.log("Adding player " + playerName);
-      } else if (currentPlayerSockets[existingName] == null){
+      } else if (currentPlayerSockets[existingName] == null) {
         socket.emit("set players", currentGame.players);
         socket.emit("set sushi player", existingName);
         socket.emit("sync sushi game", currentGame);
@@ -119,14 +121,29 @@ function Init(socket, io) {
     io.to(gameRoom).emit("start game");
     CheckPlayers(io);
   });
-
+  
   socket.on("pick sushi card", function(cardIndex) {
     var playerIndex = currentPlayerSockets.indexOf(socket.id);
     if (playerIndex == -1) {
       console.error("Player ID is unknown", socket.id);
+      return;
     }
-    currentGame.SetAsideCard(playerIndex, cardIndex);
-    io.to(gameRoom).emit("pick sushi card", playerIndex, cardIndex);
+    var currentTurn = currentGame.turnNumber;
+    if (!currentGame.SetAsideCard(playerIndex, cardIndex)) {
+      console.error("Unable to pick this card for "+playerIndex,cardIndex);
+      return;
+    }
+    while(currentPlayerSelections.length < playerIndex) currentPlayerSelections.push(null);
+    currentPlayerSelections[playerIndex] = cardIndex;
+    console.log(currentPlayerSelections);
+    if (currentTurn != currentGame.turnNumber) {
+      io.to(gameRoom).emit("pick sushi cards", currentPlayerSelections);
+      currentPlayerSelections = [];
+    }
+    else {
+      io.to(gameRoom).emit("pick sushi card", playerIndex);
+    }
+    
   });
 }
 
