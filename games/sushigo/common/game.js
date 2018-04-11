@@ -1,22 +1,10 @@
 "use strict";
-class Card {
-  constructor(name, value, type) {
-    this.name = name;
-    if (type == undefined) type = name;
-    this.type = type.toLowerCase();
-    if (value == undefined) value = 0;
-    this.value = value; //this can be an array - means you need multiple of this card to do this
-
-    //if the value is false we don't discard it at the end of the game
-    if (value === false)
-      this.discarded = false; //if it's only calculated at the end  of the game
-    else this.discarded = true;
-  }
-  //TODO define modular arch for defining how the different cards interact and how to calculate points
-}
 
 var Random = require("random-js");
-var ScoreCards = require("./cards").ScoreCards;
+var CardLib = require("./cards");
+var GetDeck = CardLib.GetDeck;
+var ScoreCards = CardLib.ScoreCards;
+var Card = CardLib.Card;
 
 class Game {
   constructor(seed) {
@@ -34,53 +22,7 @@ class Game {
     this.turnNumber = 0;
   }
 
-  //get the whole deck
-  GetDeck() {
-    //14 tempura
-    //14x sashimi
-    //14x dumplings
-    //12x 2 maki
-    //8x 3 maki rolls
-    //6x 1 maki roll
-    //10x salmon nigiri
-    //5x squid nigir
-    //5x egg nigiri
-    //10x pudding
-    //6x wasabi
-    //4x chopsticks
-    var deck = [];
-    for (var i = 0; i < 14; i++) deck.push(new Card("Tempura"));
-
-    for (i = 0; i < 14; i++) deck.push(new Card("Sashimi"));
-
-    for (i = 0; i < 14; i++) deck.push(new Card("Dumpling"));
-
-    for (i = 0; i < 12; i++) deck.push(new Card("Maki", 2));
-    for (i = 0; i < 8; i++) deck.push(new Card("Maki", 3));
-    for (i = 0; i < 6; i++) deck.push(new Card("Maki", 1));
-
-    for (i = 0; i < 10; i++) deck.push(new Card("Salmon Nigiri", 2, "nigiri"));
-    for (i = 0; i < 5; i++) deck.push(new Card("Squid Nigiri", 3, "nigiri"));
-    for (i = 0; i < 5; i++) deck.push(new Card("Egg Nigiri", 1, "nigiri"));
-
-    for (i = 0; i < 10; i++) deck.push(new Card("Pudding", false));
-
-    for (i = 0; i < 6; i++) deck.push(new Card("Wasabi"));
-
-    for (i = 0; i < 4; i++) deck.push(new Card("Chopsticks"));
-
-    //Tempaki = most gets 4 pts, least gets -4 if multiple, it splits
-    //Uramaki = first player to get 10 gets 8 points, next gets 5, next gets 2
-    //Edamame = 1 pt per player who has one
-    //Eel - 1 eel = -3, 2+ eel = 7
-    //Onigiri - unique shapes
-    //Miso - if more than one miso is played in one turn, it will discarded
-    //Tofu - 1 = 2, 2 = 6, 3+ = 0
-    //Green tea ice cream -dessert
-    //fruit - dessert
-
-    return deck;
-  }
+  
 
   SyncGame(game) {
     this.round = game.round;
@@ -164,7 +106,7 @@ class Game {
     //4 player = 8 cards
     //5 player = 7 cards
     //5+ = 7 cards
-    var deck = this.GetDeck();
+    var deck = GetDeck();
     //console.log(deck);
 
     var mt = Random.engines.mt19937();
@@ -193,7 +135,8 @@ class Game {
   }
 
   AddPlayer(name) {
-    if (this.isPlaying) return false;
+    if (this.isPlaying || this.gameOver) return false;
+    if (this.players.indexOf(name) != -1) return false;
     this.players.push(name);
   }
 

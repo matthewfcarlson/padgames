@@ -1,6 +1,6 @@
-function EmptyScore(hands) {
+function EmptyScore(size) {
   var scores = [];
-  for (var i = 0; i < hands.length; i++) scores.push(0);
+  for (var i = 0; i < size; i++) scores.push(0);
   return scores;
 }
 
@@ -13,28 +13,27 @@ function FilterHands(hands, card) {
 }
 
 function ScoreSashimi(hands) {
-    var scores = hands.map(function(hand){
-        hand = hand.filter(x=>x.type == "sashimi"||x.type=="wasabi");
-        //figure out what the points are worth
-        var multiplier = false;
-        var score = 0;
-        for (var i=0;i<hand.length;i++){
-            if (hand[i].type == "wasabi") multiplier = true;
-            else {
-                if (multiplier){
-                    score += hand[i].value * 3;
-                } else {
-                    score += hand[i].value;
-                }
-                multiplier = false;
-            }
+  var scores = hands.map(function(hand) {
+    hand = hand.filter(x => x.type == "sashimi" || x.type == "wasabi");
+    //figure out what the points are worth
+    var multiplier = false;
+    var score = 0;
+    for (var i = 0; i < hand.length; i++) {
+      if (hand[i].type == "wasabi") multiplier = true;
+      else {
+        if (multiplier) {
+          score += hand[i].value * 3;
+        } else {
+          score += hand[i].value;
         }
-        return score;
-    });
+        multiplier = false;
+      }
+    }
+    return score;
+  });
 
-    console.log("Sashimi:",scores);
-    return EmptyScore(hands);
-
+  //console.log("Sashimi:", scores);
+  return EmptyScore(hands.length);
 }
 
 function ScoreDumplings(hands) {
@@ -42,18 +41,15 @@ function ScoreDumplings(hands) {
 
   var countPerPlayer = dumplingCards.map(hand => hand.length);
 
-  var pointValues = [1, 3, 6, 10, 15];
+  var pointValues = [0, 1, 3, 6, 10, 15, 16, 18, 21, 25, 30];
 
-  var scores = countPerPlayer.map(function(value){
-    if (value >= pointValues.count) return 15;
+  var scores = countPerPlayer.map(function(value) {    
     return pointValues[value];
   });
 
-  console.log("Dumplings",scores);
+  console.log("Dumplings", scores);
 
   return scores;
-
-  
 }
 
 function ScoreMaki(hands) {
@@ -80,13 +76,32 @@ function ScoreMaki(hands) {
       maxCount = 1;
     } else if (makiValues[i] == maxMaki) {
       maxCount++;
+    }
+  }
+  //get the second highest maki hand
+  for (var i = 0; i < makiValues.length; i++) {
+    if (makiValues[i] >= maxMaki) {
+      continue;
     } else if (makiValues[i] > secondHighest) {
-      secondCount = makiValues[i];
+      secondHighest = makiValues[i];
       secondCount = 1;
     } else if (makiValues[i] == secondHighest) {
       secondCount++;
     }
   }
+
+  /*console.log(
+    "Scores " +
+      makiValues.join(",") +
+      "\tMax:" +
+      maxMaki +
+      " second:" +
+      secondHighest +
+      "\tMax count:" +
+      maxCount +
+      " second count:" +
+      secondCount
+  );*/
 
   if (maxCount > 1) secondCount = 0;
 
@@ -104,7 +119,7 @@ function ScoreMaki(hands) {
 }
 
 function ScoreTempura(hands) {
-  var scores = EmptyScore(hands);
+  var scores = EmptyScore(hands.length);
   var tempuraCards = hands.map(function(hand) {
     return hand.filter(function(c) {
       //console.log(c.type, c.type == "tempura");
@@ -117,11 +132,11 @@ function ScoreTempura(hands) {
 function ScoreCards(hands) {
   if (hands == undefined) return "ERROR";
   //figure out the list of cards
-  var scores = EmptyScore(hands);
-  scores = AddScores(scores, ScoreMaki(hands));
-  scores = AddScores(scores, ScoreTempura(hands));
-  scores = AddScores(scores, ScoreSashimi(hands));
-  scores = AddScores(scores, ScoreDumplings(hands));
+  var scorers = [ScoreMaki, ScoreTempura, ScoreSashimi, ScoreDumplings];
+  var scores = EmptyScore(hands.length);
+  scorers.forEach(calculator => {
+    scores = AddScores(scores, calculator(hands));
+  });
   return scores;
 }
 
@@ -131,5 +146,68 @@ function AddScores(score, newScore) {
   }
   return score;
 }
+//get the whole deck
+function GetDeck() {
+  //14 tempura
+  //14x sashimi
+  //14x dumplings
+  //12x 2 maki
+  //8x 3 maki rolls
+  //6x 1 maki roll
+  //10x salmon nigiri
+  //5x squid nigir
+  //5x egg nigiri
+  //10x pudding
+  //6x wasabi
+  //4x chopsticks
+  var deck = [];
+  for (var i = 0; i < 14; i++) deck.push(new Card("Tempura"));
 
-module.exports = {ScoreCards};
+  for (i = 0; i < 14; i++) deck.push(new Card("Sashimi"));
+
+  for (i = 0; i < 14; i++) deck.push(new Card("Dumpling"));
+
+  for (i = 0; i < 12; i++) deck.push(new Card("Maki", 2));
+  for (i = 0; i < 8; i++) deck.push(new Card("Maki", 3));
+  for (i = 0; i < 6; i++) deck.push(new Card("Maki", 1));
+
+  for (i = 0; i < 10; i++) deck.push(new Card("Salmon Nigiri", 2, "nigiri"));
+  for (i = 0; i < 5; i++) deck.push(new Card("Squid Nigiri", 3, "nigiri"));
+  for (i = 0; i < 5; i++) deck.push(new Card("Egg Nigiri", 1, "nigiri"));
+
+  for (i = 0; i < 10; i++) deck.push(new Card("Pudding", false));
+
+  for (i = 0; i < 6; i++) deck.push(new Card("Wasabi"));
+
+  for (i = 0; i < 4; i++) deck.push(new Card("Chopsticks"));
+
+  //Tempaki = most gets 4 pts, least gets -4 if multiple, it splits
+  //Uramaki = first player to get 10 gets 8 points, next gets 5, next gets 2
+  //Edamame = 1 pt per player who has one
+  //Eel - 1 eel = -3, 2+ eel = 7
+  //Onigiri - unique shapes
+  //Miso - if more than one miso is played in one turn, it will discarded
+  //Tofu - 1 = 2, 2 = 6, 3+ = 0
+  //Green tea ice cream -dessert
+  //fruit - dessert
+
+  return deck;
+}
+
+class Card {
+  constructor(name, value, type) {
+    this.name = name;
+    if (type == undefined) type = name;
+    this.type = type.toLowerCase();
+    if (value == undefined) value = 0;
+    this.value = value; //this can be an array - means you need multiple of this card to do this
+
+    //if the value is false we don't discard it at the end of the game
+    if (value === false)
+      this.discarded = false; //if it's only calculated at the end  of the game
+    else this.discarded = true;
+  }
+  //TODO define modular arch for defining how the different cards interact and how to calculate points
+}
+
+module.exports = { ScoreCards, GetDeck, Card };
