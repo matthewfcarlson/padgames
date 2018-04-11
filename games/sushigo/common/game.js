@@ -16,7 +16,7 @@ class Card {
 }
 
 var Random = require("random-js");
-var ScoreCards = require("./cards");
+var ScoreCards = require("./cards").ScoreCards;
 
 class Game {
   constructor(seed) {

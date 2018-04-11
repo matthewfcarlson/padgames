@@ -8,6 +8,10 @@
       <pre class="hidden-sm">{{game}}</pre>
       <button @click="isPhone = true">Play as a player</button>
     </div>
+
+    <div v-else-if="!isLandscape">
+      <h2>Please turn your phone sideways.
+    </div>
     
     <div class="container-fluid" v-else-if="isPhone && playerID == -1">
       <h2>Please Input Your Name</h2>
@@ -19,10 +23,10 @@
       
       
       <div v-if="game.isPlaying == true">
-        <div class="nav">
-          <span v-for="player, index in game.players">
+        <div class="row">
+          <div class="col-sm" v-for="player, index in game.players">
               <i class="fas fa-user" v-if="index == playerID"> </i> {{player}} {{game.playersReady[index]}} 
-          </span>  
+          </div>  
         </div>
         <div v-if="game.playerHands != undefined && game.playerHands[playerID] != undefined" class="row">
           
@@ -68,7 +72,7 @@ export default {
   name: "Sushies",
   data() {
     return {
-      isPhone: window.innerWidth <= 667,
+      isPhone: window.innerWidth <= 750,
       msg: "Sushi on the go",
       game: new Game(),
       playerID: -1,
@@ -77,6 +81,9 @@ export default {
       pickedCard: [],
       playerName: ""
     };
+  },
+  computed: {
+    isLandscape: function() { return window.innerWidth > 400; }
   },
   methods: {
     ResetGame: function() {

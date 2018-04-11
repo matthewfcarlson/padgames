@@ -115,6 +115,7 @@ function ScoreTempura(hands) {
   return scores;
 }
 function ScoreCards(hands) {
+  if (hands == undefined) return "ERROR";
   //figure out the list of cards
   var scores = EmptyScore(hands);
   scores = AddScores(scores, ScoreMaki(hands));
