@@ -52,6 +52,7 @@
       <button v-if="!game.isPlaying && playerID == 0" @click="StartGame">StartGame</button>
       <button v-if="!game.isPlaying && playerID == 0" @click="AddAI">Add AI</button>
       <button @click="ReadyToPick">Play</button>      
+      <pre>{{isLandscape}}</pre>
       <pre>{{game}}</pre>
       <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
       
@@ -73,6 +74,7 @@ export default {
   data() {
     return {
       isPhone: window.innerWidth <= 750,
+      isLandscape: window.innerWidth >= 450,
       msg: "Sushi on the go",
       game: new Game(),
       playerID: -1,
@@ -82,8 +84,15 @@ export default {
       playerName: ""
     };
   },
+  created: function(){
+    var self = this;
+    $( window ).on( "resize", function() {
+      self.isPhone = window.innerWidth <= 750;
+      self.isLandscape = window.innerWidth >= 450;
+    });
+  },
   computed: {
-    isLandscape: function() { return window.innerWidth > 400; }
+    isLandscape: function() { return window.innerWidth > 450; }
   },
   methods: {
     ResetGame: function() {
