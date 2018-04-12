@@ -12,9 +12,9 @@ function FilterHands(hands, card) {
   });
 }
 
-function ScoreSashimi(hands) {
+function ScoreNigiri(hands) {
   var scores = hands.map(function(hand) {
-    hand = hand.filter(x => x.type == "sashimi" || x.type == "wasabi");
+    hand = hand.filter(x => x.type == "nigiri" || x.type == "wasabi");
     //figure out what the points are worth
     var multiplier = false;
     var score = 0;
@@ -30,10 +30,21 @@ function ScoreSashimi(hands) {
       }
     }
     return score;
+    
+    
   });
+  //console.log("Nigiri",scores);
+  return scores;
+}
 
+function ScoreSashimi(hands) {
+  var sashimiCards = FilterHands(hands, "sashimi");
+  var countPerPlayer = sashimiCards.map(hand => hand.length);
+  var scores = countPerPlayer.map(function(value) {
+    return Math.floor(value/3) * 10;
+  });
   //console.log("Sashimi:", scores);
-  return EmptyScore(hands.length);
+  return scores;
 }
 
 function ScoreDumplings(hands) {
@@ -43,11 +54,11 @@ function ScoreDumplings(hands) {
 
   var pointValues = [0, 1, 3, 6, 10, 15, 16, 18, 21, 25, 30];
 
-  var scores = countPerPlayer.map(function(value) {    
+  var scores = countPerPlayer.map(function(value) {
     return pointValues[value];
   });
 
-  console.log("Dumplings", scores);
+  //console.log("Dumplings", scores);
 
   return scores;
 }
@@ -109,6 +120,9 @@ function ScoreMaki(hands) {
   var secondHighPointsAwarded =
     secondCount != 0 ? Math.floor(3 / secondCount) : 0;
 
+  if (maxMaki == 0) highestPointsAwarded = 0;
+  if (secondHighest == 0) secondHighPointsAwarded = 0;
+
   var scores = makiValues.map(function(value) {
     if (value == maxMaki) return highestPointsAwarded;
     if (value == secondHighest) return secondHighPointsAwarded;
@@ -132,7 +146,7 @@ function ScoreTempura(hands) {
 function ScoreCards(hands) {
   if (hands == undefined) return "ERROR";
   //figure out the list of cards
-  var scorers = [ScoreMaki, ScoreTempura, ScoreSashimi, ScoreDumplings];
+  var scorers = [ScoreMaki, ScoreTempura, ScoreSashimi, ScoreDumplings,ScoreNigiri];
   var scores = EmptyScore(hands.length);
   scorers.forEach(calculator => {
     scores = AddScores(scores, calculator(hands));
@@ -141,6 +155,7 @@ function ScoreCards(hands) {
 }
 
 function AddScores(score, newScore) {
+  //console.log(newScore);
   for (var i = 0; i < score.length && i <= newScore.length; i++) {
     score[i] += newScore[i];
   }
@@ -210,4 +225,4 @@ class Card {
   //TODO define modular arch for defining how the different cards interact and how to calculate points
 }
 
-module.exports = { ScoreCards, GetDeck, Card };
+module.exports = { ScoreCards, GetDeck, Card};

@@ -9,6 +9,35 @@ describe("sushigo deck", () => {
     });
 });
 
+describe("sushigo score sashimi", () => {
+    it("score 1 player", () => {
+        var playerHands = [[]];
+        expect(ScoreCards(playerHands)).toEqual([0]);
+        playerHands[0].push(new Card("Sashimi"));
+        playerHands[0].push(new Card("Sashimi"));
+        playerHands[0].push(new Card("Sashimi"));
+        expect(ScoreCards(playerHands)).toEqual([10]);
+        playerHands[0].push(new Card("Sashimi"));
+        playerHands[0].push(new Card("Sashimi"));
+        playerHands[0].push(new Card("Sashimi"));        
+        expect(ScoreCards(playerHands)).toEqual([20]);
+    });
+    it("score 2 player", () => {
+        var playerHands = [[],[]];
+        expect(ScoreCards(playerHands)).toEqual([0,0]);
+        playerHands[0].push(new Card("Sashimi"));
+        playerHands[0].push(new Card("Sashimi"));
+        playerHands[0].push(new Card("Sashimi"));
+        expect(ScoreCards(playerHands)).toEqual([10,0]);
+        playerHands[1].push(new Card("Sashimi"));
+        playerHands[1].push(new Card("Sashimi"));
+        playerHands[1].push(new Card("Sashimi"));        
+        expect(ScoreCards(playerHands)).toEqual([10,10]);
+    });
+});
+
+
+
 describe("sushigo score dumplings", () => {
     it("score dumplings 1 player", () => {
         var playerHands = [[]];
@@ -23,6 +52,18 @@ describe("sushigo score dumplings", () => {
         expect(ScoreCards(playerHands)).toEqual([10]);
         playerHands[0].push(new Card("Dumpling",3));
         expect(ScoreCards(playerHands)).toEqual([15]);
+    });
+    it("score dumplings 2 player", () => {
+        var playerHands = [[],[]];
+        expect(ScoreCards(playerHands)).toEqual([0,0]);
+        playerHands[0].push(new Card("Dumpling",3));
+        playerHands[1].push(new Card("Dumpling",3));
+        expect(ScoreCards(playerHands)).toEqual([1,1]);
+        playerHands[0].push(new Card("Dumpling",3));
+        playerHands[1].push(new Card("Dumpling",3));
+        expect(ScoreCards(playerHands)).toEqual([3,3]);
+        playerHands[1].push(new Card("Dumpling",3));
+        expect(ScoreCards(playerHands)).toEqual([3,6]);        
     });
 });
 
