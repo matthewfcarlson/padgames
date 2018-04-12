@@ -24,13 +24,13 @@
       
       <div v-if="game.isPlaying == true">
         <div class="row">
-          <div class="col-sm" v-for="player, index in game.players">
+          <div class="col-sm" v-for="player, index in game.players"  v-bind:key="'player'+index">
               <i class="fas fa-user" v-if="index == playerID"> </i> {{player}} {{game.playersReady[index]}} 
           </div>  
         </div>
         <div v-if="game.playerHands != undefined && game.playerHands[playerID] != undefined" class="row">
           
-          <div class="card sushi-card col-sm" v-for="card,index in game.playerHands[playerID]" v-bind:key="index" @click="PickCard(index)">
+          <div class="card sushi-card col-sm" v-for="card,index in game.playerHands[playerID]" v-bind:key="'card'+index" @click="PickCard(index)">
             <!--img class="card-img-top" alt="Card image cap"-->
             <div class="card-body">
               <p class="card-text"> {{card.name}} {{card.value}}</p>
@@ -39,7 +39,7 @@
         </div>
         <div v-if="game.playerHands != undefined && game.playerRoundDeck[playerID] != undefined" class="row">
           
-          <div class="card sushi-card col-sm" v-for="card,index in game.playerRoundDeck[playerID]" v-bind:key="index">
+          <div class="card sushi-card col-sm" v-for="card,index in game.playerRoundDeck[playerID]" v-bind:key="'cardr'+index">
             <!--img class="card-img-top" alt="Card image cap"-->
             <div class="card-body">
               <p class="card-text"> {{card.name}} {{card.value}}</p>
