@@ -16,7 +16,7 @@
     <div class="container-fluid" v-else-if="isPhone && playerID == -1">
       <h2>Please Input Your Name</h2>
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
-      <button @click="JoinGame" class="btn btn-success">Join Game</button>
+      <button @click="JoinGame" class="btn btn-success btn-block">Join Game</button>
     </div>
     <div class="container-fluid" v-else-if="isPhone && playerID != -1">
       <h1>{{ msg }} Player {{playerID}}</h1>
@@ -49,9 +49,9 @@
       </div>
       {{pickedCard}} {{cardsSetAside}}
 
-      <button v-if="!game.isPlaying && playerID == 0" @click="StartGame">StartGame</button>
-      <button v-if="!game.isPlaying && playerID == 0" @click="AddAI">Add AI</button>
-      <button @click="ReadyToPick">Play</button>      
+      <button v-if="!game.isPlaying && playerID == 0" @click="StartGame" class="btn">StartGame</button>
+      <button v-if="!game.isPlaying && playerID == 0" @click="AddAI" class="btn">Add AI</button>
+      <button @click="ReadyToPick" class="btn" v-bind:disabled="cardsSetAside.length > 0">Play</button>      
       <pre>{{isLandscape}}</pre>
       <pre>{{game}}</pre>
       <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
