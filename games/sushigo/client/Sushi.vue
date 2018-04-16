@@ -1,7 +1,17 @@
 <template>
   <div class="game-content">
     <div v-if="!isPhone">
-      {{game.players}}
+      <div class="panel" v-for="(player, playerIndex) in game.players"  v-bind:key="'player'+playerIndex">
+        <h3> {{player}} {{game.playersReady[playerIndex]}} </h3>
+        <div class="row" v-if="game.playerRoundDeck[playerIndex] != undefined">
+          <div class="card sushi-card col-sm" v-for="(card,index) in game.playerRoundDeck[playerIndex]" v-bind:key="'cardr'+index">
+              <!--img class="card-img-top" alt="Card image cap"-->
+            <div class="card-body">
+              <p class="card-text"> {{card.name}} {{card.value}}</p>
+            </div>
+          </div>
+        </div>
+      </div>        
       The whole game board goes here
       {{game.playerScores}}
       <hr/>
@@ -84,15 +94,20 @@ export default {
       playerName: ""
     };
   },
-  created: function(){
+  created: function() {
     var self = this;
-    $( window ).on( "resize", function() {
+    $(window).on("resize", function() {
       self.isPhone = window.innerWidth <= 750;
       self.isLandscape = window.innerWidth >= 450;
     });
+    if (!self.isPhone) {
+      this.JoinGame(null);
+    }
   },
   computed: {
-    isLandscape: function() { return window.innerWidth > 450; }
+    isLandscape: function() {
+      return window.innerWidth > 450;
+    }
   },
   methods: {
     ResetGame: function() {
@@ -106,12 +121,13 @@ export default {
       var currentPickedIndex = this.pickedCard.indexOf(index);
       if (currentPickedIndex != -1) {
         this.pickedCard.splice(currentPickedIndex, 1);
-      } else if (this.game.HasChopsticks(this.playerID)) {
-        console.error("I'm not sure what to do in this case");
-        if (this.pickedCard.length >= 1)
+      } 
+      else if (this.game.HasChopsticks(this.playerID)) {
+        if (this.pickedCard.length > 1)
           this.pickedCard.splice(0, this.pickedCard.length);
         this.pickedCard.push(index);
-      } else {
+      } 
+      else {
         if (this.pickedCard.length >= 1)
           this.pickedCard.splice(0, this.pickedCard.length);
         this.pickedCard.push(index);
@@ -121,7 +137,6 @@ export default {
     ReadyToPick: function(index) {
       if (this.pickedCard.length > 0) {
         this.$socket.emit("pick sushi card", this.pickedCard);
-
         this.cardsSetAside = true;
       }
     },
@@ -160,7 +175,7 @@ export default {
     },
     "pick sushi card": function(playerID) {
       console.log("Player " + playerID + " is ready!");
-      Vue.set(this.game.playersReady, playerID, true)
+      Vue.set(this.game.playersReady, playerID, true);
     },
     "pick sushi cards": function(cardIDs) {
       console.log("All players have played!", cardIDs);

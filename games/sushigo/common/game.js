@@ -22,8 +22,6 @@ class Game {
     this.turnNumber = 0;
   }
 
-  
-
   SyncGame(game) {
     this.round = game.round;
     this.deckSeed = game.deckSeed;
@@ -158,7 +156,11 @@ class Game {
 
   //determines whether a player has chopsticks
   HasChopsticks(playerIndex) {
-    return false;
+    var chopStickCards = this.playerRoundDeck[playerIndex].filter(
+      x => x.type == "chopsticks"
+    );
+    //console.log("Chopstick cards",chopStickCards,this.playerRoundDeck[playerIndex]);
+    return chopStickCards.length > 0;
   }
 
   //set aside the card of a player
@@ -192,8 +194,22 @@ class Game {
     //get the card I need
 
     if (cardIndexs.length == 2) {
+      //handle the chopsticks case
       console.error("Chopsticks aren't implemented");
-      return false;
+      cardIndexs.forEach((card, cardIndex) => {
+        this.playerRoundDeck[playerIndex].push(card);
+        //THIS IS BROKEN!
+        this.playerHands[playerIndex].splice(cardIndex, 1); //check if we are modifying the index of the array
+      });
+      //take out the chopstick
+      for (var i = 0; i < this.playerHands[playerIndex].length; i++) {
+        var card = this.playerHands[playerIndex][i];
+        if (card.type == "chopsticks") {
+          this.playerHands[playerIndex].push(card);
+          this.playerRoundDeck[playerIndex].splice(i, 1);
+          break;
+        }
+      }
     } else {
       var cardIndex = cardIndexs[0];
       var card = this.playerHands[playerIndex][cardIndex];
@@ -205,7 +221,6 @@ class Game {
     if (this.HasEveryonePlayed()) {
       console.log("Everyone has played!");
       this.EndTurn();
-      
     }
     return true;
   }

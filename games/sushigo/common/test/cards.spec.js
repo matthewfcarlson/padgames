@@ -36,6 +36,35 @@ describe("sushigo score sashimi", () => {
   });
 });
 
+describe("sushigo score tempura", () => {
+    it("score 1 player", () => {
+      var playerHands = [[]];
+      expect(ScoreCards(playerHands)).toEqual([0]);
+      playerHands[0].push(new Card("Tempura"));
+      expect(ScoreCards(playerHands)).toEqual([0]);
+      playerHands[0].push(new Card("Tempura"));
+      expect(ScoreCards(playerHands)).toEqual([5]);
+      playerHands[0].push(new Card("Tempura"));
+      expect(ScoreCards(playerHands)).toEqual([5]);
+      playerHands[0].push(new Card("Tempura"));
+      expect(ScoreCards(playerHands)).toEqual([10]);
+    });
+    it("score 2 player", () => {
+      var playerHands = [[], []];
+      expect(ScoreCards(playerHands)).toEqual([0, 0]);
+      playerHands[0].push(new Card("Tempura"));
+      playerHands[0].push(new Card("Tempura"));
+      expect(ScoreCards(playerHands)).toEqual([5, 0]);
+      playerHands[0].push(new Card("Tempura"));
+      expect(ScoreCards(playerHands)).toEqual([5, 0]);
+      playerHands[1].push(new Card("Tempura"));
+      playerHands[1].push(new Card("Tempura"));
+      expect(ScoreCards(playerHands)).toEqual([5, 5]);
+      playerHands[1].push(new Card("Tempura"));
+      expect(ScoreCards(playerHands)).toEqual([5, 5]);
+    });
+  });
+
 describe("sushigo score nigiri", () => {
   it("score 1 player", () => {
     var playerHands = [[]];

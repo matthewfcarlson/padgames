@@ -41,6 +41,8 @@ describe("sushigo game", () => {
     expect(game.players.length).toEqual(1);    
   });
 
+  //TODO write a test case for chopsticks
+
   it("it should deal the same hand every time", () => {
     var game = new Game();
     var game2 = new Game();

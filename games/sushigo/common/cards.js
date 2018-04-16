@@ -133,13 +133,8 @@ function ScoreMaki(hands) {
 }
 
 function ScoreTempura(hands) {
-  var scores = EmptyScore(hands.length);
-  var tempuraCards = hands.map(function(hand) {
-    return hand.filter(function(c) {
-      //console.log(c.type, c.type == "tempura");
-      return c.type == "tempura";
-    }).length;
-  });
+  var tempuraCards = FilterHands(hands, "tempura");
+  var scores = tempuraCards.map((x)=> Math.floor(x.length/2) * 5);
   //console.log("ALL TEMPURA", tempuraCards);
   return scores;
 }
@@ -209,6 +204,11 @@ function GetDeck() {
   return deck;
 }
 
+//at the end a game, 
+function ScoreGame(hands){
+  return EmptyScore(hands);
+}
+
 class Card {
   constructor(name, value, type) {
     this.name = name;
@@ -225,4 +225,4 @@ class Card {
   //TODO define modular arch for defining how the different cards interact and how to calculate points
 }
 
-module.exports = { ScoreCards, GetDeck, Card};
+module.exports = { ScoreCards, GetDeck, Card, ScoreGame };

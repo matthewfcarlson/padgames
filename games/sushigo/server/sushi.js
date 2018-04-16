@@ -92,7 +92,7 @@ function Init(socket, io) {
   socket.on("join sushi game", function(playerName) {
     socket.join(gameRoom);
 
-    if (playerName != null) {
+    if (playerName != null && playerName.length > 0) {
       var existingName = currentGame.players.indexOf(playerName);
       if (existingName == -1 && !currentGame.isPlaying) {
         currentGame.AddPlayer(playerName);
