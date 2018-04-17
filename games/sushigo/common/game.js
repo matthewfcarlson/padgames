@@ -168,7 +168,7 @@ class Game {
     //called by the server?
     //check if they have a chopsticks in their roundDeck
 
-    console.log("Drawing card at" + cardIndexs + " for player " + playerIndex);
+    //console.log("Drawing card at" + cardIndexs + " for player " + playerIndex);
     if (
       cardIndexs == undefined ||
       this.isPlaying == false ||
@@ -177,49 +177,65 @@ class Game {
       cardIndexs.length >= 3 ||
       (cardIndexs.length == 2 && !this.HasChopsticks(playerIndex))
     ) {
-      console.error("Invalid parameter");
+      //console.error("Invalid parameter");
       return false;
     }
 
     //check to make sure we can play
     if (this.playersReady[playerIndex]) {
       //if we don't have a chopsticks to use
-      console.error("You have already grabbed a card");
+      //console.error("You have already grabbed a card");
       return false;
     }
     //check to make sure they haven't already played
 
-    this.playersReady[playerIndex] = true;
-
     //get the card I need
-
-    if (cardIndexs.length == 2) {
+    if (cardIndexs.length > 2) {
+      console.error("I can't handle multiple chopsticks");
+      return false;
+    } else if (cardIndexs.length == 2) {
       //handle the chopsticks case
-      console.error("Chopsticks aren't implemented");
-      cardIndexs.forEach((card, cardIndex) => {
-        this.playerRoundDeck[playerIndex].push(card);
-        //THIS IS BROKEN!
-        this.playerHands[playerIndex].splice(cardIndex, 1); //check if we are modifying the index of the array
+      var pulledCards = this.playerHands[playerIndex].filter((x, index) => {
+        return cardIndexs.indexOf(index) != -1;
       });
-      //take out the chopstick
-      for (var i = 0; i < this.playerHands[playerIndex].length; i++) {
-        var card = this.playerHands[playerIndex][i];
-        if (card.type == "chopsticks") {
-          this.playerHands[playerIndex].push(card);
-          this.playerRoundDeck[playerIndex].splice(i, 1);
-          break;
+      this.playerHands[playerIndex] = this.playerHands[playerIndex].filter(
+        (x, index) => {
+          return cardIndexs.indexOf(index) == -1;
         }
-      }
+      );
+      //take out the chopstick
+      var chopstickCards = this.playerRoundDeck[playerIndex]
+        .map((x, index) => {
+          x.index = index;
+          return x;
+        })
+        .filter(x => x.type == "chopsticks")
+        .map(x => x.index);
+      //get the chopstick we used
+      var usedChopstick = this.playerRoundDeck[playerIndex].splice(
+        chopstickCards[0],
+        1
+      );
+
+      this.playerHands[playerIndex] = this.playerHands[playerIndex].concat(
+        usedChopstick
+      );
+      //add the cards we pulled earlier
+      this.playerRoundDeck[playerIndex] = this.playerRoundDeck[
+        playerIndex
+      ].concat(pulledCards);
     } else {
       var cardIndex = cardIndexs[0];
       var card = this.playerHands[playerIndex][cardIndex];
       this.playerRoundDeck[playerIndex].push(card);
       this.playerHands[playerIndex].splice(cardIndex, 1);
-      console.log("Setting aside for player " + playerIndex, card);
+      //console.log("Setting aside for player " + playerIndex, card);
     }
 
+    this.playersReady[playerIndex] = true;
+
     if (this.HasEveryonePlayed()) {
-      console.log("Everyone has played!");
+      //console.log("Everyone has played!");
       this.EndTurn();
     }
     return true;
