@@ -29,7 +29,7 @@ class Game {
     this.isPlaying = game.isPlaying;
     this.players = game.players;
     this.playerHands = game.playerHands;
-    this.scores = game.scores;
+    this.playerScores = game.playerScores;
     this.playersReady = game.playersReady;
     this.playerRoundDeck = game.playerRoundDeck;
     this.playerGameDeck = game.playerGameDeck;
@@ -58,7 +58,7 @@ class Game {
       counter++;
     }
     if (counter > 40) {
-      console.error(
+      console.log(
         "We had an error figuring out how to score player's hand:" + playerIndex
       );
     }
@@ -191,7 +191,7 @@ class Game {
 
     //get the card I need
     if (cardIndexs.length > 2) {
-      console.error("I can't handle multiple chopsticks");
+      console.log("I can't handle multiple chopsticks");
       return false;
     } else if (cardIndexs.length == 2) {
       //handle the chopsticks case

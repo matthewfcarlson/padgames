@@ -34,20 +34,13 @@
       
       <div v-if="game.isPlaying == true">
         <div class="row">
-          <div class="col-sm" v-for="(player, index) in game.players"  v-bind:key="'player'+index">
-              <i class="fas fa-user" v-if="index == playerID"> </i> {{player}} {{game.playersReady[index]}} 
-          </div>  
-        </div>
-        <div v-if="game.playerHands != undefined && game.playerHands[playerID] != undefined" class="row">
-          
-          <div class="card sushi-card col-sm" v-for="(card,index) in game.playerHands[playerID]" v-bind:key="'card'+index" @click="PickCard(index)">
-            <!--img class="card-img-top" alt="Card image cap"-->
-            <div class="card-body">
-              <p class="card-text"> {{card.name}} {{card.value}}</p>
-            </div>
+          <div class="col-sm" v-for="(player, index) in game.players"  v-bind:key="'player'+index" >
+              <i class="fas fa-user" v-if="index == playerID"> </i> {{player}} <span v-if="game.playersReady.length >= index">{{game.playersReady[index]}}</span> <span v-if="game.playerScores.length >= index">{{game.playerScores[index]}}</span>
           </div>
         </div>
-        <div v-if="game.playerHands != undefined && game.playerRoundDeck[playerID] != undefined" class="row">
+        <card-view @picked-card="PickCard" v-bind:cards="game.playerHands[playerID]" v-bind:cards-set-aside="pickedCard" id="player-hand" title="Hand"></card-view>
+        
+        <div v-if="game.playerHands != undefined && game.playerRoundDeck[playerID] != undefined" class="row" id="player-deck" >
           
           <div class="card sushi-card col-sm" v-for="(card,index) in game.playerRoundDeck[playerID]" v-bind:key="'cardr'+index">
             <!--img class="card-img-top" alt="Card image cap"-->
@@ -76,11 +69,15 @@
 <script>
 import { Game } from "../common/game";
 import Vue from "vue";
+import CardView from "./cardView";
 import VueSocketio from "vue-socket.io";
 Vue.use(VueSocketio, window.location.origin);
 console.log("Connecting to " + window.location.origin);
 export default {
   name: "Sushies",
+  components: {
+    CardView
+  },
   data() {
     return {
       isPhone: window.innerWidth <= 750,
@@ -121,13 +118,11 @@ export default {
       var currentPickedIndex = this.pickedCard.indexOf(index);
       if (currentPickedIndex != -1) {
         this.pickedCard.splice(currentPickedIndex, 1);
-      } 
-      else if (this.game.HasChopsticks(this.playerID)) {
+      } else if (this.game.HasChopsticks(this.playerID)) {
         if (this.pickedCard.length > 1)
           this.pickedCard.splice(0, this.pickedCard.length);
         this.pickedCard.push(index);
-      } 
-      else {
+      } else {
         if (this.pickedCard.length >= 1)
           this.pickedCard.splice(0, this.pickedCard.length);
         this.pickedCard.push(index);
@@ -169,6 +164,9 @@ export default {
     "set deck seed": function(seed) {
       this.game.deckSeed = seed;
     },
+    'error message':function(message){
+      alert(message);
+    },
     "set sushi player": function(id) {
       this.playerID = id;
       console.log("We are player #" + id);
@@ -196,28 +194,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1,
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-.sushi-card {
-  font-size: 11pt;
-  padding-left: 0;
-  padding-right: 0;
-}
-.sushi-card .card-body {
-  padding: 0.25rem;
-  text-align: center;
-}
+
 </style>

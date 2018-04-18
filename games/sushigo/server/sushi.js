@@ -49,7 +49,10 @@ function CheckPlayers(io) {
       );
       var socket = currentSockets[socketID];
       if (socket != undefined) socket.emit("set sushi player", index);
-      else console.error("Unknown socket", socket);
+      else {
+        console.log("Unknown socket", socket);
+      }
+      
 
       //TODO we need to figure out how to filter if this is a real socket
     });
@@ -106,6 +109,7 @@ function Init(socket, io) {
         currentPlayerSockets[existingName] = socket.id;
       } else {
         console.log("Player is trying to join twice!");
+        socket.emit("error message","This player has already joined");
       }
     }
 
@@ -126,16 +130,19 @@ function Init(socket, io) {
     var playerIndex = currentPlayerSockets.indexOf(socket.id);
     if (playerIndex == -1) {
       console.error("Player ID is unknown", socket.id);
+      socket.emit("error message","Unknown User!");
       return;
     }
     var currentTurn = currentGame.turnNumber;
 
-    while(currentPlayerSelections[playerIndex] != null){
+    if (currentPlayerSelections[playerIndex] != null){
       console.error(playerIndex+" player has already tried to pick a card");
+      socket.emit("error message","You've already tried to pick a card");
       return;
     }
     if (!currentGame.SetAsideCard(playerIndex, cardIndex)) {
       console.error("Unable to pick this card for "+playerIndex,cardIndex);
+      socket.emit("error message","Unable to pick this card");
       return;
     }
     while(currentPlayerSelections.length < playerIndex) currentPlayerSelections.push(null);
