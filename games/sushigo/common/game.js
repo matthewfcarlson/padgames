@@ -49,21 +49,8 @@ class Game {
     this.round++;
   }
 
-  CalculateHandScore(playerIndex) {
-    var hand = this.playerRoundDeck[playerIndex];
-    var score = 0;
-    var counter = 0;
-    while (hand.length > 0 && counter < 50) {
-      score += ScoreCards(this.playerRoundDeck, playerIndex, 0);
-      counter++;
-    }
-    if (counter > 40) {
-      console.log(
-        "We had an error figuring out how to score player's hand:" + playerIndex
-      );
-    }
-
-    return score;
+  RoundScores(){
+    return ScoreCards(this.playerRoundDeck);
   }
 
   EndRound() {

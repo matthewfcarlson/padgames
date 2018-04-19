@@ -7,6 +7,7 @@ function EmptyScore(size) {
 function FilterHands(hands, card) {
   return hands.map(function(hand) {
     return hand.filter(function(c) {
+      if (c == null) console.error("This is a bad card",c,hands);
       return c.type == card;
     });
   });
@@ -65,11 +66,7 @@ function ScoreDumplings(hands) {
 
 function ScoreMaki(hands) {
   //figure out which player has the most maki cards
-  var makiCards = hands.map(function(hand) {
-    return hand.filter(function(c) {
-      return c.type == "maki";
-    });
-  });
+  var makiCards = FilterHands(hands,"maki");    
   var makiValues = makiCards.map(function(hand) {
     return hand.reduce(function(prev, curr) {
       return prev + curr.value;

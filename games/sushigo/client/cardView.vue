@@ -7,7 +7,6 @@
             </template>
             
         </div>
-        {{cardsSetAside}}
     </div>
 </template>
 <script>
@@ -44,8 +43,7 @@ export default {
         x.picked = false;        
         if (typeof self.cardsSetAside !== 'undefined' && self.cardsSetAside.indexOf(index) != -1){
              x.picked = true;
-             console.log("picked"+index);
-        } else console.log(typeof self.cardsSetAside);
+        } else console.log(typeof self.cardsSetAside, self.cardsSetAside);
         return x;
       });
     }

@@ -13,6 +13,7 @@
         </div>
       </div>        
       The whole game board goes here
+      <card-view v-for="(playerName,playerID) in game.players" v-bind:key="playerName" v-bind:cards="game.playerRoundDeck[playerID]" v-bind:title="playerName"></card-view>
       {{game.playerScores}}
       <hr/>
       <pre class="hidden-sm">{{game}}</pre>
@@ -29,26 +30,21 @@
       <button @click="JoinGame" class="btn btn-success btn-block">Join Game</button>
     </div>
     <div class="container-fluid" v-else-if="isPhone && playerID != -1">
-      <h1>{{ msg }} Player {{playerID}}</h1>
+      <h2>Player {{playerID}} Round {{game.round}}</h2>
       
       
       <div v-if="game.isPlaying == true">
         <div class="row">
           <div class="col-sm" v-for="(player, index) in game.players"  v-bind:key="'player'+index" >
-              <i class="fas fa-user" v-if="index == playerID"> </i> {{player}} <span v-if="game.playersReady.length >= index">{{game.playersReady[index]}}</span> <span v-if="game.playerScores.length >= index">{{game.playerScores[index]}}</span>
+              <i class="fas fa-user" v-if="index == playerID"> </i> {{player}} 
+              <span v-if="game.playersReady.length >= index">{{game.playersReady[index]}}</span> 
+              <span v-if="game.playerScores.length >= index">{{game.playerScores[index]}}</span>
+              <span v-if="game.playerScores.length >= index">{{roundScores[index]}}</span>
           </div>
         </div>
         <card-view @picked-card="PickCard" v-bind:cards="game.playerHands[playerID]" v-bind:cards-set-aside="pickedCard" id="player-hand" title="Hand"></card-view>
+        <card-view v-bind:cards="game.playerRoundDeck[playerID]" id="player-deck" title="Deck"></card-view>
         
-        <div v-if="game.playerHands != undefined && game.playerRoundDeck[playerID] != undefined" class="row" id="player-deck" >
-          
-          <div class="card sushi-card col-sm" v-for="(card,index) in game.playerRoundDeck[playerID]" v-bind:key="'cardr'+index">
-            <!--img class="card-img-top" alt="Card image cap"-->
-            <div class="card-body">
-              <p class="card-text"> {{card.name}} {{card.value}}</p>
-            </div>
-          </div>
-        </div>
       </div>
       {{pickedCard}} {{cardsSetAside}}
 
@@ -82,7 +78,6 @@ export default {
     return {
       isPhone: window.innerWidth <= 750,
       isLandscape: window.innerWidth >= 450,
-      msg: "Sushi on the go",
       game: new Game(),
       playerID: -1,
       cardsSetAside: false,
@@ -104,6 +99,9 @@ export default {
   computed: {
     isLandscape: function() {
       return window.innerWidth > 450;
+    },
+    roundScores: function() {
+      return this.game.RoundScores();
     }
   },
   methods: {
@@ -164,7 +162,7 @@ export default {
     "set deck seed": function(seed) {
       this.game.deckSeed = seed;
     },
-    'error message':function(message){
+    "error message": function(message) {
       alert(message);
     },
     "set sushi player": function(id) {
