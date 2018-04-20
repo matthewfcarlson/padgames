@@ -25,12 +25,14 @@
     </div>
     
     <div class="container-fluid" v-else-if="isPhone && playerID == -1">
-      <h2>Please Input Your Name</h2>
+      <h2>Sushi GO!</h2>
+      <hr></hr>
+      <h3>Please Input Your Name</h3>
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
       <button @click="JoinGame" class="btn btn-success btn-block">Join Game</button>
     </div>
     <div class="container-fluid" v-else-if="isPhone && playerID != -1">
-      <h2>Player {{playerID}} Round {{game.round}}</h2>
+      <div>Player {{playerID}} Round {{game.round}}</div>
       
       
       <div v-if="game.isPlaying == true">
@@ -42,17 +44,17 @@
               <span v-if="game.playerScores.length >= index">{{roundScores[index]}}</span>
           </div>
         </div>
-        <card-view @picked-card="PickCard" v-bind:cards="game.playerHands[playerID]" v-bind:cards-set-aside="pickedCard" id="player-hand" title="Hand"></card-view>
-        <card-view v-bind:cards="game.playerRoundDeck[playerID]" id="player-deck" title="Deck"></card-view>
+        <card-view @picked-card="PickCard" v-bind:cards="game.playerHands[playerID]" v-bind:cards-set-aside="pickedCard" id="player-hand" title="Hand" class="row"></card-view>
+        <div class="row">
+          <div class="col-1"><button @click="ReadyToPick" class="btn bnt-success" v-bind:disabled="cardsSetAside.length > 0">Play</button></div>
+          <card-view v-bind:cards="game.playerRoundDeck[playerID]" id="player-deck" title="Deck" class="col"></card-view>
+        </div>
         
       </div>
-      {{pickedCard}} {{cardsSetAside}}
 
       <button v-if="!game.isPlaying && playerID == 0" @click="StartGame" class="btn">StartGame</button>
       <button v-if="!game.isPlaying && playerID == 0" @click="AddAI" class="btn">Add AI</button>
       <button @click="ReadyToPick" class="btn" v-bind:disabled="cardsSetAside.length > 0">Play</button>      
-      <pre>{{isLandscape}}</pre>
-      <pre>{{game}}</pre>
       <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
       
     </div>
@@ -112,6 +114,10 @@ export default {
       this.$socket.emit("start sushi game");
     },
     PickCard: function(index) {
+      if (this.cardsSetAside){
+        console.error("Client can't change their answer");
+         return;
+      }
       console.log("Client is picking card #" + index);
       var currentPickedIndex = this.pickedCard.indexOf(index);
       if (currentPickedIndex != -1) {
@@ -128,8 +134,12 @@ export default {
     },
     AddAI: function() {},
     ReadyToPick: function(index) {
+      if (this.cardsSetAside){
+        console.error("Client can't resend their answer!");
+         return;
+      }
       if (this.pickedCard.length > 0) {
-        this.$socket.emit("pick sushi card", this.pickedCard);
+        this.$socket.emit("pick sushi card", this.pickedCard); //TODO: maybe send the round/turn number so the server doesn't double count
         this.cardsSetAside = true;
       }
     },
