@@ -73,8 +73,7 @@ export default {
   -ms-transform: rotate(90deg);
   transform: rotate(90deg);
   position: absolute;
-  
-  left:0;
+  transform-origin: left top; 
   top:10pt;
 }
 .card-view {

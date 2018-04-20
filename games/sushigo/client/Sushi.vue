@@ -3,20 +3,11 @@
     <div v-if="!isPhone">
       <div class="panel" v-for="(player, playerIndex) in game.players"  v-bind:key="'player'+playerIndex">
         <h3> {{player}} {{game.playersReady[playerIndex]}} </h3>
-        <div class="row" v-if="game.playerRoundDeck[playerIndex] != undefined">
-          <div class="card sushi-card col-sm" v-for="(card,index) in game.playerRoundDeck[playerIndex]" v-bind:key="'cardr'+index">
-              <!--img class="card-img-top" alt="Card image cap"-->
-            <div class="card-body">
-              <p class="card-text"> {{card.name}} {{card.value}}</p>
-            </div>
-          </div>
         </div>
-      </div>        
-      The whole game board goes here
       <card-view v-for="(playerName,playerID) in game.players" v-bind:key="playerName" v-bind:cards="game.playerRoundDeck[playerID]" v-bind:title="playerName"></card-view>
       {{game.playerScores}}
       <hr/>
-      <pre class="hidden-sm">{{game}}</pre>
+      <pre class="hidden-lg">{{game}}</pre>
       <button @click="isPhone = true">Play as a player</button>
     </div>
 
@@ -54,7 +45,7 @@
 
       <button v-if="!game.isPlaying && playerID == 0" @click="StartGame" class="btn">StartGame</button>
       <button v-if="!game.isPlaying && playerID == 0" @click="AddAI" class="btn">Add AI</button>
-      <button @click="ReadyToPick" class="btn" v-bind:disabled="cardsSetAside.length > 0">Play</button>      
+      <!--button @click="ReadyToPick" class="btn" v-bind:disabled="cardsSetAside.length > 0">Play</button-->
       <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
       
     </div>

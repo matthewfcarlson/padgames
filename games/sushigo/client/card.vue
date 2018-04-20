@@ -1,17 +1,33 @@
 <template>
     <div  v-bind:class="classes" >
-        <div class="card-header" @click="PickedCard">
+        <div class="card-header" @click="PickedCard" v-bind:style="headerStyle">
           <span v-if="card.value>0" class="card-value">{{card.value}}</span>
           <img src="https://artistalvarorubio.files.wordpress.com/2015/04/maralbarismos_sushi_cute-01.png"/>
         </div>
         <div class="card-body" @click="CardInfo">
-          {{card.name}}   
+          {{card.name}} <small>{{hint}}</small>
         </div>
     </div>
 </template>
 
 <script>
 import Vue from "vue";
+function GetCardColor(card){
+  switch(card.type){
+    case "sashimi": return "green";
+    case "nigiri": return "yellow";
+    case "maki": return "red";
+    case "dumpling": return "lightblue";
+    case "chopsticks": return "cyan";
+    case "tempura": return "purple";
+    case "pudding": return "pink";
+    default: {
+      console.error("Unknown card type",card.type);
+      return "gray";
+    }
+  }
+}
+
 export default {
   props: ["card", "picked", "index"],
   name: "Sushies",
@@ -36,6 +52,26 @@ export default {
         picked: this.card.picked,
         picked2: this.picked
       };
+    },
+    headerStyle(){
+      var style = {
+        "background-color":GetCardColor(this.card)
+      };
+      return style;
+    },
+    hint(){
+      switch(this.card.type){
+        case "sashimi": return "x3=10";
+        case "nigiri": return card.value;
+        case "maki": return "";
+        case "dumpling": return "";
+        case "chopsticks": return "Grab 2";
+        case "tempura": return "x2=5";
+        case "pudding": return "";
+        default: {
+          return "";
+        }
+      }
     }
   }
 };
