@@ -2,7 +2,7 @@
     <div  v-bind:class="classes" >
         <div class="card-header" @click="PickedCard" v-bind:style="headerStyle">
           <span v-if="card.value>0" class="card-value">{{card.value}}</span>
-          <img src="https://artistalvarorubio.files.wordpress.com/2015/04/maralbarismos_sushi_cute-01.png"/>
+          <img v-bind:src="imgSrc"/>
         </div>
         <div class="card-body" @click="CardInfo">
           {{card.name}} <small>{{hint}}</small>
@@ -59,6 +59,19 @@ export default {
         "background-color":GetCardColor(this.card)
       };
       return style;
+    },
+    imgSrc(){
+      if (this.card == undefined || this.card.type == undefined) return "N/A";
+      switch(this.card.type){
+        case "nigiri": 
+          if (this.card.value == 1) return "/static/egg_nigiri.png";
+          if (this.card.value == 2) return "/static/nigiri.png";
+          if (this.card.value == 3) return "/static/squid_nigiri.png";
+        case "pudding": return "/static/pudding.png";
+        default: {
+          return "/static/default_sushi.png";
+        }
+      }
     },
     hint(){
       if (this.card == undefined || this.card.type == undefined) return "N/A";
