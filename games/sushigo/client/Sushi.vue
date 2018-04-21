@@ -42,6 +42,17 @@
         </div>
         
       </div>
+      <div v-else-if="game.gameOver">
+        <!-- if the game is over -->
+      </div>
+      <div v-else>
+        <!-- if the game hasn't started yet -->
+        <p>Waiting for the game to start</p>
+        <p>Players waiting:</p>
+        <ul>
+          <li v-for="player in game.players"> {{player}} </li>
+        </ul>
+      </div>
 
       <button v-if="!game.isPlaying && playerID == 0" @click="StartGame" class="btn">StartGame</button>
       <button v-if="!game.isPlaying && playerID == 0" @click="AddAI" class="btn">Add AI</button>
@@ -123,7 +134,9 @@ export default {
         this.pickedCard.push(index);
       }
     },
-    AddAI: function() {},
+    AddAI: function() {
+      this.$socket.emit("add sushi ai");
+    },
     ReadyToPick: function(index) {
       if (this.cardsSetAside){
         console.error("Client can't resend their answer!");

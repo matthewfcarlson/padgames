@@ -25,20 +25,23 @@ function CheckPlayers(io) {
     currentGame.players = currentGame.players.filter(function(value, index) {
       var socketID = currentPlayerSockets[index];
       console.log("Checking " + value + " at socket#" + socketID);
-      var socket = currentSockets[socketID];
+      if (socketID == "AI") return true;
+      var socket = currentSockets[socketID];      
       if (socket != undefined) return true;
       else {
-        console.error("Unknown socket" + socketID, socket);
+        console.error("Removing unknown socket" + socketID, socket);
 
         return false;
       }
       //TODO we need to figure out how to filter if this is a real socket
     });
     currentPlayerSockets = currentPlayerSockets.filter(function(value) {
+      if (value == "AI") return true;
       return currentSockets[value] != undefined;
     });
     currentGame.players.forEach(function(value, index) {
       var socketID = currentPlayerSockets[index];
+      if (socketID == "AI") return;
       console.log(
         "Sending Message to " +
           value +
@@ -88,6 +91,7 @@ function Init(socket, io) {
     var currentGame = new SushiGo.Game();
     currentGame.deckSeed = Math.floor(Math.random() * 100000);
     io.to(gameRoom).emit("reset game", currentGame.deckSeed);
+    currentPlayerSockets = [];
   });
   socket.on("sync sushi game", function() {
     socket.emit("sync sushi game", currentGame);
@@ -125,6 +129,17 @@ function Init(socket, io) {
     io.to(gameRoom).emit("start game");
     CheckPlayers(io);
   });
+
+  socket.on("add sushi ai", function(){
+    if (currentGame.isPlaying || currentGame.gameOver){
+      console.error("Player cannot add AI", socket.id);
+      socket.emit("error message","You can't add an AI since the game has started");
+      return;
+    }
+    currentGame.AddAI();    
+    currentPlayerSockets.push("AI");
+    CheckPlayers(io);
+  });
   
   socket.on("pick sushi card", function(cardIndex) {
     var playerIndex = currentPlayerSockets.indexOf(socket.id);
@@ -145,9 +160,25 @@ function Init(socket, io) {
       socket.emit("error message","Unable to pick this card");
       return;
     }
-    while(currentPlayerSelections.length < playerIndex) currentPlayerSelections.push(null);
+    while(currentPlayerSelections.length < currentGame.players.length) currentPlayerSelections.push(null);
     currentPlayerSelections[playerIndex] = cardIndex;
+    
+    //check if we need to play for the AI
+    currentPlayerSockets.forEach((x,index)=>{
+      if (x != "AI") return;
+      if (currentGame.playersReady[index]) return;
+      var move = currentGame.CalculateAIMoves(index);
+      var result = currentGame.SetAsideCard(index,move);
+      if (!result){
+        console.error("Unable to play for the AI");
+        return;
+      }
+      io.to(gameRoom).emit("pick sushi card", index);
+      currentPlayerSelections[index] = move;
+    });
+
     console.log(currentPlayerSelections);
+
     if (currentTurn != currentGame.turnNumber) {
       io.to(gameRoom).emit("pick sushi cards", currentPlayerSelections);
       currentPlayerSelections = [];

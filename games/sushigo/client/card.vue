@@ -21,6 +21,7 @@ function GetCardColor(card){
     case "chopsticks": return "cyan";
     case "tempura": return "purple";
     case "pudding": return "pink";
+    case "wasabi": return "lightgreen";
     default: {
       console.error("Unknown card type",card.type);
       return "gray";
@@ -60,9 +61,10 @@ export default {
       return style;
     },
     hint(){
+      if (this.card == undefined || this.card.type == undefined) return "N/A";
       switch(this.card.type){
         case "sashimi": return "x3=10";
-        case "nigiri": return card.value;
+        case "nigiri": return this.card.value;
         case "maki": return "";
         case "dumpling": return "";
         case "chopsticks": return "Grab 2";

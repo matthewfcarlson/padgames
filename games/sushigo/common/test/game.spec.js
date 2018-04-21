@@ -140,3 +140,14 @@ describe("sushigo game", () => {
     //TODO finish
   });
 });
+
+describe("Sushi go aI", ()=> {
+  it("be able to add an AI player", () => {
+    const game = new Game();
+    game.AddAI();
+    game.AddAI();
+    expect(game.players.length).toEqual(2);
+    game.StartGame();
+    expect(game.round).toEqual(1);
+  });
+});

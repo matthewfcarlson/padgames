@@ -125,6 +125,28 @@ class Game {
     this.players.push(name);
   }
 
+  AddAI(){
+    var name = "[AI]";
+    var possibleNames = ["Billy","Jean","Bobby","Stella","Paul"];
+    var mt = Random.engines.mt19937();
+    if (this.deckSeed == undefined) {
+      mt = mt.autoSeed();
+      console.log("Using autoseed");
+    } else mt = mt.seed(this.deckSeed);
+    Random.shuffle(mt, possibleNames);
+    
+    name += possibleNames[this.players.length % possibleNames.length];
+    if (!this.AddPlayer(name)) return false;    
+  }
+
+  /**
+   * Calculates the moves for the AI - returns an array of moves
+   */
+  CalculateAIMoves(playerIndex){
+    //default behavior is to pick the first card they have
+    return [0];
+  }
+
   //this starts the game
   StartGame() {
     if (this.players.length <= 1) return false;
