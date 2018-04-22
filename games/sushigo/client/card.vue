@@ -69,6 +69,9 @@ export default {
           if (this.card.value == 3) return "/static/squid_nigiri.png";
         case "pudding": return "/static/pudding.png";
         case "maki": return "/static/maki.png";
+        case "tempura": return "/static/tempura.png";
+        case "wasabi": return "/static/wasabi.png";
+        case "chopsticks": return "/static/chopsticks.png";
         default: {
           return "/static/default_sushi.png";
         }
@@ -78,12 +81,12 @@ export default {
       if (this.card == undefined || this.card.type == undefined) return "N/A";
       switch(this.card.type){
         case "sashimi": return "x3=10";
-        case "nigiri": return this.card.value;
-        case "maki": return "";
-        case "dumpling": return "";
-        case "chopsticks": return "Grab 2";
+        //case "nigiri": return this.card.value;
+        case "maki": return ""; //most 6/3
+        //case "dumpling": return ""; //1 3 5 10 15
+        case "chopsticks": return ""; //end most=6, least= -6
         case "tempura": return "x2=5";
-        case "pudding": return "";
+        //case "pudding": return "";//pick 2
         default: {
           return "";
         }

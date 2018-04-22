@@ -49,7 +49,7 @@ class Game {
     this.round++;
   }
 
-  RoundScores(){
+  RoundScores() {
     return ScoreCards(this.playerRoundDeck);
   }
 
@@ -125,24 +125,24 @@ class Game {
     this.players.push(name);
   }
 
-  AddAI(){
+  AddAI() {
     var name = "[AI]";
-    var possibleNames = ["Billy","Jean","Bobby","Stella","Paul"];
+    var possibleNames = ["Billy", "Jean", "Bobby", "Stella", "Paul"];
     var mt = Random.engines.mt19937();
     if (this.deckSeed == undefined) {
       mt = mt.autoSeed();
       console.log("Using autoseed");
     } else mt = mt.seed(this.deckSeed);
     Random.shuffle(mt, possibleNames);
-    
+
     name += possibleNames[this.players.length % possibleNames.length];
-    if (!this.AddPlayer(name)) return false;    
+    if (!this.AddPlayer(name)) return false;
   }
 
   /**
    * Calculates the moves for the AI - returns an array of moves
    */
-  CalculateAIMoves(playerIndex){
+  CalculateAIMoves(playerIndex) {
     //default behavior is to pick the first card they have
     return [0];
   }
@@ -225,14 +225,14 @@ class Game {
         chopstickCards[0],
         1
       );
-
-      this.playerHands[playerIndex] = this.playerHands[playerIndex].concat(
-        usedChopstick
-      );
+      var self = this;
+      usedChopstick.forEach(element => {
+        self.playerHands[playerIndex].push(element);
+      });
       //add the cards we pulled earlier
-      this.playerRoundDeck[playerIndex] = this.playerRoundDeck[
-        playerIndex
-      ].concat(pulledCards);
+      pulledCards.forEach(element => {
+        self.playerRoundDeck[playerIndex].push(element);
+      });
     } else {
       var cardIndex = cardIndexs[0];
       var card = this.playerHands[playerIndex][cardIndex];

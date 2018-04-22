@@ -17,10 +17,12 @@
     
     <div class="container-fluid" v-else-if="isPhone && playerID == -1">
       <h2>Sushi GO!</h2>
-      <hr></hr>
+      <hr/>
       <h3>Please Input Your Name</h3>
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
       <button @click="JoinGame" class="btn btn-success btn-block">Join Game</button>
+      <br/>
+      <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
     </div>
     <div class="container-fluid" v-else-if="isPhone && playerID != -1">
       <div>Player {{playerID}} Round {{game.round}}</div>
