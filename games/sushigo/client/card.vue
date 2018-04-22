@@ -68,6 +68,7 @@ export default {
           if (this.card.value == 2) return "/static/nigiri.png";
           if (this.card.value == 3) return "/static/squid_nigiri.png";
         case "pudding": return "/static/pudding.png";
+        case "maki": return "/static/maki.png";
         default: {
           return "/static/default_sushi.png";
         }
