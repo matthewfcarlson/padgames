@@ -148,7 +148,7 @@ function Init(socket, io) {
     console.log("Resetting the game");*/
   });
   socket.on("sync sushi game", function() {
-    var currentGame = GetPlayerGame(socket);
+    var currentGame = GetPlayerGame(socket.id);
     socket.emit("sync sushi game", currentGame);
   });
   socket.on("join sushi game", function(gameID, playerName) {
