@@ -14,14 +14,14 @@
 import Vue from "vue";
 function GetCardColor(card){
   switch(card.type){
-    case "sashimi": return "green";
-    case "nigiri": return "yellow";
-    case "maki": return "red";
-    case "dumpling": return "lightblue";
-    case "chopsticks": return "cyan";
-    case "tempura": return "purple";
-    case "pudding": return "pink";
-    case "wasabi": return "lightgreen";
+    case "sashimi": return "linear-gradient(to bottom, #bdd100 0%,#a3c441 100%);";
+    case "nigiri": return "linear-gradient(to bottom, #fabf0b 0%,#fbcc0c 100%);";
+    case "maki": return "linear-gradient(to bottom, #bd402c 0%,#d83f35 100%);";
+    case "dumpling": return "linear-gradient(to bottom, #6e83bc 0%,#7693cd 100%);";
+    case "chopsticks": return "linear-gradient(to bottom, #94cfc9 0%,#74c8ca 100%);";
+    case "tempura": return "linear-gradient(to bottom, #b67fc2 0%,#9779c1 100%);";
+    case "pudding": return "linear-gradient(to bottom, #f0c2c2 0%,#f2b7bd 100%);";
+    case "wasabi": return "linear-gradient(to bottom, #fec900 0%,#ffbd1e 100%);";
     default: {
       console.error("Unknown card type",card.type);
       return "gray";
@@ -56,7 +56,7 @@ export default {
     },
     headerStyle(){
       var style = {
-        "background-color":GetCardColor(this.card)
+        "background":GetCardColor(this.card)
       };
       return style;
     },
