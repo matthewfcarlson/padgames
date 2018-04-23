@@ -2,10 +2,11 @@
 <div class="content">
     <h1>Sushi Go!</h1>
     <div>
-        Here's where the lobby will go
+        The List of games
         <ul>
           <li v-for="game in gamesList"><a v-bind:href="/sushi/+game.id" >{{game.name}}</a></li>
         </ul>
+        <div v-if="gameList.length == 0">No Games Yet</div>
     </div>
     <input type="text" v-model="gameName" placeholder="Name of a new game"/>
     <button class="btn btn-success" @click="CreateGame">Create Game</button>

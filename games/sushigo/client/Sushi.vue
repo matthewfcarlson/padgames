@@ -46,6 +46,10 @@
       </div>
       <div v-else-if="game.gameOver">
         <!-- if the game is over -->
+        <h2>Game over!</h2>
+        <ul>
+          <li v-for="(player,index) in game.players"> {{player}} {{game.scores[index]}} </li>
+        </ul>
       </div>
       <div v-else>
         <!-- if the game hasn't started yet -->
@@ -59,7 +63,7 @@
       <button v-if="!game.isPlaying && playerID == 0" @click="StartGame" class="btn">StartGame</button>
       <button v-if="!game.isPlaying && playerID == 0" @click="AddAI" class="btn">Add AI</button>
       <!--button @click="ReadyToPick" class="btn" v-bind:disabled="cardsSetAside.length > 0">Play</button-->
-      <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
+      <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
       
     </div>
     <div v-else>
@@ -154,6 +158,9 @@ export default {
     },
     JoinGame: function() {
       this.$socket.emit("join sushi game",  this.gameRoom, this.playerName);
+    },
+    LeaveGame: function() {
+      this.$router.push("/sushi");
     }
   },
 
