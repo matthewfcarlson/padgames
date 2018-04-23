@@ -88,8 +88,9 @@ export default {
       playerID: -1,
       cardsSetAside: false,
       connected: false,
+      gameRoom:  "",
       pickedCard: [],
-      playerName: ""
+      playerName: "Matt"
     };
   },
   created: function() {
@@ -101,6 +102,7 @@ export default {
     if (!self.isPhone) {
       this.JoinGame(null);
     }
+    this.gameRoom = this.$route.params.gameID || "";
   },
   computed: {
     isLandscape: function() {
@@ -112,7 +114,7 @@ export default {
   },
   methods: {
     ResetGame: function() {
-      this.$socket.emit("reset sushi game");
+      this.$socket.emit("reset sushi game",this.gameRoom);
     },
     StartGame: function() {
       this.$socket.emit("start sushi game");
@@ -150,7 +152,7 @@ export default {
       }
     },
     JoinGame: function() {
-      this.$socket.emit("join sushi game", this.playerName);
+      this.$socket.emit("join sushi game",  this.gameRoom, this.playerName);
     }
   },
 
