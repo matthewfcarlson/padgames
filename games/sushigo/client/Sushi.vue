@@ -99,10 +99,11 @@ export default {
       self.isPhone = window.innerWidth <= 750;
       self.isLandscape = window.innerWidth >= 450;
     });
-    if (!self.isPhone) {
-      this.JoinGame(null);
-    }
     this.gameRoom = this.$route.params.gameID || "";
+    if (!self.isPhone) {
+      this.JoinGame(this.gameRoom,null);
+    }
+    
   },
   computed: {
     isLandscape: function() {

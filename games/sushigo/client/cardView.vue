@@ -48,7 +48,7 @@ export default {
           self.cardsSetAside.indexOf(index) != -1
         ) {
           x.picked = true;
-        } else console.log(typeof self.cardsSetAside, self.cardsSetAside);
+        }// else console.log(typeof self.cardsSetAside, self.cardsSetAside);
         return x;
       });
     }

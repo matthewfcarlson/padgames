@@ -14,17 +14,17 @@
 import Vue from "vue";
 function GetCardColor(card){
   switch(card.type){
-    case "sashimi": return "linear-gradient(to bottom, #bdd100 0%,#a3c441 100%);";
-    case "nigiri": return "linear-gradient(to bottom, #fabf0b 0%,#fbcc0c 100%);";
-    case "maki": return "linear-gradient(to bottom, #bd402c 0%,#d83f35 100%);";
-    case "dumpling": return "linear-gradient(to bottom, #6e83bc 0%,#7693cd 100%);";
-    case "chopsticks": return "linear-gradient(to bottom, #94cfc9 0%,#74c8ca 100%);";
-    case "tempura": return "linear-gradient(to bottom, #b67fc2 0%,#9779c1 100%);";
-    case "pudding": return "linear-gradient(to bottom, #f0c2c2 0%,#f2b7bd 100%);";
-    case "wasabi": return "linear-gradient(to bottom, #fec900 0%,#ffbd1e 100%);";
+    case "sashimi": return "linear-gradient(to bottom, #bdd100 0%,#a3c441 100%)";
+    case "nigiri": return "linear-gradient(to bottom, #fabf0b 0%,#fbcc0c 100%)";
+    case "maki": return "linear-gradient(to bottom, #bd402c 0%,#d83f35 100%)";
+    case "dumpling": return "linear-gradient(to bottom, #6e83bc 0%,#7693cd 100%)";
+    case "chopsticks": return "linear-gradient(to bottom, #94cfc9 0%,#74c8ca 100%)";
+    case "tempura": return "linear-gradient(to bottom, #b67fc2 0%,#9779c1 100%)";
+    case "pudding": return "linear-gradient(to bottom, #f0c2c2 0%,#f2b7bd 100%)";
+    case "wasabi": return "linear-gradient(to bottom, #fec900 0%,#ffbd1e 100%)";
     default: {
       console.error("Unknown card type",card.type);
-      return "gray";
+      return "linear-gradient(to bottom, #fec900 0%,#ffbd1e 100%)";
     }
   }
 }
@@ -56,7 +56,8 @@ export default {
     },
     headerStyle(){
       var style = {
-        "background":GetCardColor(this.card)
+        "background-color":"blue",
+        "background":GetCardColor(this.card),
       };
       return style;
     },
@@ -108,6 +109,7 @@ export default {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
   display:inline-block;
+  background-color:#888;
 }
 .sushi-card:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -134,6 +136,7 @@ export default {
   padding:0;
   padding-left:1pt;
   padding-right:1pt;
+  color:white;
 }
 .sushi-card.picked {
   border-color: rgba(255, 0, 0, 0.5);
