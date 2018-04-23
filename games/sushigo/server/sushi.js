@@ -19,18 +19,20 @@ var currentPlayerSockets = [];
 function GetPlayerGame(socketId) {
   var gameID = GetPlayerGameID(socketId);
   if (gameID == undefined || gameID == null) return null;
-  return currentGames[gameID].game;
-  //TODO: return the current player game
+  return GetPlayerGameByID(gameID);
 }
 function GetPlayerGameID(socketId) {
   if (currentPlayerSockets[socketId] == undefined) return null;
   console.log("This player is currently in ", currentPlayerSockets[socketId]);
-  return currentPlayerSockets[socketId].gameID;
-  //TODO: return the current player game
+  return currentPlayerSockets[socketId].gameID;  
 }
 
 function HashGameName(gameName) {
   return Buffer.from(gameName).toString("hex");
+}
+
+function GetPlayerGameByID(gameID){
+  return currentGames[gameID].game;
 }
 
 function GetGameList() {
@@ -118,6 +120,7 @@ function Init(socket, io) {
     }
     CheckPlayers(io);
     */
+   console.error("Disconnect logic is in need of rewriting?");
   });
   socket.on("create sushi game", function(gameName) {
     var gameID = HashGameName(gameName);
@@ -131,7 +134,7 @@ function Init(socket, io) {
     currentGames[gameID].name = gameName;
     currentGames[gameID].sockets = [];
     currentGames[gameID].game = new SushiGo.Game();
-    currentGames[gameID].deckSeed = Math.floor(Math.random() * 100000);
+    currentGames[gameID].game.deckSeed = Math.floor(Math.random() * 100000);
 
     io.to("SushiGo").emit("list sushi games", GetGameList());
   });
@@ -140,15 +143,10 @@ function Init(socket, io) {
     socket.join("SushiGo");
     socket.emit("list sushi games", GetGameList());
   });
-  socket.on("reset sushi game", function(gameRoom) {
-    /*var currentGame = new SushiGo.Game();
-    currentGame.deckSeed = Math.floor(Math.random() * 100000);
-    io.to(gameRoom).emit("reset game", currentGame.deckSeed);
-    currentPlayerSockets = [];
-    console.log("Resetting the game");*/
-  });
-  socket.on("sync sushi game", function() {
-    var currentGame = GetPlayerGame(socket.id);
+
+  socket.on("sync sushi game", function(gameID) {
+    var currentGame = GetPlayerGameByID(gameID);
+    if (currentGame == null) console.error("Unable to find the game for this player!");
     socket.emit("sync sushi game", currentGame);
   });
   socket.on("join sushi game", function(gameID, playerName) {
