@@ -21,7 +21,6 @@ routes.push( {
   path: '*',
   component: NotFoundComponent
 });
-console.log(routes);
 
 export default new Router({
   routes: routes,

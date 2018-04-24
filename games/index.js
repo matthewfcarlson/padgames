@@ -12,7 +12,8 @@ export const GameRoutes = [
   {
     path: "/sushi",
     name: "Sushi-to-go-lobby",
-    title: "Sushies Lobby",
+    title: "Sushies On The Go",
+    isGame: true,
     component: SushiLobby
   },
   {
@@ -25,6 +26,7 @@ export const GameRoutes = [
     path: "/codewords",
     name: "codewords",
     title: "Code Words",
+    isGame: true,
     component: CWClient
   }
 ];

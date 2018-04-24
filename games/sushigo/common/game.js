@@ -16,6 +16,7 @@ class Game {
     this.playerGameDeck = [];
     this.isPlaying = false;
     this.playerScores = [];
+    this.lastRound = [];
     this.gameOver = false;
     if (seed == undefined) seed = 25;
     this.deckSeed = seed;
@@ -73,6 +74,8 @@ class Game {
     for (var i = 0; i < this.players.length && i <= scores.length; i++) {
       this.playerScores[i] += scores[i];
     }
+
+    this.lastRound = this.playerRoundDeck;
 
     if (this.round == 3) {
       this.gameOver = true;
@@ -144,7 +147,50 @@ class Game {
    */
   CalculateAIMoves(playerIndex) {
     //default behavior is to pick the first card they have
-    return [0];
+    var hand = this.playerHands[playerIndex];
+    var scoreTable = {
+      chopsticks: "h",
+      wasabi: 4,
+      maki: "v",
+      nigiri: "v",
+      pudding: 1,
+      dumping: "c",
+      sashimi: "c"
+    };
+    //figure out a score for each card in your hand
+    var scoredCards = hand.map((x, index) => {
+      if (x.type in scoreTable) {
+        var value = scoreTable[x.type];
+        if (value == "v") value = x.value;
+        if (value == "h") value = hand.length;
+        if (value == "c") {
+          //based on the number we have
+          value = hand.reduce((prev, c) => {
+            return c.type == x.type ? prev + 1 : prev;
+          }, 1);
+        }
+        return [index, value, x.type];
+      }
+      return [index, 0, x.type];
+    });
+    console.log("Scored hand", scoredCards);
+    var highestCards = scoredCards.sort((a, b) => {
+      if (a[1] == b[1]) return 0;
+      if (a[1] < b[1]) return 1;
+      return -1;
+    });
+    console.log("sorted scored hand", highestCards);
+    var pickedCards = [];
+    if (this.HasChopsticks(playerIndex)) {
+      //get the top two cards
+      console.log("Using Chopsticks for AI" + playerIndex);
+      pickedCards = highestCards.slice(0, 2);
+    } else {
+      //get the top card
+      pickedCards = highestCards.slice(0, 1);
+    }
+    //remove the value
+    return pickedCards.map(x => x[0]);
   }
 
   //this starts the game
@@ -191,9 +237,9 @@ class Game {
     }
 
     //check to make sure we can play
-    if (this.playersReady[playerIndex]) {
+    if (this.playersReady[playerIndex] == true) {
       //if we don't have a chopsticks to use
-      //console.error("You have already grabbed a card");
+      console.error("You have already grabbed a card player#" + playerIndex);
       return false;
     }
     //check to make sure they haven't already played

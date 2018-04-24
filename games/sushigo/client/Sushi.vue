@@ -99,10 +99,11 @@ export default {
       self.isPhone = window.innerWidth <= 750;
       self.isLandscape = window.innerWidth >= 450;
     });
-    if (!self.isPhone) {
-      this.JoinGame(null);
-    }
     this.gameRoom = this.$route.params.gameID || "";
+    if (!self.isPhone) {
+      this.JoinGame(this.gameRoom,null);
+    }
+    
   },
   computed: {
     isLandscape: function() {
@@ -160,10 +161,14 @@ export default {
     connect: function() {
       console.log("socket connected");
       this.connected = true;
-      if (!this.isPhone) this.$socket.emit("sync sushi game");
+      if (!this.isPhone) this.$socket.emit("sync sushi game", this.gameRoom);
     },
     "sync sushi game": function(newGame) {
       console.log("We got a new state for the sushi game", newGame);
+      if (newGame == null) {
+        console.error("This is a bad game state");
+        return;
+      }
       this.game.SyncGame(newGame);
       this.$set(this.game, "playerHands", newGame.playerHands);
     },

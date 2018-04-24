@@ -1,14 +1,3 @@
-function findClientsSocketByRoomId(roomId) {
-  var res = [],
-    room = io.sockets.adapter.rooms[roomId];
-  if (room) {
-    for (var id in room) {
-      res.push(io.sockets.adapter.nsp.connected[id]);
-    }
-  }
-  return res;
-}
-
 var SushiGo = require("../common/game");
 
 //current games are stored by game ID
@@ -19,18 +8,29 @@ var currentPlayerSockets = [];
 function GetPlayerGame(socketId) {
   var gameID = GetPlayerGameID(socketId);
   if (gameID == undefined || gameID == null) return null;
-  return currentGames[gameID].game;
-  //TODO: return the current player game
+  return GetPlayerGameByID(gameID);
 }
 function GetPlayerGameID(socketId) {
   if (currentPlayerSockets[socketId] == undefined) return null;
   console.log("This player is currently in ", currentPlayerSockets[socketId]);
   return currentPlayerSockets[socketId].gameID;
-  //TODO: return the current player game
 }
 
 function HashGameName(gameName) {
   return Buffer.from(gameName).toString("hex");
+}
+
+function GetPlayerGameByID(gameID) {
+  if (currentGames[gameID] == null) return null;
+  return currentGames[gameID].game;
+}
+
+function GetPlayerIndex(socketID) {
+  var currentGame = GetPlayerGame(socketID);
+  if (currentGame == null) return -1;
+  var player = currentPlayerSockets[socketID];
+  var playerIndex = currentGame.players.indexOf(player.player);
+  return playerIndex;
 }
 
 function GetGameList() {
@@ -64,9 +64,9 @@ function CheckPlayers(gameID, io) {
       return currentSockets[value] != undefined;
     });
     */
-   currentGames[gameID].sockets.filter((socketID) => {
+    currentGames[gameID].sockets.filter(socketID => {
       if (currentSockets[socketID] == undefined) {
-        console.error("Player is no longer connected",socketID);
+        console.error("Player is no longer connected", socketID);
         var value = currentPlayerSockets[socketID];
         console.log(socketID, value);
         //remove player that disconnected
@@ -74,9 +74,8 @@ function CheckPlayers(gameID, io) {
         currentGames[gameID].sockets[socketID] = null;
       }
       return true;
-   });
-    currentGames[gameID].sockets.forEach((socketID) => {
-    
+    });
+    currentGames[gameID].sockets.forEach(socketID => {
       var value = currentPlayerSockets[socketID];
       console.log(socketID, value);
       //check if socketID is in currentSockets
@@ -90,7 +89,6 @@ function CheckPlayers(gameID, io) {
       //figure out where each player is
       socket.emit("set sushi player", playerIndex);
     });
-
 
     io.to(gameRoom).emit("set players", currentGame.players);
   }
@@ -118,6 +116,7 @@ function Init(socket, io) {
     }
     CheckPlayers(io);
     */
+    console.error("Disconnect logic is in need of rewriting?");
   });
   socket.on("create sushi game", function(gameName) {
     var gameID = HashGameName(gameName);
@@ -130,8 +129,10 @@ function Init(socket, io) {
     currentGames[gameID] = {};
     currentGames[gameID].name = gameName;
     currentGames[gameID].sockets = [];
+    currentGames[gameID].AI = [];
+    currentGames[gameID].currentPlayerSelections = [];
     currentGames[gameID].game = new SushiGo.Game();
-    currentGames[gameID].deckSeed = Math.floor(Math.random() * 100000);
+    currentGames[gameID].game.deckSeed = Math.floor(Math.random() * 100000);
 
     io.to("SushiGo").emit("list sushi games", GetGameList());
   });
@@ -140,15 +141,11 @@ function Init(socket, io) {
     socket.join("SushiGo");
     socket.emit("list sushi games", GetGameList());
   });
-  socket.on("reset sushi game", function(gameRoom) {
-    /*var currentGame = new SushiGo.Game();
-    currentGame.deckSeed = Math.floor(Math.random() * 100000);
-    io.to(gameRoom).emit("reset game", currentGame.deckSeed);
-    currentPlayerSockets = [];
-    console.log("Resetting the game");*/
-  });
-  socket.on("sync sushi game", function() {
-    var currentGame = GetPlayerGame(socket);
+
+  socket.on("sync sushi game", function(gameID) {
+    var currentGame = GetPlayerGameByID(gameID);
+    if (currentGame == null)
+      console.error("Unable to find the game for this player!");
     socket.emit("sync sushi game", currentGame);
   });
   socket.on("join sushi game", function(gameID, playerName) {
@@ -157,6 +154,9 @@ function Init(socket, io) {
       return;
     }
     socket.join(gameRoomRoot + gameID);
+    if (playerName == null){
+      return;
+    }
     currentPlayerSockets[socket.id] = {
       gameID: gameID,
       player: playerName
@@ -214,11 +214,14 @@ function Init(socket, io) {
       return;
     }
     currentGame.AddAI();
-    CheckPlayers(gameID,io);
+    CheckPlayers(gameID, io);
   });
 
   socket.on("pick sushi card", function(cardIndex) {
-    var playerIndex = currentPlayerSockets.indexOf(socket.id);
+    var playerIndex = GetPlayerIndex(socket.id);
+    var currentGame = GetPlayerGame(socket.id);
+    var gameID = GetPlayerGameID(socket.id);
+    var gameRoom = gameRoomRoot + gameID;
     if (playerIndex == -1) {
       console.error("Player ID is unknown", socket.id);
       socket.emit("error message", "Unknown User!");
@@ -226,24 +229,25 @@ function Init(socket, io) {
     }
     var currentTurn = currentGame.turnNumber;
 
-    if (currentPlayerSelections[playerIndex] != null) {
+    if (currentGames[gameID].currentPlayerSelections[playerIndex] != null) {
       console.error(playerIndex + " player has already tried to pick a card");
       socket.emit("error message", "You've already tried to pick a card");
       return;
     }
-    if (!currentGame.SetAsideCard(playerIndex, cardIndex)) {
-      console.error("Unable to pick this card for " + playerIndex, cardIndex);
-      socket.emit("error message", "Unable to pick this card");
-      return;
+
+    while (
+      currentGames[gameID].currentPlayerSelections.length <
+      currentGame.players.length
+    ) {
+      currentGames[gameID].currentPlayerSelections.push(null);
     }
-    while (currentPlayerSelections.length < currentGame.players.length)
-      currentPlayerSelections.push(null);
-    currentPlayerSelections[playerIndex] = cardIndex;
 
     //check if we need to play for the AI
-    currentPlayerSockets.forEach((x, index) => {
-      if (x != "AI") return;
+    currentGame.players.forEach((x, index) => {
+      if (x.substring(0, 4) != "[AI]") return;
+
       if (currentGame.playersReady[index]) return;
+      console.log("Playing for " + x);
       var move = currentGame.CalculateAIMoves(index);
       var result = currentGame.SetAsideCard(index, move);
       if (!result) {
@@ -251,14 +255,24 @@ function Init(socket, io) {
         return;
       }
       io.to(gameRoom).emit("pick sushi card", index);
-      currentPlayerSelections[index] = move;
+      currentGames[gameID].currentPlayerSelections[index] = move;
     });
 
-    console.log(currentPlayerSelections);
+    //play the game as we need to
+    if (!currentGame.SetAsideCard(playerIndex, cardIndex)) {
+      console.error("Unable to pick this card for " + playerIndex, cardIndex);
+      socket.emit("error message", "Unable to pick this card");
+      return;
+    }
+    currentGames[gameID].currentPlayerSelections[playerIndex] = cardIndex;
+
+    console.log(currentGames[gameID].currentPlayerSelections);
 
     if (currentTurn != currentGame.turnNumber) {
-      io.to(gameRoom).emit("pick sushi cards", currentPlayerSelections);
-      currentPlayerSelections = [];
+      io
+        .to(gameRoom)
+        .emit("pick sushi cards", currentGames[gameID].currentPlayerSelections);
+      currentGames[gameID].currentPlayerSelections = [];
     } else {
       io.to(gameRoom).emit("pick sushi card", playerIndex);
     }

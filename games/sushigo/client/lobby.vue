@@ -3,9 +3,11 @@
     <h1>Sushi Go!</h1>
     <div>
         Here's where the lobby will go
-        <a v-bind:href="/sushi/+game.id" v-for="game in gamesList">{{game.name}}</a>
+        <ul>
+          <li v-for="game in gamesList"><a v-bind:href="/sushi/+game.id" >{{game.name}}</a></li>
+        </ul>
     </div>
-    
+    <input type="text" v-model="gameName" placeholder="Name of a new game"/>
     <button class="btn btn-success" @click="CreateGame">Create Game</button>
 </div>
 </template>
@@ -19,13 +21,14 @@ export default {
   data() {
     return {
       gamesList: {},
-      playerName: "Testing",
+      gameName: "",
+      playerName: "Testing"
     };
   },
   methods: {
-    CreateGame(){
+    CreateGame() {
       console.log("Crating sushi game");
-      this.$socket.emit("create sushi game", this.playerName+"'s game");
+      this.$socket.emit("create sushi game", this.gameName);
     }
   },
   sockets: {
@@ -34,12 +37,13 @@ export default {
       this.$socket.emit("list sushi games");
     },
     "list sushi games": function(newGames) {
-      console.log("We got a new list of sushi games", newGames);      
+      console.log("We got a new list of sushi games", newGames);
       this.$set(this, "gamesList", newGames);
-    },
+    }
   }
 };
 </script>
 
 <style scoped>
+
 </style>
