@@ -105,10 +105,10 @@ export default {
     });
     this.gameRoom = this.$route.params.gameID || "";
     if (!self.isPhone) {
-      this.JoinGame(this.gameRoom,null);
+      this.JoinGame(this.gameRoom,"");
     }
     else {
-      screen.orientation.lock('landscape');
+      //screen.orientation.lock('landscape');
     }
     
   },
@@ -159,8 +159,10 @@ export default {
         this.cardsSetAside = true;
       }
     },
-    JoinGame: function() {
-      this.$socket.emit("join sushi game",  this.gameRoom, this.playerName);
+    JoinGame: function(gameRoom, playerName) {
+      if (gameRoom == undefined) gameRoom = this.gameRoom;
+      if (playerName == undefined) playerName = this.playerName;
+      this.$socket.emit("join sushi game",  gameRoom, playerName);
     },
     LeaveGame: function() {
       this.$router.push("/sushi");

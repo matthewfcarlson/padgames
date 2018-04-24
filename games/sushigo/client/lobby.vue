@@ -5,8 +5,9 @@
         The List of games
         <ul>
           <li v-for="game in gamesList"><a v-bind:href="/sushi/+game.id" >{{game.name}}</a></li>
+          <li v-if="gamesList.length == 0">No Games Yet</li>
         </ul>
-        <div v-if="gameList.length == 0">No Games Yet</div>
+        
     </div>
     <input type="text" v-model="gameName" placeholder="Name of a new game"/>
     <button class="btn btn-success" @click="CreateGame">Create Game</button>
@@ -31,6 +32,9 @@ export default {
       console.log("Crating sushi game");
       this.$socket.emit("create sushi game", this.gameName);
     }
+  },
+  created: function() {
+    this.$socket.emit("list sushi games");
   },
   sockets: {
     connect: function() {

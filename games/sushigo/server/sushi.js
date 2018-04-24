@@ -154,7 +154,7 @@ function Init(socket, io) {
       return;
     }
     socket.join(gameRoomRoot + gameID);
-    if (playerName == null){
+    if (playerName == null || playerName == ""){
       return;
     }
     currentPlayerSockets[socket.id] = {
