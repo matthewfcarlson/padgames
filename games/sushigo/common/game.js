@@ -71,6 +71,7 @@ class Game {
     }
 
     var scores = ScoreCards(this.playerRoundDeck);
+    console.log("This is the reason for the scores",this.GetLastScoreReasons());
     for (var i = 0; i < this.players.length && i <= scores.length; i++) {
       this.playerScores[i] += scores[i];
     }

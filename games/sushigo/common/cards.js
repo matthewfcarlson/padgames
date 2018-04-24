@@ -135,13 +135,30 @@ function ScoreTempura(hands) {
   //console.log("ALL TEMPURA", tempuraCards);
   return scores;
 }
+
+var lastScoreReasons = {};
+
+function GetLastScoreReasons(){
+  //TODO massage the data a little
+  var data = [];
+  for (scoreCategory in lastScoreReasons){
+    lastScoreReasons[scoreCategory].forEach((score,index)=>{
+      if (data[index] == undefined) data[index] = {};
+      data[index][scoreCategory] = score;
+    });
+  }
+  return data;
+}
 function ScoreCards(hands) {
   if (hands == undefined) return "ERROR";
   //figure out the list of cards
   var scorers = [ScoreMaki, ScoreTempura, ScoreSashimi, ScoreDumplings,ScoreNigiri];
   var scores = EmptyScore(hands.length);
-  scorers.forEach(calculator => {
-    scores = AddScores(scores, calculator(hands));
+  var lastScoreReasons = {};
+  scorers.forEach(calculator => {    
+    var result = calculator(hands);
+    scores = AddScores(scores, result);
+    lastScoreReasons[calculator.name] = result;
   });
   return scores;
 }

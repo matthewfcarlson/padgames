@@ -20,7 +20,7 @@
       <hr/>
       <h3>Please Input Your Name</h3>
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
-      <button @click="JoinGame" class="btn btn-success btn-block">Join Game</button>
+      <button @click="JoinGame()" class="btn btn-success btn-block">Join Game</button>
       <br/>
       <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
     </div>
@@ -94,7 +94,7 @@ export default {
       connected: false,
       gameRoom:  "",
       pickedCard: [],
-      playerName: "Matt"
+      playerName: ""
     };
   },
   created: function() {
