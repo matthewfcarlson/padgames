@@ -73,6 +73,8 @@ export default {
         case "tempura": return "/static/tempura.png";
         case "wasabi": return "/static/wasabi.png";
         case "chopsticks": return "/static/chopsticks.png";
+        case "dumpling": return "/static/dumpling.png";
+        case "sashimi": return "/static/sashimi.png"; //redo with face that's happier?
         default: {
           return "/static/default_sushi.png";
         }
