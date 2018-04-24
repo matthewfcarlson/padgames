@@ -21,7 +21,7 @@ export default {
   name: "Sushies",
   data() {
     return {
-      gamesList: {},
+      gamesList: [],
       gameName: "",
       playerName: "Testing"
     };

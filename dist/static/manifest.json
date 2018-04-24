@@ -3,6 +3,9 @@
     "short_name": "PadGames",
     "lang": "en-US",
     "start_url": "/",
+    "description": "A collection of collobrative games",
+    "background_color": "#336699",
+    "theme_color":"#336699",
     "display": "standalone",
-    "orientation": "portrait"
+    "orientation": "portrait-primary"
 }

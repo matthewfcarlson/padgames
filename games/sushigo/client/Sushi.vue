@@ -22,7 +22,7 @@
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
       <button @click="JoinGame" class="btn btn-success btn-block">Join Game</button>
       <br/>
-      <button @click="ResetGame" class="btn btn-danger">Reset Game</button>    
+      <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
     </div>
     <div class="container-fluid" v-else-if="isPhone && playerID != -1">
       <div>Player {{playerID}} Round {{game.round}}</div>
@@ -106,6 +106,9 @@ export default {
     this.gameRoom = this.$route.params.gameID || "";
     if (!self.isPhone) {
       this.JoinGame(this.gameRoom,null);
+    }
+    else {
+      screen.orientation.lock('landscape');
     }
     
   },
