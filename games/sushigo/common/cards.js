@@ -144,6 +144,7 @@ function GetLastScoreReasons(){
   for (scoreCategory in lastScoreReasons){
     lastScoreReasons[scoreCategory].forEach((score,index)=>{
       if (data[index] == undefined) data[index] = {};
+      if (score == 0) return;
       data[index][scoreCategory] = score;
     });
   }
@@ -154,7 +155,7 @@ function ScoreCards(hands) {
   //figure out the list of cards
   var scorers = [ScoreMaki, ScoreTempura, ScoreSashimi, ScoreDumplings,ScoreNigiri];
   var scores = EmptyScore(hands.length);
-  var lastScoreReasons = {};
+  lastScoreReasons = {};
   scorers.forEach(calculator => {    
     var result = calculator(hands);
     scores = AddScores(scores, result);
@@ -239,4 +240,4 @@ class Card {
   //TODO define modular arch for defining how the different cards interact and how to calculate points
 }
 
-module.exports = { ScoreCards, GetDeck, Card, ScoreGame };
+module.exports = { ScoreCards, GetDeck, Card, ScoreGame, GetLastScoreReasons };

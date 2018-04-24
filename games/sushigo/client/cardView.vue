@@ -41,6 +41,7 @@ export default {
   computed: {
     allCards() {
       var self = this;
+      if (this.cards == undefined) return [];
       return this.cards.map((x, index) => {
         x.picked = false;
         if (

@@ -5,7 +5,7 @@
         <h3> {{player}} {{game.playersReady[playerIndex]}} </h3>
         </div>
       <card-view v-for="(playerName,playerID) in game.players" v-bind:key="playerName" v-bind:cards="game.playerRoundDeck[playerID]" v-bind:title="playerName"></card-view>
-      {{game.playerScores}}
+      Scores: {{game.playerScores}}
       <hr/>
       <pre class="hidden-lg">{{game}}</pre>
       <button @click="isPhone = true">Play as a player</button>
@@ -63,6 +63,8 @@
       <button v-if="!game.isPlaying && playerID == 0" @click="StartGame" class="btn">StartGame</button>
       <button v-if="!game.isPlaying && playerID == 0" @click="AddAI" class="btn">Add AI</button>
       <!--button @click="ReadyToPick" class="btn" v-bind:disabled="cardsSetAside.length > 0">Play</button-->
+      <br/>
+      <hr/>
       <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
       
     </div>

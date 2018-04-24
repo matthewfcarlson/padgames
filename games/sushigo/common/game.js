@@ -71,7 +71,10 @@ class Game {
     }
 
     var scores = ScoreCards(this.playerRoundDeck);
-    console.log("This is the reason for the scores",this.GetLastScoreReasons());
+    console.log(
+      "This is the reason for the scores",
+      CardLib.GetLastScoreReasons()
+    );
     for (var i = 0; i < this.players.length && i <= scores.length; i++) {
       this.playerScores[i] += scores[i];
     }
@@ -143,38 +146,82 @@ class Game {
     if (!this.AddPlayer(name)) return false;
   }
 
+  //what would happen if you gave these cards to these players
+  CalculatePotentialScore(cards, playerIndex) {
+    var allPlayerDecks = this.playerRoundDeck.slice(); //create a copy
+    var newDeck = allPlayerDecks[playerIndex].slice();
+    allPlayerDecks[playerIndex] = newDeck.concat(cards);
+    return ScoreCards(allPlayerDecks);
+  }
+
   /**
    * Calculates the moves for the AI - returns an array of moves
    */
   CalculateAIMoves(playerIndex) {
     //default behavior is to pick the first card they have
-    var hand = this.playerHands[playerIndex];
-    var scoreTable = {
-      chopsticks: "h",
-      wasabi: 4,
-      maki: "v",
-      nigiri: "v",
-      pudding: 1,
-      dumping: "c",
-      sashimi: "c"
-    };
+    var hand = this.playerHands[playerIndex].slice();
+    var currentCards = this.playerRoundDeck[playerIndex].slice();
+    var nextPlayer =
+      playerIndex == 0 ? this.players.length - 1 : playerIndex - 1; //this is the player we are handing our cards to next
+    var prevPlayer = (playerIndex + 1) % this.players.length; //this is the player we are getting cards from
+    var nextPlayerCards = this.playerRoundDeck[nextPlayer].slice();
+    var prevPlayerHand = this.playerHands[prevPlayer].slice(); //this could potentially be the same as next player
+
+    var baseScores = ScoreCards(this.playerRoundDeck);
     //figure out a score for each card in your hand
     var scoredCards = hand.map((x, index) => {
-      if (x.type in scoreTable) {
-        var value = scoreTable[x.type];
-        if (value == "v") value = x.value;
-        if (value == "h") value = hand.length;
-        if (value == "c") {
-          //based on the number we have
-          value = hand.reduce((prev, c) => {
-            return c.type == x.type ? prev + 1 : prev;
-          }, 1);
-        }
-        return [index, value, x.type];
+      var help = 0;
+      var hurt = 0;
+      var value = 0;
+      if (x.type == "chopsticks") {
+        value = hand.length;
+      } else {
+        //we get the card that we care about
+        var self = this;
+        var maxScores = prevPlayerHand.map(newCard => {
+          var newScores = self.CalculatePotentialScore(
+            [x, newCard],
+            playerIndex
+          );
+          //console.log(x.type+" and "+newCard.type+" = "+newScores[playerIndex]);
+          return newScores[playerIndex];
+        });
+        //TODO figure out scarcity as well - this would help cards like wasabi to boost their score
+        //console.log("Max scores for "+x.type+x.value,maxScores);
+        var maxScore = maxScores.reduce(
+          (prev, curr) => (prev < curr ? curr : prev),
+          0
+        );
+        var scarcity = this.playerHands.reduce((acc, hand) => {
+          return (
+            acc +
+            hand.reduce((acc, card) => {
+              if (card.type == x.type) return acc + 1;
+              return acc;
+            }, 0)
+          );
+        }, 0);
+        var totalCards = hand.length * this.playerHands.length;
+        var newScores = this.CalculatePotentialScore([x], playerIndex);
+        help = newScores[playerIndex] - baseScores[playerIndex];
+        var potential = maxScore - help - baseScores[playerIndex];
+        console.log(
+          "For " +
+            x.type +
+            x.value +
+            " we get " +
+            help +
+            " but could get " +
+            potential
+        );
+        //TODO: figure out how to make it pick wasabi, pudding, and chopsticks more
+        newScores = this.CalculatePotentialScore([x], nextPlayer);
+        hurt = newScores[nextPlayer] - baseScores[nextPlayer];
+        value = help + hurt * 0.5 + potential * 0.75;
       }
-      return [index, 0, x.type];
+      return [index, value, x.type, help + "/" + hurt];
     });
-    console.log("Scored hand", scoredCards);
+    //console.log("Scored hand", scoredCards);
     var highestCards = scoredCards.sort((a, b) => {
       if (a[1] == b[1]) return 0;
       if (a[1] < b[1]) return 1;
@@ -191,7 +238,7 @@ class Game {
       pickedCards = highestCards.slice(0, 1);
     }
     //remove the value
-    return pickedCards.map(x => x[0]);
+    return pickedCards.map(x => x[0]); //get the index part of it
   }
 
   //this starts the game
