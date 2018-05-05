@@ -1,6 +1,7 @@
 import SushiClient from "./sushigo/client/Sushi";
 import SushiLobby from "./sushigo/client/lobby";
 import CWClient from "./codewords/client/CodeWords";
+import TestAI from "./codewords/client/TestAI";
 
 export const GameRoutes = [
   /* This is the format
@@ -28,5 +29,12 @@ export const GameRoutes = [
     title: "Code Words",
     isGame: true,
     component: CWClient
+  },
+  {
+    path: "/codewords/testai",
+    name: "codewords",
+    title: "Code Words AT",
+    isGame: false,
+    component: TestAI
   }
 ];
