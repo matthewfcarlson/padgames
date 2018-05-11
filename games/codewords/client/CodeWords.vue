@@ -45,10 +45,10 @@
         </div>
         <div v-else-if="gameID != '' && winner == ''" class="container">
             <div class="text-center">Currently {{(role ==currentTurn)?"your":"not your"}} turn</div>
-            <button class="btn btn-block btn-info" @click="EndTurn">End Turn</button>
+            <button class="btn btn-block btn-info" v-if="role == currentTurn" @click="EndTurn">End Turn</button>
             <h2>Your Words</h2>
             <ul>
-                <li v-for="word in MyColor">{{word}}</li>
+                <li v-for="word in MyColor">{{word}}</li> 
             </ul>
             <h2>Their words</h2>
             <ul>
@@ -67,6 +67,7 @@
                 <li v-for="word in Guessed">{{word}}</li>
             </ul>
             <br/>
+            <hr/>
             <div class="col">
                 <button class="btn btn-success btn-block btn-sm" @click="LeaveGame">Leave Game</button>
             </div>
