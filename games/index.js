@@ -21,6 +21,7 @@ export const GameRoutes = [
     path: "/sushi/:gameID",
     name: "Sushi-on-the-go",
     title: "Sushies",
+    isGame: false,
     component: SushiClient
   },
   {
@@ -32,7 +33,7 @@ export const GameRoutes = [
   },
   {
     path: "/codewords/testai",
-    name: "codewords",
+    name: "codewords-testAI",
     title: "Code Words AT",
     isGame: false,
     component: TestAI
