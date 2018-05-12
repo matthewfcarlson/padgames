@@ -45,7 +45,7 @@
         </div>
         <card-view @picked-card="PickCard" v-bind:cards="game.playerHands[playerID]" v-bind:cards-set-aside="pickedCard" id="player-hand" title="Hand" class="row"></card-view>
         <div class="row">
-          <div class="col-1"><button @click="ReadyToPick" class="btn bnt-success" v-bind:disabled="cardsSetAside.length > 0">Play</button></div>
+          <div class="col-1"><button @click="ReadyToPick" class="btn btn-success" v-bind:disabled="cardsSetAside.length > 0">Play</button></div>
           <card-view v-bind:cards="game.playerRoundDeck[playerID]" id="player-deck" title="Deck" class="col"></card-view>
         </div>
         
