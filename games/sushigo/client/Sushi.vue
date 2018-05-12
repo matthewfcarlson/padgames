@@ -15,7 +15,7 @@
       <h2>Please turn your phone sideways.
     </div>
     
-    <div class="container-fluid" v-else-if="isPhone && playerID == -1">
+    <div class="container-fluid" v-else-if="isPhone && playerID == -1 && !game.isPlaying">
       <h2>Sushi GO!</h2>
       <hr/>
       <h3>Please Input Your Name</h3>
@@ -24,9 +24,15 @@
       <br/>
       <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
     </div>
+    <div class="container-fluid" v-else-if="isPhone && playerID == -1 && game.isPlaying">
+      <h2>Sushi GO!</h2>
+      <hr/>
+      <h3>This game is in progress. I'm working on being able to rejoin games but I'm not there yet</h3>
+      <br/>
+      <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
+    </div>
     <div class="container-fluid" v-else-if="isPhone && playerID != -1">
-      <div>Player {{playerID}} Round {{game.round}}</div>
-      
+      <div>Player {{playerID}} Round {{game.round}}</div>      
       
       <div v-if="game.isPlaying == true">
         <div class="row">

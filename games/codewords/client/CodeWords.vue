@@ -45,11 +45,13 @@
         </div>
         <div v-else-if="gameID != '' && winner == ''" class="container">
             <div class="text-center">Currently {{(role ==currentTurn)?"your":"not your"}} turn</div>
-            <button class="btn btn-block btn-info" @click="EndTurn">End Turn</button>
+            <button class="btn btn-block btn-info" v-if="role == currentTurn" @click="EndTurn">End Turn</button>
             <h2>Your Words</h2>
             <ul>
-                <li v-for="word in MyColor">{{word}}</li>
+                <li v-for="word in MyColor">{{word}}</li> 
             </ul>
+            <b>Suggested Clues</b>
+            <pre>{{SuggestedClues}}</pre>
             <h2>Their words</h2>
             <ul>
                 <li v-for="word in TheirColor">{{word}}</li>
@@ -67,6 +69,7 @@
                 <li v-for="word in Guessed">{{word}}</li>
             </ul>
             <br/>
+            <hr/>
             <div class="col">
                 <button class="btn btn-success btn-block btn-sm" @click="LeaveGame">Leave Game</button>
             </div>
@@ -109,6 +112,9 @@
 <script>
 import io from 'socket.io-client';
 import Vue from "vue";
+import loadModel from "../common/model";
+import trainedmodel from "../common/data.json";
+
 var width = window.innerWidth ||
     document.documentElement.clientWidth ||
     document.body.clientWidth;
@@ -136,6 +142,7 @@ export default {
         winner: "",
         words: [],
         board: [],
+        model: null,
         wordsGuessed: [],
         isPhone: (width < 500),
         boxHeight: (boxHeight - 5) + "px"
@@ -174,6 +181,14 @@ export default {
         app.winner = winner;
 
     });
+    var self = this;
+    if (this.isPhone){
+        
+         loadModel(trainedmodel, function(data, newModel) {
+            console.log("Loaded model", data);
+            self.model = newModel;
+        });
+    }
   },
   methods: {
         CreateGame: function () {
@@ -238,6 +253,29 @@ export default {
             return this.words.filter(function (value, index) {
                 return board[index] == currentColor && !guesses[index]
             });
+        },
+        SuggestedClues: function(){
+            if (!this.isPhone) return [];
+            var suggestedClues = [];
+            var self = this;
+            this.MyColor.forEach( (value)=>{
+                var results = self.model.mostSimilar("/en/"+value);
+                suggestedClues.push({"source":value, "result":results[0]});
+            });
+            this.MyColor.forEach( (value,index)=>{
+                this.MyColor.forEach( (value2,index2)=>{
+                    if (index == index2) return;
+                    var results = self.model.mostSimilar("/en/"+value + " /en/"+value2);
+                    suggestedClues.push({"source":value+"+"+value2, "result":results[0]});
+                    results = self.model.mostSimilar("/en/"+value2 + " /en/"+value);
+                    suggestedClues.push({"source":value2+"+"+value, "result":results[0]});
+                });
+            });
+            suggestedClues.sort((a,b)=>b.results.dist - a.results.dist);
+            //filter down to the top four
+            //trip down to the best 4 or so
+            return suggestedClues;
+            
         },
         NoColor: function () {
             var board = this.board;

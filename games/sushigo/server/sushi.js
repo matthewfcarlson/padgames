@@ -40,30 +40,17 @@ function GetGameList() {
 }
 
 function CheckPlayers(gameID, io) {
+  if (currentGames[gameID] == null){ 
+    console.error("Checking a game that doesn't exist: "+gameID);
+    return false;
+
+  }
   var currentGame = currentGames[gameID].game;
   var gameRoom = gameRoomRoot + gameID;
   if (!currentGame.isPlaying) {
     currentSockets = io.in(gameRoom).connected;
     console.log(currentGame.players);
 
-    /* currentGame.players = currentGame.players.filter(function(value, index) {
-      var socketID = currentPlayerSockets[index];
-      console.log("Checking " + value + " at socket#" + socketID);
-      if (socketID == "AI") return true;
-      var socket = currentSockets[socketID];
-      if (socket != undefined) return true;
-      else {
-        console.error("Removing unknown socket" + socketID, socket);
-
-        return false;
-      }
-      //TODO we need to figure out how to filter if this is a real socket
-    });
-    currentPlayerSockets = currentPlayerSockets.filter(function(value) {
-      if (value == "AI") return true;
-      return currentSockets[value] != undefined;
-    });
-    */
     currentGames[gameID].sockets.filter(socketID => {
       if (currentSockets[socketID] == undefined) {
         console.error("Player is no longer connected", socketID);
@@ -96,27 +83,17 @@ function CheckPlayers(gameID, io) {
 
 function Init(socket, io) {
   socket.on("disconnect", function() {
-    //var playerName = socket.get("playerName");
-    /*var index = currentPlayerSockets.indexOf(socket.id);
-    if (index != -1 && !currentGame.isPlaying) {
-      currentPlayerSockets.splice(index, 1);
-      var playerName = currentGame.players.splice(index, 1);
-      console.log("Disconnecting " + playerName + "@" + index);
-    } else if (index != -1) {
-      currentPlayerSockets[index] = null;
-      console.log(
-        "Disconnecting socket for player " + socket.id,
-        currentPlayerSockets
-      );
-    } else {
-      console.log(
-        "Disconnecting an unknown socket " + socket.id,
-        currentPlayerSockets
-      );
-    }
-    CheckPlayers(io);
-    */
-    console.error("Disconnect logic is in need of rewriting?");
+    var currentGame = GetPlayerGame(socket.id);
+    var gameID = GetPlayerGameID(socket.id);
+    if (gameID == null) return;
+    CheckPlayers(gameID, io);    
+    var socketIndex = currentGames[gameID].sockets.indexOf(socket.id);
+
+    currentPlayerSockets[socket.id] = null;
+    
+    console.error("Remove this socket from the game "+socketIndex, currentGames[gameID].sockets);
+    currentGames[gameID].sockets.splice(socketIndex,1);
+    //console.error("Disconnect logic is in need of rewriting?");
   });
   socket.on("create sushi game", function(gameName) {
     var gameID = HashGameName(gameName);
@@ -151,44 +128,63 @@ function Init(socket, io) {
   socket.on("join sushi game", function(gameID, playerName) {
     if (currentGames[gameID] == null) {
       console.error("You can't join a game that doesn't exist", gameID);
+      socket.emit("error message", "This game doesn't exist");
       return;
     }
-    socket.join(gameRoomRoot + gameID);
+    
     if (playerName == null || playerName == ""){
       return;
     }
-    currentPlayerSockets[socket.id] = {
-      gameID: gameID,
-      player: playerName
-    };
-    //check currentGames[gameRoom].sockets
-    currentGames[gameID].sockets.push(socket.id);
-    console.log("Player joined the game " + gameID);
-    var currentGame = GetPlayerGame(socket.id);
 
-    if (currentGame == null) {
-      socket.emit("error message", "This game does not exist");
-      return;
-    }
-
+    var currentGame = GetPlayerGameByID(gameID)
+    
     if (playerName != null && playerName.length > 0) {
       var existingName = currentGame.players.indexOf(playerName);
       //if we are joining as a brand new player
       if (existingName == -1 && !currentGame.isPlaying) {
         currentGame.AddPlayer(playerName);
         console.log("Adding player " + playerName);
-      } else if (currentPlayerSockets[existingName] == null) {
-        //socket.emit("set players", currentGame.players);
-        //socket.emit("set sushi player", existingName);
-        //socket.emit("sync sushi game", currentGame);
-        //TODO figure out how to transmit whole game state
-        //currentPlayerSockets[existingName] = socket.id;
+      
+      } else if (existingName == -1 && currentGame.isPlaying) {
+        console.log("Player is joining after game is started!");
+        socket.emit("error message", "Game has already started");
+        return;
+      } else if (existingName != -1 && currentGame.isPlaying) {        
+        socket.emit("set sushi player", existingName);
+        var foundPlayerSocket = false;
+        for (var i=0;i<currentGames[gameID].sockets.length;i++){
+          var currSocketID = currentGames[gameID].sockets[i];
+          if (currentPlayerSockets[currSocketID].gameID == gameID && currentPlayerSockets[currSocketID].player === playerName) {
+            foundPlayerSocket = true;
+            break;
+          }
+        }
+        if (foundPlayerSocket) {
+          console.log("Player is joining after game is started!");
+          socket.emit("error message", "You can't join the game from two places");
+          return;
+        }
+        console.log("Letting user rejoin the game");
       } else {
         console.log("Player is trying to join twice!");
         socket.emit("error message", "This player has already joined");
         return;
       }
     }
+    //sync the socket upto the current game
+    socket.emit("set players", currentGame.players);    
+    socket.emit("sync sushi game", currentGame);
+        
+    socket.join(gameRoomRoot + gameID);
+    currentPlayerSockets[socket.id] = {
+      gameID: gameID,
+      player: playerName
+    };
+    
+    currentGames[gameID].sockets.push(socket.id);
+
+    console.log("Player "+playerName+" joined the game " + gameID);
+    var currentGame = GetPlayerGame(socket.id);
     socket.emit("set deck seed", currentGame.deckSeed);
     CheckPlayers(gameID, io);
   });
