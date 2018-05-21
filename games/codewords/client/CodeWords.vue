@@ -212,6 +212,8 @@ export default {
     },
     GuessWord: function(index) {
       this.socket.emit("guess word", [this.gameID, index]);
+      //if we have already guessed this one, don't press it again
+      if (this.wordsGuessed[index] == true) return;
       Vue.set(this.wordsGuessed, index, true);
       if (this.board[index] != this.currentTurn)
         this.currentTurn = OppositeColor(this.currentTurn);
