@@ -32,10 +32,7 @@ export default {
       console.log("Crating stuff game");
       this.$socket.emit("stuff:create game", this.gameName);
     }
-  },
-  created: function() {
-    this.$socket.emit("stuff:list games");
-  },
+  },  
   sockets: {
     connect: function() {
       console.log("socket connected");
