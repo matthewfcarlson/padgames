@@ -15,11 +15,16 @@
     <div class="container-fluid" v-else>      
       <h1>Stuff {{question}}</h1>
       <input type="text" class="form-control" placeholder="Your answer" v-model="answer" />
-      <button @click="Answer()" class="btn btn-success btn-block">Answer</button>
+      <button v-if="!AnswerSubmitted" @click="Answer()" class="btn btn-success btn-block">Answer</button>
+      <div v-for="player,index in players">
+        {{player}} 
+      </div>
+      {{playerAnswers}}
     </div>
 </div>
 </template>
 <script>
+//<div v-if="playerAnswers[index] != undefined && playerAnswers[index].length == 0">???</div>
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import Questions from "../common/questions.js";
@@ -38,6 +43,7 @@ export default {
       playerID: -1,
       gameName: "",
       players: [],
+      playerAnswers:[],
       game: null,
       playerName: "Testing"
     };
@@ -53,7 +59,21 @@ export default {
     },
     LeaveGame: function() {
       this.$router.push("/stuff");
+    },
+    Answer: function(gameRoom, answer){
+      if (gameRoom == undefined) gameRoom = this.gameRoom;
+      if (answer == undefined) answer = this.answer;
+      this.$socket.emit(ROOT + "answer", gameRoom, answer);
     }
+  },
+  computed: {
+    EveryoneAnswered: function(){
+      return false;
+    },
+    AnswerSubmitted: function(){
+      return this.playerAnswers[this.playerID-1].length > 0;
+    }
+
   },
   created: function() {
     this.gameRoom = this.$route.params.gameID || "";
@@ -72,6 +92,7 @@ export default {
       //TODO do this better
       this.players = newgame.players;
       this.question = Questions.questions[newgame.questions[0]];
+      this.playerAnswers = newgame.playersAnswers;
     },
     "stuff:set player": function(playerIndex) {
       console.log("Player ID" + playerIndex);

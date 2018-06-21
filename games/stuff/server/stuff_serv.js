@@ -33,6 +33,15 @@ function GetGameList() {
     });
 }
 
+function GetPlayerIndex(gameId,socketID){
+    var game = GetGameByID(gameId);
+    if (game == null) {
+        return -1;
+    }
+    var playerIndex = game.sockets.indexOf(socketID);
+    return playerIndex;
+}
+
 function JoinGame(gameId, playerName, socketID) {
     var game = GetGameByID(gameId);
     if (game == null) {
@@ -42,6 +51,8 @@ function JoinGame(gameId, playerName, socketID) {
     if (playerIndex == -1){
         game.players.push(playerName);
         game.sockets.push(socketID);
+        game.playerAnswers.push("");
+        game.scores.push(0);
         return game.players.length;
     }
     game.players[playerIndex] = playerName;
@@ -79,6 +90,9 @@ function Init(socket, io) {
         currentGames[gameID].players = [];
         currentGames[gameID].questions = [];
         currentGames[gameID].sockets = [];
+        currentGames[gameID].playerAnswers = [];
+        currentGames[gameID].ready = [];
+        currentGames[gameID].scores = [];
         currentGames[gameID].questions.unshift(GetNewQuestion());
         
         socket.emit(gameRoomRoot + "list games", GetGameList());
@@ -93,6 +107,23 @@ function Init(socket, io) {
         } else {
             socket.emit(gameRoomRoot + "sync game", game);
         }
+    });
+
+    socket.on(gameRoomRoot + "answer", function (gameId,answer) {
+        console.log("Got an answer for "+gameId,answer);
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            socket.emit(gameRoomRoot + "error", "This game does not exist: " + gameId);
+            return;
+        }
+        var playerIndex = GetPlayerIndex(gameId,socket.id);
+        if (game.playerAnswers[playerIndex] == ""){
+            game.playerAnswers[playerIndex] = answer;
+        }
+        else {
+            socket.emit(gameRoomRoot + "error", "You've already answered this round ");
+        }
+        SyncGame(gameId,io);
     });
 
     socket.on(gameRoomRoot + "join game", function (gameId, playerName) {
