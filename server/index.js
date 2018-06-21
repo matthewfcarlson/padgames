@@ -77,9 +77,11 @@ function OppositeColor(color) {
 var boards = {};
 
 var SushiGo = require("../games/sushigo/server/sushi");
+var StuffServer = require("../games/stuff/server/stuff_serv");
 
 io.on("connection", function(socket) {
   SushiGo.Init(socket,io);
+  StuffServer.Init(socket,io);
   //console.log("a user connected");
   socket.emit("game list", gameList);
   socket.on("chat message", function(msg) {

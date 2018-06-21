@@ -1,6 +1,6 @@
 <template>
 <div class="content">
-    <h1>Sushi Go!</h1>
+    <h1>Game of Stuff</h1>
     <div>
         The List of games
         <ul>
@@ -30,18 +30,18 @@ export default {
   methods: {
     CreateGame() {
       console.log("Crating stuff game");
-      this.$socket.emit("create stuff game", this.gameName);
+      this.$socket.emit("stuff:create game", this.gameName);
     }
   },
   created: function() {
-    this.$socket.emit("list stuff games");
+    this.$socket.emit("stuff:list games");
   },
   sockets: {
     connect: function() {
       console.log("socket connected");
-      this.$socket.emit("list stuff games");
+      this.$socket.emit("stuff:list games");
     },
-    "list sushi games": function(newGames) {
+    "stuff:list games": function(newGames) {
       console.log("We got a new list of stuff games", newGames);
       this.$set(this, "gamesList", newGames);
     }

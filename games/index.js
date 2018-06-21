@@ -2,7 +2,7 @@ import SushiClient from "./sushigo/client/Sushi";
 import SushiLobby from "./sushigo/client/lobby";
 import CWClient from "./codewords/client/CodeWords";
 import GoSLobby from "./stuff/client/lobby";
-import GoSLobby from "./stuff/client/game";
+import GoSGame from "./stuff/client/game";
 import TestAI from "./codewords/client/TestAI";
 
 export const GameRoutes = [

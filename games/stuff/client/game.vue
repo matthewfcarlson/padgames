@@ -1,54 +1,67 @@
 <template>
 <div class="content">
-    <h1>Sushi Go!</h1>
-    <div>
-        The List of games
-        <ul>
-          <li v-for="game in gamesList"><a v-bind:href="/stuff/+game.id" >{{game.name}}</a></li>
-          <li v-if="gamesList.length == 0">No Games Yet</li>
-        </ul>
-        
+   <div class="container-fluid" v-if="playerID == -1">
+      <h2>Game of Stuff!</h2>
+      <hr/>
+      <h3>Please Input Your Name</h3>
+      <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
+      <button @click="JoinGame()" class="btn btn-success btn-block">Join Game</button>
+      <br/>
+      <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
     </div>
-    <input type="text" v-model="gameName" placeholder="Name of a new game"/>
-    <button class="btn btn-success" @click="CreateGame">Create Game</button>
 </div>
 </template>
 <script>
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 Vue.use(VueSocketio, window.location.origin);
-
+const ROOT = "stuff:";
 export default {
   name: "Stuff",
   data() {
     return {
-      gamesList: [],
+      gameRoom: "",
+      connected: false,
+      pickedCard: [],
+      playerID: -1,
       gameName: "",
+      game: null,
       playerName: "Testing"
     };
   },
   methods: {
-    CreateGame() {
-      console.log("Crating stuff game");
-      this.$socket.emit("create stuff game", this.gameName);
+    StartGame: function() {
+      this.$socket.emit(ROOT + "start game");
+    },
+    JoinGame: function(gameRoom, playerName) {
+      if (gameRoom == undefined) gameRoom = this.gameRoom;
+      if (playerName == undefined) playerName = this.playerName;
+      this.$socket.emit(ROOT + "join game", gameRoom, playerName);
+    },
+    LeaveGame: function() {
+      this.$router.push("/stuff");
     }
   },
   created: function() {
-    this.$socket.emit("list stuff games");
+    this.gameRoom = this.$route.params.gameID || "";
   },
   sockets: {
     connect: function() {
       console.log("socket connected");
-      this.$socket.emit("list stuff games");
+      this.connected = true;
+      this.$socket.emit(ROOT + "sync game", this.gameRoom);
     },
-    "list sushi games": function(newGames) {
-      console.log("We got a new list of stuff games", newGames);
-      this.$set(this, "gamesList", newGames);
-    }
+     "stuff:error": function(message) {
+      alert(message);
+    },
+     "stuff:sync game": function(newgame) {
+      console.log(newgame);
+      //TODO do this better
+      this.game = newgame;
+    },
   }
 };
 </script>
 
 <style scoped>
-
 </style>
