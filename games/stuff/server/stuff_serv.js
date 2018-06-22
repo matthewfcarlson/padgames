@@ -87,6 +87,7 @@ function Init(socket, io) {
         console.log("Creating a new game", gameID);
         currentGames[gameID] = {};
         currentGames[gameID].name = gameName;
+        currentGames[gameID].state = "question"; //states are question, guessing, game over
         currentGames[gameID].players = [];
         currentGames[gameID].questions = [];
         currentGames[gameID].sockets = [];
@@ -123,6 +124,8 @@ function Init(socket, io) {
         else {
             socket.emit(gameRoomRoot + "error", "You've already answered this round ");
         }
+        //if all players have answered
+        //if all players have answered game.state = "guessing";
         SyncGame(gameId,io);
     });
 
