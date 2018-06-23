@@ -188,12 +188,13 @@ function Init(socket, io) {
             socket.emit(gameRoomRoot + "error", "This game does not exist: " + gameId, true);
             return;
         }
+        var oldPlayerLength = game.players.length;
         var result = JoinGame(gameId, playerName, socket.id);
         if (result === false) {
             socket.emit(gameRoomRoot + "error", "This game does not exist: " + gameId, true);
             return;
         }
-        if (game.players.length > 2) game.state = "question";
+        if (game.players.length > 2 && (game.state == "waiting" || oldPlayerLength != game.players.length) ) game.state = "question";
         socket.join(gameRoomRoot + gameId);
         socket.emit(gameRoomRoot + "set player", result);
         SyncGame(gameId, io);

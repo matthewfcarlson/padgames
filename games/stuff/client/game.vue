@@ -34,9 +34,9 @@
         <h2>Stuff {{question}}</h2>
         <h2>Your answer: {{answer}}</h2>
         <div v-if="playerAnswers[PlayerIndex]!=''">
-          
+          <div v-if="IsFirstGuesser">You get to guess first!</div>
           Who guessed you?
-          <button class="btn-block btn" @click="Guessed(index)" v-for="player,index in players" v-bind:key="player+index" v-if="index != PlayerIndex && playerAnswers[index] != ''">{{player}}</button>
+          <button class="btn-block btn btn-default" @click="Guessed(index)" v-for="player,index in players" v-bind:key="player+index" v-if="index != PlayerIndex && playerAnswers[index] != ''">{{player}}</button>
           {{playerAnswers}}
         </div>
         <div v-else>You've been guessed!</div>
@@ -105,6 +105,12 @@ export default {
         return false;
       console.log(this.playerAnswers[this.PlayerIndex]);
       return this.playerAnswers[this.PlayerIndex].length > 0;
+    },
+    IsFirstGuesser: function() {
+      if (this.playerID < 1) return false;
+      var guesserIndex = this.numQuestions % this.players.length;
+      if (this.PlayerIndex == guesserIndex) return true;
+      return false;
     }
   },
   created: function() {
