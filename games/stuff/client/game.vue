@@ -129,6 +129,7 @@ export default {
       }
       //TODO do this better
       this.players = newgame.players;
+      this.scores = newgame.scores;
       this.question = Questions.questions[newgame.questions[0]];
       if (newgame.playerAnswers != undefined)
         this.playerAnswers = newgame.playerAnswers;
