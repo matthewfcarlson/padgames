@@ -128,6 +128,12 @@ function Init(socket, io) {
             socket.emit(gameRoomRoot + "error", "You've already answered this round ");
             return;
         }
+
+        var aiIndex = game.sockets.indexOf("AI");
+        if (aiIndex != -1){
+            game.playerAnswers[aiIndex] = "generic response";
+        }
+
         console.log(game.playerAnswers);
         var allAnswered = game.playerAnswers.reduce((prev, curr) => prev && (curr != ""), true);
         console.log("All Answered " + allAnswered);
@@ -156,6 +162,9 @@ function Init(socket, io) {
         }
         game.playerAnswers[playerIndex] = "";
 
+        var aiIndex = game.sockets.indexOf("AI");
+        
+
         var guesserIndex = guessedBy - 1;
         if (guesserIndex < 0 || guessedBy >= game.players.length) {
             socket.emit(gameRoomRoot + "error", "Invalid guessed by: " + guesserIndex);
@@ -163,7 +172,7 @@ function Init(socket, io) {
         }
         game.scores[guesserIndex] += 1;
 
-        var numNotGuessed = game.playerAnswers.reduce((prev, curr) => (curr != "") ? prev +1 : prev, 0);
+        var numNotGuessed = game.playerAnswers.reduce((prev, curr,index) => (curr != "" && index != aiIndex) ? prev +1 : prev, 0);
         console.log("num not guessed: "+numNotGuessed);
 
         if (numNotGuessed == 1){
@@ -182,10 +191,31 @@ function Init(socket, io) {
         SyncGame(gameId, io);
     });
 
+    socket.on(gameRoomRoot + "add ai", function (gameId) {
+        console.log("TODO ADD AI");
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            socket.emit(gameRoomRoot + "error", "This game does not exist: " + gameId, true);
+            return;
+        }
+
+        if (game.players.indexOf("AI") != -1){
+            socket.emit(gameRoomRoot + "error", "AI has already been added: " + gameId, true);
+            return;
+        }
+
+        JoinGame(gameId, "AI", "AI");
+
+    });
+
     socket.on(gameRoomRoot + "join game", function (gameId, playerName) {
         var game = GetGameByID(gameId);
         if (game == null) {
             socket.emit(gameRoomRoot + "error", "This game does not exist: " + gameId, true);
+            return;
+        }
+        if (playerName == "AI") {
+            socket.emit(gameRoomRoot + "error", "You can't be named AI " + gameId);
             return;
         }
         var oldPlayerLength = game.players.length;

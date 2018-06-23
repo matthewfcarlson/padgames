@@ -37,7 +37,10 @@
         <div v-if="playerAnswers[PlayerIndex]!=''">
           <div v-if="IsFirstGuesser">You get to guess first!</div>
           Who guessed you?
-          <button class="btn-block btn btn-default" @click="Guessed(index)" v-for="player,index in players" v-bind:key="player+index" v-if="index != PlayerIndex && playerAnswers[index] != ''">{{player}}</button>
+          <button class="btn-block btn btn-default" 
+            @click="Guessed(index)" v-for="player,index in players" 
+            v-bind:key="player+index" 
+            v-if="index != PlayerIndex && playerAnswers[index] != '' && player != 'AI'">{{player}}</button>
           {{playerAnswers}}
         </div>
         <div v-else>You've been guessed!</div>
