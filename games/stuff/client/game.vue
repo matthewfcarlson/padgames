@@ -14,6 +14,7 @@
     <div class="container-fluid" v-else-if="state == 'waiting'">
         Waiting for more players to join:
         <div v-for="player in players"  v-bind:key="player">{{player}}</div>
+        <button v-if="PlayerIndex == 0" @click="AddAI()" class="btn btn-info btn-block">Add AI</button>
     </div>
     <div class="container-fluid" v-else-if="state == 'question'">      
       <h2>Stuff {{question}}</h2>
