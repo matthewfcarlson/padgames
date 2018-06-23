@@ -156,16 +156,26 @@ function Init(socket, io) {
         }
         game.playerAnswers[playerIndex] = "";
 
-        console.log("//TODO: add score to the guesser");
         var guesserIndex = guessedBy - 1;
         if (guesserIndex < 0 || guessedBy >= game.players.length) {
             socket.emit(gameRoomRoot + "error", "Invalid guessed by: " + guesserIndex);
             return;
         }
-        game.scores[guessedBy - 1] += 1;
+        game.scores[guesserIndex] += 1;
 
-        var numGuessed = game.playerAnswers.reduce((prev, curr) => (curr == "") ? prev +1 : prev, 0);
-        console.log("num guessed: "+numGuessed);
+        var numNotGuessed = game.playerAnswers.reduce((prev, curr) => (curr != "") ? prev +1 : prev, 0);
+        console.log("num not guessed: "+numNotGuessed);
+
+        if (numNotGuessed == 1){
+            //give two extra points to the last player left
+            var lastPlayerIndex = game.playerAnswers.reduce((prev,curr, index) => (curr != "") ? index : prev,-1);
+            console.log("last player standing: "+lastPlayerIndex);
+            game.playerAnswers[lastPlayerIndex] = "";
+            game.scores[lastPlayerIndex] += 2;
+            game.state = "question";
+            var newQuestion = GetNewQuestion(game.questions);
+            game.questions.unshift(newQuestion);
+        }
         //todo check if all players have been guessed
         //give them extra points        
 

@@ -9,11 +9,11 @@
       <h3>Please Input Your Name</h3>
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
       <button @click="JoinGame()" class="btn btn-success btn-block">Join Game</button>
-      <br/>
-      <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
+      
     </div>
     <div class="container-fluid" v-else-if="state == 'waiting'">
-        Loading...
+        Waiting for more players to join:
+        <div v-for="player in players"  v-bind:key="player">{{player}}</div>
     </div>
     <div class="container-fluid" v-else-if="state == 'question'">      
       <h2>Stuff {{question}}</h2>
@@ -36,11 +36,13 @@
         <div v-if="playerAnswers[PlayerIndex]!=''">
           
           Who guessed you?
-          <button class="btn-block btn" @click="Guessed(index)" v-for="player,index in players" v-bind:key="player+index" v-if="index != PlayerIndex">{{player}}</button>
+          <button class="btn-block btn" @click="Guessed(index)" v-for="player,index in players" v-bind:key="player+index" v-if="index != PlayerIndex && playerAnswers[index] != ''">{{player}}</button>
           {{playerAnswers}}
         </div>
         <div v-else>You've been guessed!</div>
     </div>
+    <br/>
+      <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
 </div>
 </template>
 <script>
@@ -66,7 +68,8 @@ export default {
       scores: [],
       playerAnswers: [""],
       game: null,
-      playerName: "Testing"
+      playerName: "Testing",
+      numQuestions: 0
     };
   },
   methods: {
@@ -134,6 +137,11 @@ export default {
       if (newgame.playerAnswers != undefined)
         this.playerAnswers = newgame.playerAnswers;
       this.state = newgame.state;
+
+      if (this.numQuestions != newgame.questions.length) {
+        this.answer = "";
+        this.numQuestions = newgame.questions.length;
+      }
       console.log(this.playerAnswers);
     },
     "stuff:set player": function(playerIndex) {
