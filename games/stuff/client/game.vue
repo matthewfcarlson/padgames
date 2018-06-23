@@ -93,6 +93,11 @@ export default {
       if (answer == undefined) answer = this.answer;
       this.$socket.emit(ROOT + "answer", gameRoom, answer);
     },
+
+    AddAI: function(gameRoom) {
+      if (gameRoom == undefined) gameRoom = this.gameRoom;
+      this.$socket.emit(ROOT + "add ai", gameRoom);
+    },
     Guessed: function(playerIndex, gameRoom) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       this.$socket.emit(ROOT + "guessed", gameRoom, playerIndex);
