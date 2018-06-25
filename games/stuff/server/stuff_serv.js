@@ -111,13 +111,14 @@ function Init(socket, io) {
         io.to(gameRoomRoot).emit(gameRoomRoot + "list games", GetGameList());
     });
     socket.on(gameRoomRoot + "sync game", function (gameId) {
-        console.log("Syncing to this server");
+
         var game = GetGameByID(gameId);
         if (game == null) {
             socket.emit(gameRoomRoot + "error", "This game does not exist: " + gameId, true);
         } else {
             socket.emit(gameRoomRoot + "sync game", game);
         }
+        console.log("Syncing to this server " + game.name + " " + game.state);
     });
 
     socket.on(gameRoomRoot + "answer", function (gameId, answer) {
@@ -176,15 +177,14 @@ function Init(socket, io) {
         game.scores[guesserIndex] += 1;
         game.playerAnswers[playerIndex] = "";
 
-        var aiIndex = game.sockets.indexOf("AI");       
-        
+        var aiIndex = game.sockets.indexOf("AI");
 
         var numNotGuessed = game.playerAnswers.reduce((prev, curr, index) => (curr != "" && index != aiIndex) ? prev + 1 : prev, 0);
         console.log("num not guessed: " + numNotGuessed);
 
-        if (numNotGuessed <  2) {
+        if (numNotGuessed < 2) {
             //give two extra points to the last player left
-            var lastPlayerIndex = game.playerAnswers.reduce((prev, curr, index) => (curr != "") ? index : prev, -1);
+            var lastPlayerIndex = game.playerAnswers.reduce((prev, curr, index) => (curr != "" && index != aiIndex) ? index : prev, -1);
             console.log("last player standing: " + lastPlayerIndex);
             game.playerAnswers[lastPlayerIndex] = "";
             game.scores[lastPlayerIndex] += 2;
@@ -210,8 +210,9 @@ function Init(socket, io) {
             socket.emit(gameRoomRoot + "error", "AI has already been added: " + gameId, true);
             return;
         }
-        if (game.players.length > 2 && (game.state == "waiting" || oldPlayerLength != game.players.length)) game.state = "question";
+
         JoinGame(gameId, "AI", "AI");
+        if (game.players.length > 2 && (game.state == "waiting" || oldPlayerLength != game.players.length)) game.state = "question";
         SyncGame(gameId, io);
     });
 
@@ -235,8 +236,6 @@ function Init(socket, io) {
         socket.join(gameRoomRoot + gameId);
         socket.emit(gameRoomRoot + "set player", result);
         SyncGame(gameId, io);
-
-
     });
 
 }

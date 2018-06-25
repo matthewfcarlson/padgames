@@ -1,12 +1,12 @@
 <template>
 <div class="content">
    <div class="container-fluid" v-if="playerID == -1">
-      <h2>Game of Stuff!</h2>
+      <h2>The Game of Stuff!</h2>
       <hr/>
-      <h3>Players</h3>
+      <h3>Current Players</h3>
       <div v-for="player in players"  v-bind:key="player">{{player}}</div>
       <hr/>
-      <h3>Please Input Your Name</h3>
+      <h3>Please Input Your Name to Join</h3>
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
       <button @click="JoinGame()" class="btn btn-success btn-block">Join Game</button>
       
@@ -24,12 +24,15 @@
       </div>
       <div v-else>
         Waiting for everyone else to answer
-      </div>
+      </div>      
       <div v-for="player,index in players" v-bind:key="player+index">
-        {{player}} 
+        {{player}} : <span v-if="playerAnswers[index] != ''">Ready</span><span v-else>Thinking</span>
       </div>
-      {{playerAnswers}}
-      {{scores}}
+      <!--{{playerAnswers}}-->
+      <h4>Scores:</h4>
+       <div v-for="player,index in players" v-bind:key="player+index">
+        {{player}} : {{scores[index]}} 
+      </div>
     </div>
     <div class="container-fluid" v-else-if="state == 'guessing'">
         <h2>Stuff {{question}}</h2>
@@ -37,11 +40,12 @@
         <div v-if="playerAnswers[PlayerIndex]!=''">
           <div v-if="IsFirstGuesser">You get to guess first!</div>
           Who guessed you?
-          <button class="btn-block btn btn-default" 
+          <button class="btn-block btn btn-secondary" 
             @click="Guessed(index)" v-for="player,index in players" 
             v-bind:key="player+index" 
             v-if="index != PlayerIndex && playerAnswers[index] != '' && player != 'AI'">{{player}}</button>
-          {{playerAnswers}}
+          <h3>Answers:</h3>
+          <ul><li v-for="answer in shuffle(oldPlayerAnswers)">{{answer}}</li> </ul>
         </div>
         <div v-else>You've been guessed!</div>
     </div>
@@ -54,6 +58,11 @@
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import Questions from "../common/questions.js";
+
+/**
+ * Shuffles array in place. ES6 version
+ * @param {Array} a items An array containing the items.
+ */
 
 Vue.use(VueSocketio, window.location.origin);
 const ROOT = "stuff:";
@@ -71,8 +80,9 @@ export default {
       players: [],
       scores: [],
       playerAnswers: [""],
+      oldPlayerAnswers: [""], //this stores the old player answers?
       game: null,
-      playerName: "Testing",
+      playerName: "",
       numQuestions: 0
     };
   },
@@ -101,6 +111,13 @@ export default {
     Guessed: function(playerIndex, gameRoom) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       this.$socket.emit(ROOT + "guessed", gameRoom, playerIndex);
+    },
+    shuffle: function(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
     }
   },
   computed: {
@@ -157,6 +174,16 @@ export default {
         this.answer = "";
         this.numQuestions = newgame.questions.length;
       }
+
+      //if it doesn't contain the
+      if (
+        newgame.state == "guessing" &&
+        (!newgame.playerAnswers.some(x => x == "") ||
+          this.oldPlayerAnswers.length == 0)
+      ) {
+        this.oldPlayerAnswers = newgame.playerAnswers;
+      }
+
       console.log(this.playerAnswers);
     },
     "stuff:set player": function(playerIndex) {

@@ -59,7 +59,7 @@ var questions = [
     "you wouldn't want to clean",
     "children shouldn't know",
     "women know more about than men",
-    "men know about more than men",
+    "men know about more than women",
     "girls have to deal with that guys don't",
     "men have have to deal with that women don't",
     "you think should be nicer",
@@ -103,7 +103,7 @@ var questions = [
     "you shouldn't do on vacation",
     "you would wish for if you found a genie",
     "that confirms you are losing your memory",
-    "that take forever",
+    "that takes forever",
     "that you wish you could see again for the first time",
     "that you never tell your parents about",
     "that you always tell your parents about"

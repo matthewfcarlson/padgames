@@ -4,7 +4,7 @@
     <div>
         The List of games
         <ul>
-          <li v-for="game in gamesList"><a v-bind:href="/stuff/+game.id" >{{game.name}}</a></li>
+          <li v-for="game in gamesList"><a class="btn btn-secondary btn-lg" v-bind:href="/stuff/+game.id" >{{game.name}}</a></li>
           <li v-if="gamesList.length == 0">No Games Yet</li>
         </ul>
         
