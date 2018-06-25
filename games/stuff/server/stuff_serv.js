@@ -1,6 +1,7 @@
 var currentGames = {};
 var gameRoomRoot = "stuff:";
 const questions = require("../common/questions").questions;
+const aiAnswers = require("../common/questions").answers;
 
 function GetNewQuestion(questionsList) {
     if (questionsList == undefined) questionsList = [-1];
@@ -14,6 +15,11 @@ function GetNewQuestion(questionsList) {
         tries++;
     }
     return questionIndex;
+}
+
+function GetAIAnswer() {
+    var answerIndex = Math.round(Math.random() * aiAnswers.length);
+    return aiAnswers[answerIndex];
 }
 
 function HashGameName(gameName) {
@@ -130,8 +136,8 @@ function Init(socket, io) {
         }
 
         var aiIndex = game.sockets.indexOf("AI");
-        if (aiIndex != -1){
-            game.playerAnswers[aiIndex] = "generic response";
+        if (aiIndex != -1) {
+            game.playerAnswers[aiIndex] = GetAIAnswer();
         }
 
         console.log(game.playerAnswers);
@@ -154,31 +160,32 @@ function Init(socket, io) {
             socket.emit(gameRoomRoot + "error", "You can't guess just yet: " + gameId);
             return;
         }
-        var playerIndex = GetPlayerIndex(gameId, socket.id);
-        console.log("Player " + playerIndex + " has been guessed");
-        if (game.playerAnswers[playerIndex] == "") {
-            socket.emit(gameRoomRoot + "error", "You've already been guessed: " + gameId);
-            return;
-        }
-        game.playerAnswers[playerIndex] = "";
-
-        var aiIndex = game.sockets.indexOf("AI");
-        
 
         var guesserIndex = guessedBy - 1;
         if (guesserIndex < 0 || guessedBy >= game.players.length) {
             socket.emit(gameRoomRoot + "error", "Invalid guessed by: " + guesserIndex);
             return;
         }
+
+        var playerIndex = GetPlayerIndex(gameId, socket.id);
+        console.log("Player " + playerIndex + " has been guessed");
+        if (game.playerAnswers[playerIndex] == "") {
+            socket.emit(gameRoomRoot + "error", "You've already been guessed: " + gameId);
+            return;
+        }
         game.scores[guesserIndex] += 1;
+        game.playerAnswers[playerIndex] = "";
 
-        var numNotGuessed = game.playerAnswers.reduce((prev, curr,index) => (curr != "" && index != aiIndex) ? prev +1 : prev, 0);
-        console.log("num not guessed: "+numNotGuessed);
+        var aiIndex = game.sockets.indexOf("AI");       
+        
 
-        if (numNotGuessed == 1){
+        var numNotGuessed = game.playerAnswers.reduce((prev, curr, index) => (curr != "" && index != aiIndex) ? prev + 1 : prev, 0);
+        console.log("num not guessed: " + numNotGuessed);
+
+        if (numNotGuessed <  2) {
             //give two extra points to the last player left
-            var lastPlayerIndex = game.playerAnswers.reduce((prev,curr, index) => (curr != "") ? index : prev,-1);
-            console.log("last player standing: "+lastPlayerIndex);
+            var lastPlayerIndex = game.playerAnswers.reduce((prev, curr, index) => (curr != "") ? index : prev, -1);
+            console.log("last player standing: " + lastPlayerIndex);
             game.playerAnswers[lastPlayerIndex] = "";
             game.scores[lastPlayerIndex] += 2;
             game.state = "question";
@@ -199,13 +206,13 @@ function Init(socket, io) {
             return;
         }
 
-        if (game.players.indexOf("AI") != -1){
+        if (game.players.indexOf("AI") != -1) {
             socket.emit(gameRoomRoot + "error", "AI has already been added: " + gameId, true);
             return;
         }
-
+        if (game.players.length > 2 && (game.state == "waiting" || oldPlayerLength != game.players.length)) game.state = "question";
         JoinGame(gameId, "AI", "AI");
-
+        SyncGame(gameId, io);
     });
 
     socket.on(gameRoomRoot + "join game", function (gameId, playerName) {
@@ -224,7 +231,7 @@ function Init(socket, io) {
             socket.emit(gameRoomRoot + "error", "This game does not exist: " + gameId, true);
             return;
         }
-        if (game.players.length > 2 && (game.state == "waiting" || oldPlayerLength != game.players.length) ) game.state = "question";
+        if (game.players.length > 2 && (game.state == "waiting" || oldPlayerLength != game.players.length)) game.state = "question";
         socket.join(gameRoomRoot + gameId);
         socket.emit(gameRoomRoot + "set player", result);
         SyncGame(gameId, io);
