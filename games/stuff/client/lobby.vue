@@ -3,8 +3,8 @@
     <h1>Game of Stuff</h1>
     <div>
         The List of games
-        <ul>
-          <li v-for="game in gamesList"><a class="btn btn-secondary btn-lg" v-bind:href="/stuff/+game.id" >{{game.name}}</a></li>
+        <ul class="list-group">
+          <a v-for="game in gamesList" class="list-group-item list-group-item-action" v-bind:href="/stuff/+game.id" >{{game.name}}</a>
           <li v-if="gamesList.length == 0">No Games Yet</li>
         </ul>
         

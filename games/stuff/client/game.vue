@@ -14,7 +14,6 @@
     <div class="container-fluid" v-else-if="state == 'waiting'">
         Waiting for more players to join:
         <div v-for="player in players"  v-bind:key="player">{{player}}</div>
-        <button v-if="PlayerIndex == 0" @click="AddAI()" class="btn btn-info btn-block">Add AI</button>
     </div>
     <div class="container-fluid" v-else-if="state == 'question'">      
       <h2>Stuff {{question}}</h2>
@@ -36,9 +35,9 @@
     </div>
     <div class="container-fluid" v-else-if="state == 'guessing'">
         <h2>Stuff {{question}}</h2>
-        <h2>Your answer: {{answer}}</h2>
+        <h3>Your answer: <small>{{answer}}</small></h3>
         <div v-if="playerAnswers[PlayerIndex]!=''">
-          <div v-if="IsFirstGuesser">You get to guess first!</div>
+          <h3 v-if="IsFirstGuesser">You get to guess first!</h3>
           Who guessed you?
           <button class="btn-block btn btn-secondary" 
             @click="Guessed(index)" v-for="player,index in players" 
@@ -50,7 +49,10 @@
         <div v-else>You've been guessed!</div>
     </div>
     <br/>
-      <button @click="LeaveGame" class="btn btn-danger">Leave Game</button>    
+    <hr/>
+      <div v-if="votesToEnd > 0">{{votesToEnd}} people have voted to end the game</div>
+      <button @click="VoteToEnd" class="btn btn-warning btn-sm">Vote to End the Game</button>    
+      <button @click="LeaveGame" class="btn btn-danger btn-sm">Leave Game</button>    
 </div>
 </template>
 <script>
@@ -77,9 +79,11 @@ export default {
       playerID: -1,
       gameName: "",
       state: "waiting",
+      currentPlayerTurn: 0,
       players: [],
       scores: [],
       playerAnswers: [""],
+      votesToEnd: 0,
       oldPlayerAnswers: [""], //this stores the old player answers?
       game: null,
       playerName: "",
@@ -104,13 +108,13 @@ export default {
       this.$socket.emit(ROOT + "answer", gameRoom, answer);
     },
 
-    AddAI: function(gameRoom) {
-      if (gameRoom == undefined) gameRoom = this.gameRoom;
-      this.$socket.emit(ROOT + "add ai", gameRoom);
-    },
-    Guessed: function(playerIndex, gameRoom) {
+     Guessed: function(playerIndex, gameRoom) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       this.$socket.emit(ROOT + "guessed", gameRoom, playerIndex);
+    },
+    VoteToEnd: function(gameRoom) {
+      if (gameRoom == undefined) gameRoom = this.gameRoom;
+      this.$socket.emit(ROOT + "vote end", gameRoom);
     },
     shuffle: function(a) {
       for (let i = a.length - 1; i > 0; i--) {
@@ -156,6 +160,7 @@ export default {
         LeaveGame();
       }
     },
+    //the main syncing method
     "stuff:sync game": function(newgame) {
       console.log("New Game:", newgame);
       if (newgame == undefined) {
@@ -174,6 +179,10 @@ export default {
         this.answer = "";
         this.numQuestions = newgame.questions.length;
       }
+
+      this.currentPlayerTurn = newgame.currentPlayerTurn;
+
+      this.votesToEnd = newgame.votesToEnd.reduce((prev,curr)=> curr ? prev +1 : prev,0);
 
       //if it doesn't contain the
       if (
