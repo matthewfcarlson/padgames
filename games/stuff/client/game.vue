@@ -14,9 +14,17 @@
     <div class="container-fluid" v-else-if="state == 'waiting'">
         Waiting for more players to join:
         <div v-for="player in players"  v-bind:key="player">{{player}}</div>
+        <div>In this game, you will be asked to answer a question. Don't let anyone see what you answer!</div>
+        <div>After everyone has answered, people will have to guess!</div>
+        <div>
+          When it's your turn, guess someone and see if you're right.
+          If you're right, they will press the "I was guessed by" button with your name on it! So make sure everyone is paying attention.
+          Once you guess incorrectly, your turn is over and it goes to the next person.
+          Once you've been guessed, you can't guess anymore and you're out of the game.
+        </div>
     </div>
     <div class="container-fluid" v-else-if="state == 'question'">      
-      <h2>Stuff {{question}}</h2>
+      <h2>Question: Stuff {{question}}</h2>
       <div v-if="!AnswerSubmitted">
         <input type="text" class="form-control" placeholder="Your answer" v-model="answer" />
         <button @click="Answer()" class="btn btn-success btn-block">Answer</button>
@@ -34,8 +42,13 @@
       </div>
     </div>
     <div class="container-fluid" v-else-if="state == 'guessing'">
-        <h2>Stuff {{question}}</h2>
+        <h2>Question: Stuff {{question}}</h2>
         <h3>Your answer: <small>{{answer}}</small></h3>
+        <div>It is currently {{players[currentPlayerTurn]}}'s turn</div>
+        <div v-if="currentPlayerTurn == playerIndex">
+          <b class="text-center">It's YOUR turn</b>
+          <button class="btn-block btn btn-secondary">I guessed incorrectly</button>
+        </div>
         <div v-if="playerAnswers[PlayerIndex]!=''">
           <h3 v-if="IsFirstGuesser">You get to guess first!</h3>
           Who guessed you?
@@ -51,8 +64,8 @@
     <br/>
     <hr/>
       <div v-if="votesToEnd > 0">{{votesToEnd}} people have voted to end the game</div>
-      <button @click="VoteToEnd" class="btn btn-warning btn-sm">Vote to End the Game</button>    
-      <button @click="LeaveGame" class="btn btn-danger btn-sm">Leave Game</button>    
+      <button @click="VoteToEnd()" class="btn btn-warning btn-sm">Vote to End the Game</button>    
+      <button @click="LeaveGame()" class="btn btn-danger btn-sm">Leave Game</button>    
 </div>
 </template>
 <script>
@@ -108,7 +121,7 @@ export default {
       this.$socket.emit(ROOT + "answer", gameRoom, answer);
     },
 
-     Guessed: function(playerIndex, gameRoom) {
+    Guessed: function(playerIndex, gameRoom) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       this.$socket.emit(ROOT + "guessed", gameRoom, playerIndex);
     },
@@ -182,7 +195,10 @@ export default {
 
       this.currentPlayerTurn = newgame.currentPlayerTurn;
 
-      this.votesToEnd = newgame.votesToEnd.reduce((prev,curr)=> curr ? prev +1 : prev,0);
+      this.votesToEnd = newgame.votesToEnd.reduce(
+        (prev, curr) => (curr ? prev + 1 : prev),
+        0
+      );
 
       //if it doesn't contain the
       if (

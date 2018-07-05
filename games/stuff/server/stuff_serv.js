@@ -51,7 +51,8 @@ function GetGameByID(gameID) {
 }
 
 function GetGameList() {
-  return Object.keys(currentGames).map(x => {
+    var currentOpenGames = currentGames.filter(x => x.state != "gameover");
+  return Object.keys(currentOpenGames).map(x => {
     return {
       id: x,
       name: currentGames[x].name
@@ -160,6 +161,12 @@ function Init(socket, io) {
     while (game.votesToEnd.length < game.players.length)
       game.votesToEnd.push(false);
     game.votesToEnd[playerIndex] = true;
+    console.log(playerIndex+" voted to end the game");
+
+    var votesToEndGame = game.votesToEnd.reduce((prev,curr)= curr?prev+1:prev,0);
+    if (votesToEndGame > game.players.length/2) {
+        game.state = "gameover";
+    }
 
     SyncGame(gameId, io);
   });
@@ -191,11 +198,10 @@ function Init(socket, io) {
         question:currQuestion,
         answer:answer
     };
-    console.log(data);
     var answerDB = new mongoAnswer( data );
     // http://mongoosejs.com/docs/api.html#model_Model-save
     answerDB.save(function (err) {
-      console.log("Unable to save the answer to the DB",err);
+      if (err != null) console.log("Unable to save the answer to the DB",err);
     });
 
     if (game.playerAnswers.length == game.players.length)
@@ -232,7 +238,7 @@ function Init(socket, io) {
       return;
     }
 
-    var guesserIndex = guessedBy - 1;
+    var guesserIndex = guessedBy;
     if (guesserIndex < 0 || guessedBy >= game.players.length) {
       socket.emit(
         gameRoomRoot + "error",
