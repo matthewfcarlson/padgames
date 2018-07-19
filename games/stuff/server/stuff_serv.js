@@ -51,6 +51,7 @@ function GetGameByID(gameID) {
 }
 
 function GetGameList() {
+    if (currentGames == null) return [];
     var currentOpenGames = currentGames.filter(x => x.state != "gameover");
     return Object.keys(currentOpenGames).map(x => {
         return {
