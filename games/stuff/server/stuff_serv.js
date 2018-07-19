@@ -31,7 +31,7 @@ function GetNewQuestion(questionsList) {
     var goodQuest = false;
     var questionIndex = 0;
     var tries = 0;
-    while (!goodQuest && tries < 50) {
+    while (!goodQuest && tries < 100) {
         questionIndex = Math.round(Math.random() * questions.length);
         if (questionsList.indexOf(questions[questionIndex]) == -1) goodQuest = true;
         tries++;
@@ -93,6 +93,10 @@ function JoinGame(gameId, playerName, socketID) {
     if (playerIndex == -1) {
         game.players.push(playerName);
         game.sockets.push(socketID);
+        if (game.playerAnswers.length >= game.players.length) {
+            //if someone had already answered
+            game.playerAnswers.pop();
+        }
         game.playerAnswers.push("");
         game.scores.push(0);
         return game.players.length;
@@ -146,6 +150,20 @@ function Init(socket, io) {
         socket.emit(gameRoomRoot + "list games", GetGameList());
 
         io.to(gameRoomRoot).emit(gameRoomRoot + "list games", GetGameList());
+    });
+
+    socket.on(gameRoomRoot + "end turn", function(gameId) {
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            socket.emit(
+                gameRoomRoot + "error",
+                "This game does not exist: " + gameId,
+                "go_back"
+            );
+            return;
+        }
+        game.currentPlayerTurn++;
+        SyncGame(gameId, io);
     });
     socket.on(gameRoomRoot + "sync game", function(gameId) {
         var game = GetGameByID(gameId);
@@ -223,8 +241,10 @@ function Init(socket, io) {
             game.playerAnswers.push("AI ANSWER");
             GetAIAnswer(currQuestion, function(answer) {
                 game.playerAnswers.pop();
-                game.playerAnswers.push(answer);
-                console.log(game.playerAnswers);
+                aiAnswerIndex = game.playerAnswers.indexOf("AI ANSWER");
+                if (aiAnswerIndex == -1) game.playerAnswers.push(answer);
+                else game.playerAnswers[aiAnswerIndex] = answer;
+                console.log("AI ADDED:", game.playerAnswers);
                 SyncGame(gameId, io);
             });
         }
@@ -301,6 +321,7 @@ function Init(socket, io) {
             if (aiIndex == game.playerAnswers.length - 1) game.playerAnswers.pop();
             game.state = "question";
             var newQuestion = GetNewQuestion(game.questions);
+            game.currentPlayerTurn = game.questions.legth;
             game.questions.unshift(newQuestion);
         }
         //todo check if all players have been guessed

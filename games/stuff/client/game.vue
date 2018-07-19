@@ -46,21 +46,22 @@
     </div>
     <div class="container-fluid" v-else-if="state == 'guessing'">
         <h2>Question: Stuff {{question}}</h2>
-        <h3>Your answer: <small>{{answer}}</small></h3>
-        <div>It is currently {{players[currentPlayerTurn]}}'s turn</div>
-        <div v-if="currentPlayerTurn == playerIndex">
-          <b class="text-center">It's YOUR turn</b>
-          <button class="btn-block btn btn-secondary">I guessed incorrectly</button>
+        <h3>Your answer: <small style="font-size:7pt;">{{answer}}</small></h3>
+        <div>It is currently {{players[currentPlayerTurn]}}'s turn ({{currentPlayerTurn}}) ({{PlayerIndex}})</div>
+        <div v-if="currentPlayerTurn == PlayerIndex">
+          <b class="text-center">It is YOUR turn</b>
+          <button @click="EndTurn()" class="btn-block btn btn-secondary">I guessed incorrectly</button>
+          <div>Guess people until you get one wrong</div>
+          <h3>Answers:</h3>
+          <ul><li v-for="answer in shuffle(oldPlayerAnswers)">{{answer}}</li> </ul>
         </div>
-        <div v-if="playerAnswers[PlayerIndex]!=''">
-          <h3 v-if="IsFirstGuesser">You get to guess first!</h3>
+        <div v-else-if="playerAnswers[PlayerIndex]!=''">
           Who guessed you?
           <button class="btn-block btn btn-secondary" 
             @click="Guessed(index)" v-for="player,index in players" 
             v-bind:key="player+index" 
-            v-if="index != PlayerIndex && playerAnswers[index] != '' && player != 'AI'">{{player}}</button>
-          <h3>Answers:</h3>
-          <ul><li v-for="answer in shuffle(oldPlayerAnswers)">{{answer}}</li> </ul>
+            v-if="index != PlayerIndex && playerAnswers[index] != '' && player != 'AI'">I was guessed by {{player}}</button>
+          <div><small>Do not click one of these buttons unless someone guesses you!</small></div>
         </div>
         <div v-else>You've been guessed!</div>
     </div>
@@ -128,6 +129,12 @@ export default {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       this.$socket.emit(ROOT + "guessed", gameRoom, playerIndex);
     },
+
+    EndTurn: function(gameRoom) {
+      if (gameRoom == undefined) gameRoom = this.gameRoom;
+      this.$socket.emit(ROOT + "end turn", gameRoom);
+    },
+
     VoteToEnd: function(gameRoom) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       this.$socket.emit(ROOT + "vote end", gameRoom);
@@ -196,7 +203,7 @@ export default {
         this.numQuestions = newgame.questions.length;
       }
 
-      this.currentPlayerTurn = newgame.currentPlayerTurn;
+      this.currentPlayerTurn = newgame.currentPlayerTurn % this.players.length;
 
       this.votesToEnd = newgame.votesToEnd.reduce(
         (prev, curr) => (curr ? prev + 1 : prev),
