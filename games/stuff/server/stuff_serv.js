@@ -14,13 +14,15 @@ Schema = new mongoose.Schema({
 mongoAnswer = mongoose.model("GOSAnswer", Schema);
 
 console.log("Connecting to ", process.env.MONGOLAB_URI);
-mongoose.connect(
-    process.env.MONGOLAB_URI,
-    function(error) {
-        if (error) console.error(error);
-        else console.log("mongo connected");
-    }
-);
+if (process.env.MONGOLAB_URI != null) {
+    mongoose.connect(
+        process.env.MONGOLAB_URI,
+        function(error) {
+            if (error) console.error(error);
+            else console.log("mongo connected");
+        }
+    );
+}
 
 function GetNewQuestion(questionsList) {
     if (questionsList == undefined) questionsList = [-1];
@@ -51,14 +53,14 @@ function GetGameByID(gameID) {
 }
 
 function GetGameList() {
-    if (currentGames == null) return [];
-    var currentOpenGames = currentGames.filter(x => x.state != "gameover");
-    return Object.keys(currentOpenGames).map(x => {
+    if (currentGames == null || currentGames.length == 0) return [];
+    return Object.keys(currentGames).map(x => {
         return {
             id: x,
-            name: currentGames[x].name
+            name: currentGames[x].name,
+            state: x.state
         };
-    });
+    }).filter(x => x.state != "gameover");
 }
 
 function GetPlayerIndex(gameId, socketID) {
