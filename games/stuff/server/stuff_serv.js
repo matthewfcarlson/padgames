@@ -14,6 +14,7 @@ Schema = new mongoose.Schema({
 mongoAnswer = mongoose.model("GOSAnswer", Schema);
 
 console.log("Connecting to ", process.env.MONGOLAB_URI);
+
 if (process.env.MONGOLAB_URI != null) {
     mongoose.connect(
         process.env.MONGOLAB_URI,
@@ -38,9 +39,20 @@ function GetNewQuestion(questionsList) {
     return questionIndex;
 }
 
-function GetAIAnswer() {
-    var answerIndex = Math.round(Math.random() * aiAnswers.length);
-    return aiAnswers[answerIndex];
+function GetAIAnswer(currQuestion, callback) {
+    var AIAnswers = mongoAnswer.find({
+        question: currQuestion
+    }, function(err, previousAnswers) {
+        console.log("Previous Answers: ", previousAnswers);
+        var answerIndex = Math.round(Math.random() * aiAnswers.length);
+        var aIanswer = aiAnswers[answerIndex];
+        if (previousAnswers.length > 2) {
+            answerIndex = Math.round(Math.random() * previousAnswers.length);
+            aIanswer = previousAnswers[answerIndex].answer;
+        }
+        if (callback != null) callback(aIanswer);
+    });
+
 }
 
 function HashGameName(gameName) {
@@ -207,8 +219,15 @@ function Init(socket, io) {
             if (err != null) console.log("Unable to save the answer to the DB", err);
         });
 
-        if (game.playerAnswers.length == game.players.length)
-            game.playerAnswers.push(GetAIAnswer());
+        if (game.playerAnswers.length == game.players.length) {
+            game.playerAnswers.push("AI ANSWER");
+            GetAIAnswer(currQuestion, function(answer) {
+                game.playerAnswers.pop();
+                game.playerAnswers.push(answer);
+                console.log(game.playerAnswers);
+                SyncGame(gameId, io);
+            });
+        }
 
         console.log(game.playerAnswers);
         var allAnswered = game.playerAnswers.reduce(

@@ -11,16 +11,19 @@
       <button @click="JoinGame()" class="btn btn-success btn-block">Join Game</button>
       
     </div>
-    <div class="container-fluid" v-else-if="state == 'waiting'">
-        Waiting for more players to join:
-        <div v-for="player in players"  v-bind:key="player">{{player}}</div>
+    <div class="container-fluid" v-else-if="state == 'waiting'">        
+        <div class ="well" >
+          <strong>Waiting for more players to join:</strong>
+          <div v-for="player in players"  v-bind:key="player">{{player}}</div>
+        </div>
+        <br/>
         <div>In this game, you will be asked to answer a question. Don't let anyone see what you answer!</div>
-        <div>After everyone has answered, people will have to guess!</div>
-        <div>
-          When it's your turn, guess someone and see if you're right.
+        <div>After everyone has answered, people will have to guess who said what!</div>
+        <div>When it's your turn, guess someone and see if you're right.
           If you're right, they will press the "I was guessed by" button with your name on it! So make sure everyone is paying attention.
           Once you guess incorrectly, your turn is over and it goes to the next person.
-          Once you've been guessed, you can't guess anymore and you're out of the game.
+          Once you've been guessed, you can't guess anymore and you're out of this round.
+          Guessing another person's answer gives you one point and being the last one to guess gives you an extra 2 points.
         </div>
     </div>
     <div class="container-fluid" v-else-if="state == 'question'">      
