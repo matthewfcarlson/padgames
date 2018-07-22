@@ -321,7 +321,7 @@ function Init(socket, io) {
             if (aiIndex == game.playerAnswers.length - 1) game.playerAnswers.pop();
             game.state = "question";
             var newQuestion = GetNewQuestion(game.questions);
-            game.currentPlayerTurn = game.questions.legth;
+            game.currentPlayerTurn = game.questions.length;
             game.questions.unshift(newQuestion);
         }
         //todo check if all players have been guessed

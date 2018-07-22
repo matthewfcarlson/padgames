@@ -58,9 +58,8 @@
         <div v-else-if="playerAnswers[PlayerIndex]!=''">
           Who guessed you?
           <button class="btn-block btn btn-secondary" 
-            @click="Guessed(index)" v-for="player,index in players" 
-            v-bind:key="player+index" 
-            v-if="index != PlayerIndex && playerAnswers[index] != '' && player != 'AI'">I was guessed by {{player}}</button>
+            @click="Guessed(index)" 
+            v-if="index != currentPlayerTurn >=0 && currentPlayerTurn<players.length && playerAnswers[currentPlayerTurn] != '' && player != 'AI'">I was guessed by {{players[currentPlayerTurn]}}</button>
           <div><small>Do not click one of these buttons unless someone guesses you!</small></div>
         </div>
         <div v-else>You've been guessed!</div>
@@ -114,6 +113,7 @@ export default {
     JoinGame: function(gameRoom, playerName) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       if (playerName == undefined) playerName = this.playerName;
+      if (playerName == "") return;
       this.$socket.emit(ROOT + "join game", gameRoom, playerName);
     },
     LeaveGame: function() {
