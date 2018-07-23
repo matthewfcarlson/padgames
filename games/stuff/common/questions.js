@@ -129,7 +129,7 @@ var questions = [
     "that you might find in the bathroom",
     "that you might find in the bedroom",
     "that you wish wasn't cancelled",
-    "that you would kill your parents for",
+    "that you would kill a homeless person for",
     "that you would kidnap someone for",
     "that you wish you could do in an elevator",
     "you might wear to a wedding",

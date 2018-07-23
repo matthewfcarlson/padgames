@@ -162,7 +162,17 @@ function Init(socket, io) {
             );
             return;
         }
+        var playerIndex = GetPlayerIndex(gameId, socket.id);
+        if (game.currentPlayerTurn % game.players.length != playerIndex) {
+            socket.emit(
+                gameRoomRoot + "error",
+                "It is not your turn to end the game: " + gameId,
+                "go_back"
+            );
+            return;
+        }
         game.currentPlayerTurn++;
+        while (game.playerAnswers[game.currentPlayerTurn % game.players.length] == "") game.currentPlayerTurn++;
         SyncGame(gameId, io);
     });
     socket.on(gameRoomRoot + "sync game", function(gameId) {

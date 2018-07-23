@@ -4,7 +4,7 @@
       <h2>The Game of Stuff!</h2>
       <hr/>
       <h3>Current Players</h3>
-      <div v-for="player in players"  v-bind:key="player">{{player}}</div>
+      <div v-for="player in players" v-bind:key="player">{{player}} <button class="btn btn-sm pull-right" @click="JoinGame(null,player)"> Rejoin as this player</button></div>
       <hr/>
       <h3>Please Input Your Name to Join</h3>
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
@@ -57,8 +57,8 @@
         </div>
         <div v-else-if="playerAnswers[PlayerIndex]!=''">
           Who guessed you?
-          <button class="btn-block btn btn-secondary" 
-            @click="Guessed(index)" 
+          <button class="btn-block btn btn-danger" 
+            @click="Guessed(currentPlayerTurn)" 
             v-if="index != currentPlayerTurn >=0 && currentPlayerTurn<players.length && playerAnswers[currentPlayerTurn] != '' && player != 'AI'">I was guessed by <b>{{players[currentPlayerTurn]}}</b></button>
           <div><small>Do not click one of these buttons unless someone guesses you!</small></div>
         </div>
