@@ -32,8 +32,8 @@ function GetNewQuestion(questionsList) {
     var questionIndex = 0;
     var tries = 0;
     while (!goodQuest && tries < 100) {
-        questionIndex = Math.round(Math.random() * questions.length);
-        if (questionsList.indexOf(questions[questionIndex]) == -1) goodQuest = true;
+        questionIndex = Math.round(Math.random() * (questions.length - 1));
+        if (questions[questionIndex] != "" && questionsList.indexOf(questions[questionIndex]) == -1) goodQuest = true;
         tries++;
     }
     return questionIndex;

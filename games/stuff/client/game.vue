@@ -59,7 +59,7 @@
           Who guessed you?
           <button class="btn-block btn btn-secondary" 
             @click="Guessed(index)" 
-            v-if="index != currentPlayerTurn >=0 && currentPlayerTurn<players.length && playerAnswers[currentPlayerTurn] != '' && player != 'AI'">I was guessed by {{players[currentPlayerTurn]}}</button>
+            v-if="index != currentPlayerTurn >=0 && currentPlayerTurn<players.length && playerAnswers[currentPlayerTurn] != '' && player != 'AI'">I was guessed by <b>{{players[currentPlayerTurn]}}</b></button>
           <div><small>Do not click one of these buttons unless someone guesses you!</small></div>
         </div>
         <div v-else>You've been guessed!</div>
