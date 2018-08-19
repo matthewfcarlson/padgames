@@ -47,7 +47,7 @@
     <div class="container-fluid" v-else-if="state == 'guessing'">
         <h2>Question: Stuff {{question}}</h2>
         <h3>Your answer: <small style="font-size:7pt;">{{answer}}</small></h3>
-        <div>It is currently {{players[currentPlayerTurn]}}'s turn ({{currentPlayerTurn}}) ({{PlayerIndex}})</div>
+        <div>It is currently {{players[currentPlayerTurn]}}'s turn</div>
         <div v-if="currentPlayerTurn == PlayerIndex">
           <b class="text-center">It is YOUR turn</b>
           <button @click="EndTurn()" class="btn-block btn btn-secondary">I guessed incorrectly</button>
@@ -217,6 +217,7 @@ export default {
           this.oldPlayerAnswers.length == 0)
       ) {
         this.oldPlayerAnswers = newgame.playerAnswers;
+        //TODO store old answers server side so this syncs properly
       }
 
       console.log(this.playerAnswers);
