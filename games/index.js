@@ -4,6 +4,8 @@ import CWClient from "./codewords/client/CodeWords";
 import GoSLobby from "./stuff/client/lobby";
 import GoSGame from "./stuff/client/game";
 import TestAI from "./codewords/client/TestAI";
+import ArgueLobby from "./arguable/client/ArgueLobby"
+import ArgueGame from "./arguable/client/ArgueGameView"
 
 export const GameRoutes = [
   /* This is the format
@@ -18,6 +20,20 @@ export const GameRoutes = [
     title: "Sushies On The Go",
     isGame: true,
     component: SushiLobby
+  },
+  {
+    path: "/argue",
+    name: "Arguable-lobby",
+    title: "Arguable",
+    isGame: true,
+    component: ArgueLobby
+  },
+  {
+    path: "/argue/:gameID",
+    name: "Arguable-Game",
+    title: "Arguable",
+    isGame: false,
+    component: ArgueGame
   },
   {
     path: "/sushi/:gameID",

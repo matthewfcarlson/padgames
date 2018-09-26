@@ -78,10 +78,12 @@ var boards = {};
 
 var SushiGo = require("../games/sushigo/server/sushi");
 var StuffServer = require("../games/stuff/server/stuff_serv");
+var ArgueServer = require("../games/arguable/server/argueServer");
 
 io.on("connection", function(socket) {
   SushiGo.Init(socket,io);
   StuffServer.Init(socket,io);
+  ArgueServer.Init(socket,io);
   //console.log("a user connected");
   socket.emit("game list", gameList);
   socket.on("chat message", function(msg) {
