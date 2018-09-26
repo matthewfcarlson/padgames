@@ -116,10 +116,11 @@ export default {
 .speech-bubble {
 	position: relative;
 	background: var(--color4);
-  color:#eee;
+  color:white;
   padding:0.75em;
-  margin:0.42em;
-	border-radius: .4em;
+  text-transform: uppercase;
+  margin:0.5em;
+	border-radius: .2em;
 }
 .speech-bubble:after {
 	content: '';
@@ -130,6 +131,7 @@ export default {
 	height: 0;
 	border: 20px solid transparent;
 	border-right-color: #000000;
+  border-right-color: var(--color4);
 	border-left: 0;
 	border-bottom: 0;
 	margin-top: -10px;
