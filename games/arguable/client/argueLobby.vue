@@ -22,7 +22,7 @@
 
       <hr/>
       
-      <p class="speech-bubble">Think you can win any argument</p>
+      <p class="speech-bubble">Think you can win any argument?</p>
       <p class="speech-bubble">Regardless of what you argue for?</p>
       <p>A seriously silly party game for funny people.</p>
 

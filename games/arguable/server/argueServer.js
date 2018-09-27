@@ -57,6 +57,17 @@ function Init(socket, io) {
 
         io.to(gameRoomRoot).emit(gameRoomRoot + "list games", GetGameList());
     });
+
+    //relay any sort of thing we get from other clients to all the clients
+    socket.on(gameRoomRoot+"engine call", function(callName, args){
+        console.log("Got an request from "+socket.id);
+        console.log(callName,args);
+        //TODO apply to the current game and make sure there are no errors
+        var result = false; //currentGame.CalledFunction(callName,args);
+        console.log(result);
+        var source = socket.id;
+        io.to(gameRoomRoot).emit(gameRoomRoot + "engine call", source, callName, args);
+    });
 }
 
 

@@ -52,15 +52,18 @@ describe("create game", () => {
     expect(game.Moderator()).toBeGreaterThan(-1);
     expect(game.Moderator()).toBeLessThan(game.GetPlayers().length);
   });
-  it("should pick a moderator", () => {
+  it("should not let me start a game twice", () => {
     const game = CreateGame();
-    game.AddPlayer("Matthew1");
-    game.AddPlayer("Matthew2")
-    game.AddPlayer("Matthew3");
-    var state = game.GetState();
-    expect(game.Moderator()).toEqual(-1)
-    game.StartGame();
-    var moderator = game.Moderator();
-    expect(game.Moderator()).toBeGreaterThan(-1);
+    game.replicated.AddPlayer("Matthew1");
+    game.replicated.AddPlayer("Matthew2")
+    game.replicated.AddPlayer("Matthew3");
+    game.CallFunc("AddPlayer","Matthew4");
+    
+    var ret = game.replicated.StartGame();
+    var ret2 = game.replicated.StartGame();
+
+    expect(ret).toBe(0);
+    expect(ret2).not.toBe(ret); //some none zero error code
+    
   });
 });
