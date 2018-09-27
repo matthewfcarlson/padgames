@@ -21,16 +21,20 @@
       </form>
 
       <hr/>
-      <h3>How To play</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec interdum vel magna id pellentesque. Pellentesque tortor sapien, viverra non feugiat quis, iaculis in velit. Vestibulum sed nulla ut nunc porta egestas. Curabitur et semper ante, in porta eros. Phasellus tincidunt molestie mi, in commodo massa viverra ut. Etiam at odio leo. Aliquam maximus egestas scelerisque. Phasellus enim mi, pretium in efficitur ac, dictum hendrerit ipsum. Praesent sodales feugiat libero.</p>
+      
+      <p class="speech-bubble">Think you can win any argument</p>
+      <p class="speech-bubble">Regardless of what you argue for?</p>
+      <p>A seriously silly party game for funny people.</p>
 
-      <p>Vestibulum maximus mollis euismod. In venenatis vel metus nec finibus. Duis in sapien a nisl auctor aliquam. Proin lacus lacus, sagittis eget auctor id, lacinia ut est. Vivamus vel suscipit ligula. Nunc faucibus pretium justo ut malesuada. Nulla malesuada diam non urna malesuada laoreet. Nulla ullamcorper risus sit amet laoreet blandit. Integer ullamcorper nibh enim, ut eleifend augue consectetur ac. Fusce eget commodo arcu, ac posuere sapien. Vestibulum vitae tincidunt arcu. Quisque ligula augue, euismod eu enim sed, pulvinar iaculis sapien. Donec mauris libero, consequat ac venenatis ac, fringilla a leo. Phasellus hendrerit orci orci, et volutpat lacus imperdiet ac. Vestibulum ac tincidunt odio, eget sollicitudin lacus. Nam augue ligula, feugiat sed accumsan pretium, suscipit et ex.</p>
+      <h3 class="speech-bubble">How To play</h3>
 
-      <p>Proin dignissim in turpis sed ornare. Donec ut ex auctor, facilisis urna at, maximus augue. Sed scelerisque, odio vitae cursus vestibulum, nisl turpis ullamcorper velit, sit amet porta ipsum mi non arcu. Praesent luctus efficitur hendrerit. Nulla id erat sagittis, dignissim diam eu, ultricies neque. Sed vitae augue ex. Sed placerat purus purus, semper ullamcorper leo eleifend non. Nulla leo odio, commodo eget congue ut, ultricies sollicitudin elit. Duis sem velit, accumsan vel elit sit amet, venenatis mattis mi. Curabitur eu pellentesque velit. Duis vitae vestibulum est, vitae tincidunt sapien. Morbi mauris ante, maximus eget egestas faucibus, aliquam sit amet sapien. Etiam luctus consectetur auctor. Aenean eu fringilla metus, in posuere turpis. Nam eget augue risus.</p>
-
-      <p>Quisque eu ante a felis congue condimentum at at lectus. Etiam enim sem, mattis vitae lacus at, dictum ullamcorper metus. Ut gravida elit id erat placerat convallis. Duis sollicitudin vehicula orci ut maximus. In ornare urna nec lorem gravida, at pretium tortor mattis. Morbi tempus pretium ante at efficitur. In hac habitasse platea dictumst. Nulla bibendum sodales vulputate. Fusce porta dapibus nisi, sed egestas velit rutrum molestie. Nam vel feugiat nibh. In nisi nisi, consequat varius eleifend nec, pellentesque nec magna. Donec mauris sem, egestas in rhoncus eget, imperdiet quis lectus. Nunc gravida iaculis nulla sit amet cursus. Aliquam semper facilisis urna, consectetur dapibus arcu tristique sit amet. Integer porta enim est, sit amet scelerisque massa sollicitudin a. Vestibulum eget lectus rutrum mi sagittis tincidunt vitae sed purus.</p>
-
-      <p>Maecenas in sodales quam, in venenatis purus. Proin quis nulla pretium, venenatis metus nec, facilisis purus. Etiam in vestibulum nisl. Etiam sed dapibus purus. Nunc scelerisque eu massa et euismod. Integer at quam augue. In hendrerit euismod dignissim. Duis id nisi nec felis porttitor elementum eget eget tortor. Nulla dictum suscipit leo vitae cursus. Morbi venenatis augue non justo lobortis, et gravida quam semper. Vestibulum vitae consectetur lectus. Proin eget lectus lorem.</p>
+      <p>The game starts by randomly selecting a moderator. In this example, Ellen is the moderator. The moderator first picks out of 5 different topics to debate and then selects the two players she wants to debate. </p>
+      <p>Ellen then picks who will say yes and no to the issue. She gives TJ the YES card and Kira the NO card.</p>
+      <p>Kira and TJ then both get two debate strategies. In this example, Kira will argue that men should be allowed to vote and TJ will argue they will not. Kira will have the strategies: be really polite, and hurl insults mercilessly. </p>
+      <p>TJ will argue with his strategies of blaming the vadican and wheezing</p>
+      <p>Ellen moderates the argument and asks questions to both debaters. The debate will last 2 minutes and when the debate is over, the audience will vote. In this case, TJ wins. Kira recieves an under pressure and TJ is safe. If she gets another under pressure, she is out of the game</p>
+      <p>After a player is out, they continue to play by voting on the debates.</p>
+      <p>Eventually only one player will be left and they are crowned the debate winner.</p>
     </div>
     
   
