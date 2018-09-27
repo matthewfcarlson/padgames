@@ -67,14 +67,30 @@ function CreateGame(gameName, proxyCallback){
             transitionFunction = trans;
         },
 
-        //set the debaters
+        //set the debaters (yes is always first)
         SetDebaters: function(player1, player2){
-
+            if (player1 == player2) return "You cannot debate yourself";
+            if (player1 < 0) return "Invalid debator 1";
+            if (player2 < 0) return "Invalid debator 2";
+            this._debaters = [player1, player2];
+            return 0;
         },
 
         //set the next debaters
         SetNextDebaters: function(){
 
+        },
+
+        //Gets the debator that is for the issue
+        GetYesDebator: function(){
+            if (this._debaters.length == 0) return -1;
+            return this._debaters[0];
+        },
+
+        //Gets the debator that is against the issue
+        GetNoDebator: function(){
+            if (this._debaters.length == 0) return -1;
+            return this._debaters[1];
         },
 
         //Get the list of players
@@ -100,6 +116,10 @@ function CreateGame(gameName, proxyCallback){
         //Adds a player to the game
         AddPlayer: function(name){
             if (name == null) return "Malformed name";
+            if (!(typeof name === 'string')){
+                name = String(name);
+            }
+            if (name == null) return "Malformed name";
             name = name.trim();
             if (!this._state.is("lobby")) return "The game has already started";
             if (this._players.indexOf(name) != -1) return "You cannot join the same game twice";
@@ -115,7 +135,7 @@ function CreateGame(gameName, proxyCallback){
         //starts the game, you must have three players
         StartGame: function(){
             //check if we can start
-            if (this._players.length > 3) return "You need 3 players before you can start the game"
+            if (this._players.length < 3) return "You need 3 players before you can start the game"
             if (this._state.cannot("start")) return "You cannot start the game";
             this._state.start();            
             this._moderator = this.GetRandomNumber(0,this._players.length-1);
@@ -124,7 +144,11 @@ function CreateGame(gameName, proxyCallback){
 
         CallFunc: function (name,...args){
             if (this.hasOwnProperty(name)){
-                this[name].call(args);
+                console.log("Calling "+name+" with "+args);
+                return this[name].apply(this, args);
+            }
+            else {
+                return "This call "+name+" does not exist";
             }
         },
 

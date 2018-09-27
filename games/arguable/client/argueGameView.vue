@@ -2,12 +2,15 @@
 <div class="content">
     <h1>Arguable Game</h1>
     <div>
-        <button @click="AddPlayer">Add Player</button>
-        <button @click="AddServerPlayer">Send to Server</button>
-        <button @click="StartGame">Start Game</button>
-        <button @click="JoinGame()">Join Game</button>
-        {{ currentGame }}
+      <input type="text" class="form-control" placeholder="Your name" v-model="playerName" v-if="playerIndex==-1" />
+      <button @click="StartGame">Start Game</button>
+      <button @click="JoinGame()">Join Game</button>
     </div>
+    {{playerList}}
+    {{state}}
+    Role: {{currentRole}}
+    Moderator: {{moderator}}
+    PlayerIndex: {{playerIndex}}
     
 </div>
 </template>
@@ -25,12 +28,35 @@ export default {
     return {
         currentGame: null,
         count:0,
-        playerID: -1,
+        playerIndex: -1,
         playerName: "Default",
     }
   },
   created: function() {
     this.gameRoom = this.$route.params.gameID || "";
+  },
+  computed: {
+    playerList: function(){
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetPlayers();
+    },
+    state: function(){
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetState();
+    },
+    moderator: function(){
+      if (this.currentGame == null) return [];
+      return this.currentGame.Moderator();
+    },
+    currentRole: function(){
+      if (this.currentGame == null) return "none";
+      if (this.playerIndex == -1) return "spectator";
+      if (this.currentGame.Moderator() == this.playerIndex) return "moderator";
+      if (this.currentGame.GetYesDebator() == this.playerIndex) return "debate_yes";
+      if (this.currentGame.GetNoDebator() == this.playerIndex) return "debate_no";
+      return "voter";
+    }
+    
   },
   methods: {
     StartGame: function() {
@@ -40,12 +66,11 @@ export default {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       if (playerName == undefined) playerName = this.playerName;
       if (playerName == "") return;
-      const game = ArgueGame.CreateGame(gameRoom, function(name,args){
-          console.log("Broadcast up to the server that we called this ",name,args);
-          this.$socket.emit(ROOT + "engine call",gameRoom, name,args);
-      });
-      this.currentGame = game;
       this.$socket.emit(ROOT + "join game", gameRoom, playerName);
+    },
+    RejoinGame: function(gameRoom, playerName, playerIndex, socketId) {
+      console.log("Attempting to rejoin the game!");
+      this.$socket.emit(ROOT + "rejoin game", gameRoom, playerName, playerIndex, socketId);      
     },
     LeaveGame: function() {
       this.$router.push("/argue");
@@ -53,12 +78,28 @@ export default {
   },
   sockets: {
     connect: function() {
-      console.log("socket connected for room " + this.gameRoom);
+      var gameRoom = this.gameRoom;
+      console.log("socket connected for room " + gameRoom);
       this.connected = true;
       this.$socket.emit(ROOT + "connect");
-      this.$socket.emit(ROOT + "sync game", this.gameRoom);
+      this.$socket.emit(ROOT + "sync game", gameRoom);
+      var self = this;
+      const game = ArgueGame.CreateGame(gameRoom, function(name,args){
+          console.log("Broadcast up to the server that we called this ",name,args);
+          self.$socket.emit(ROOT + "engine call",gameRoom, name,args);
+      });
+      this.currentGame = game;
+
+      var previousGame = null;
+      if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
+        previousGame = JSON.parse(localStorage.getItem(gameRoom));
+        console.log(this);
+        this.RejoinGame(gameRoom,previousGame.playerName, previousGame.index, previousGame.socketId);
+        localStorage.removeItem(gameRoom);
+      }
+      console.log("Previous game",previousGame);
     },
-    "Argue:error": function(message, leave) {
+    "Argue:error": function(message,leave) {
       alert(message + leave);
       if (leave != undefined && leave == true) {
         console.log("Leaving game");
@@ -68,14 +109,16 @@ export default {
     "Argue:set player": function(playerIndex) {
       console.log("Player ID" + playerIndex);
       //TODO do this better
-      this.playerID = playerIndex;
+      this.playerIndex = playerIndex;
+      localStorage.setItem(this.gameRoom,JSON.stringify({playerName:this.playerName,index:this.playerIndex, socketId:this.$socket.id}));
+      
     },
-    "Argue:engine call": function(source, funcName, argList) {
-      console.log("We got a response from the server to call our engine with func " + funcName+" from "+source, argList);
-      if (this.$socket.id == source) {
+    "Argue:engine call": function(data) {
+      console.log("We got a response from the server to call our engine with func " + data.funcName+" from "+data.source, data);
+      if (this.$socket.id == data.source) {
           console.log("Ignoring");
       }
-      else this.currentGame.CallFunc(funcName,argList);
+      else this.currentGame.CallFunc(data.funcName,data.argList);
     }
   }
 }

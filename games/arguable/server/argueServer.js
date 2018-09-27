@@ -27,13 +27,14 @@ function JoinGame(io,gameId, playerName, socketID) {
         console.error("JOIN GAME: this game does not exist");
         return false;
     }
-    if (ReplicateCall(io,gameId, socketID,"AddPlayer",playerName)){
+    console.log("Attempting to add "+playerName+" to game: "+gameId);
+    if (ReplicateCall(io,gameId, "server","AddPlayer",[playerName])){
         var playerIndex = GetPlayerIndex(gameId,playerName);
         if (game.sockets.length <= playerIndex) game.sockets.push("");
         game.sockets[playerIndex] = socketID;
         return playerIndex;
     }
-    console.error("JOIN GAME: unable to replicate this ca");
+    console.error("JOIN GAME: unable to replicate this call");
     return false;
 }
 
@@ -56,6 +57,9 @@ function GetGameList() {
 function HashGameName(gameName) {
     return Buffer.from(gameName).toString("hex");
 }
+function GenCallObj(source, callName,args){
+    return {source:source,funcName:callName,argList:args}
+}
 
 function ReplicateCall(io,gameId, source, callName, args){
     var game = GetGameByID(gameId);
@@ -66,17 +70,26 @@ function ReplicateCall(io,gameId, source, callName, args){
     //Call the function on our game engine and if it succedded send it out
     var result = game.CallFunc(callName,args);
     if (result != 0){
-        console.error("REP CALL: We found an error", result);
+        console.error("REP CALL: We found an error:", result);
         return false;
     }
     game.commands.push([source,callName,args]);
     
-    io.to(gameRoomRoot).emit(gameRoomRoot + "engine call", source, callName, args);
+    io.to(gameRoomRoot).emit(gameRoomRoot + "engine call", GenCallObj(source, callName, args));
     return true;
 }
 
+var gameID = HashGameName("test");
+console.log("Creating a new game", gameID);
+currentGames[gameID] = ArgueGame.CreateGame(gameID,function(callName,args){
+    console.log(callname,args);
+});
+currentGames[gameID].name="test";
+currentGames[gameID].sockets = [];
+currentGames[gameID].commands = [];
 
 function Init(socket, io) {
+
     socket.on(gameRoomRoot + "connect", function() {
         //lists all the games that are available
         socket.join(gameRoomRoot);
@@ -96,16 +109,27 @@ function Init(socket, io) {
 
         console.log("Creating a new game", gameID);
         currentGames[gameID] = ArgueGame.CreateGame(gameID,function(callName,args){
-
+            console.log(callname,args);
         });
-        currentGames[gameID].name = gameName;
-        currentGames[gameID].state = "waiting"; //states are question, guessing, game over
+        currentGames[gameID].name=gameName;
         currentGames[gameID].sockets = [];
         currentGames[gameID].commands = [];
 
         socket.emit(gameRoomRoot + "list games", GetGameList());
 
         io.to(gameRoomRoot).emit(gameRoomRoot + "list games", GetGameList());
+    });
+
+    socket.on(gameRoomRoot+"sync game", function(gameId){
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            console.error("SYNC GAME: this game does not exist");
+            return false;
+        }
+        game.commands.forEach(function(storedCall){
+            console.log("Playing back call",storedCall);
+            socket.emit(gameRoomRoot+"engine call",GenCallObj(storedCall[0],storedCall[1],storedCall[2]));
+        });
     });
 
     //relay any sort of thing we get from other clients to all the clients
@@ -123,6 +147,28 @@ function Init(socket, io) {
         console.log(result)
         
     });
+    socket.on(gameRoomRoot + "rejoin game", function(gameId, playerName, playerIndex, previousSocket) {
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            socket.emit(
+                gameRoomRoot + "error",
+                "This game does not exist: " + gameId,
+                true
+            );
+            console.error("SOCKET REJOIN GAME: this game does not exist");
+            return;
+        }
+
+        var oldIndex = GetPlayerIndex(gameID,playerName);
+        var oldSocket = game.sockets[oldIndex];
+        if (playerIndex == oldIndex && oldSocket == previousSocket){
+            game.sockets[playerIndex] = socket.id;
+            socket.emit(
+                gameRoomRoot + "set player", playerIndex
+            );
+            console.log("Player rejoined as "+playerName);
+        }
+    });
     socket.on(gameRoomRoot + "join game", function(gameId, playerName) {
         var game = GetGameByID(gameId);
         if (game == null) {
@@ -138,11 +184,7 @@ function Init(socket, io) {
         var playerIndex = JoinGame(io,gameId, playerName, socket.id);
 
         if (playerIndex === false) {
-            socket.emit(
-                gameRoomRoot + "error",
-                "This game does not exist: " + gameId,
-                true
-            );
+            console.error("Player tried to join with bogus playerIndex");
             return;
         }
         else {
