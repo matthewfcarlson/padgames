@@ -9,13 +9,13 @@
         </div>
           
         <ul class="list-group list-group-flush">
-          <a v-for="game in gamesList" class="list-group-item list-group-item-action" v-bind:href="/argue/+game.id" >{{game.name}}</a>
+          <a v-for="game in gamesList" v-bind:key="game.id" class="list-group-item list-group-item-action" v-bind:href="/argue/+game.id" >{{game.name}}</a>
           <li class="list-group-item" v-if="gamesList.length == 0">No Games Yet</li>
         </ul>
           
       </div>
       <br/>
-      <form class="form-inline">
+      <form class="form-inline" onsubmit="event.preventDefault();return false">
         <input class="form-control mb-2 mr-sm-2" type="text" v-model="gameName" placeholder="Name of a new game"/>
         <button class="btn btn-success mb-2" @click="CreateGame">Create Game</button>
       </form>
@@ -52,7 +52,6 @@ export default {
     return {
       gamesList: [],
       gameName: "",
-      playerName: "Testing",
       ready: false
     };
   },
@@ -60,6 +59,7 @@ export default {
     CreateGame() {
       console.log("Creating Argue game");
       this.$socket.emit("Argue:create game", this.gameName);
+      this.gameName = "";
     }
   },
   sockets: {

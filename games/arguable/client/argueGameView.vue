@@ -25,6 +25,7 @@ export default {
     return {
         currentGame: null,
         count:0,
+        playerID: -1,
         playerName: "Default",
     }
   },
@@ -39,22 +40,12 @@ export default {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       if (playerName == undefined) playerName = this.playerName;
       if (playerName == "") return;
-      const game = ArgueGame.CreateGame(this.gameRoom, this.CalledFunction);
+      const game = ArgueGame.CreateGame(gameRoom, function(name,args){
+          console.log("Broadcast up to the server that we called this ",name,args);
+          this.$socket.emit(ROOT + "engine call",gameRoom, name,args);
+      });
       this.currentGame = game;
       this.$socket.emit(ROOT + "join game", gameRoom, playerName);
-    },
-    AddPlayer: function(){
-        this.currentGame.replicated.AddPlayer("Matt"+this.count);
-        this.count++;
-    },
-    AddServerPlayer: function(){
-        console.log(this.$socket);
-        this.CalledFunction( "AddPlayer","Matt"+this.count);
-        this.count++;
-    },
-    CalledFunction: function(name,args){
-        console.log("Broadcast up to the server that we called this ",name,args);
-        this.$socket.emit(ROOT + "engine call",name,args);
     },
     LeaveGame: function() {
       this.$router.push("/argue");
@@ -84,7 +75,7 @@ export default {
       if (this.$socket.id == source) {
           console.log("Ignoring");
       }
-      else this.currentGame.CalledFunction(funcName,argList);
+      else this.currentGame.CallFunc(funcName,argList);
     }
   }
 }
