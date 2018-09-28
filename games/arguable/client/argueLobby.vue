@@ -82,14 +82,12 @@ export default {
 </script>
 <style>
 :root {
-
-
---color1: #F9F4CA; /* beige*/
---color2: #B9B696; /* khaki */
---color3: #797763; /*navajowhite */
---color4: #3A392F;
---color5: #DFDBB5; /* palegoldenrod */
---color6: blanchedalmond /* blanched almond*/
+  --color1: #F9F4CA; /* beige*/
+  --color2: #B9B696; /* khaki */
+  --color3: #797763; /*navajowhite */
+  --color4: #3A392F;
+  --color5: #DFDBB5; /* palegoldenrod */
+  --color6: blanchedalmond /* blanched almond*/
 }
 </style>
 <style scoped>

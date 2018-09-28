@@ -20,8 +20,7 @@ function CreateGame(gameName, proxyCallback){
     // -> We are running the timer down
     //Voting
     // -> We wait for each player to vote
-    // -> Moderator an override
-    // -> 
+    // -> Moderator can override
     //End_vote
     // -> New debaters are chosen new moderate is chosen. Losing player is now moderator.
     // -> If more than one player left, We automatically move to Moderate_topic
@@ -59,7 +58,8 @@ function CreateGame(gameName, proxyCallback){
         _answers: [],
         _moderator: -1,
         _debaters: [],
-        topic: "",
+        _pressure: [], //0 = no pressure, 1 = under pressure, 2 = out of the game
+        _topic: "",
         _mt: null,
 
         //Sets a callback for transitions in state
@@ -69,6 +69,9 @@ function CreateGame(gameName, proxyCallback){
 
         //set the debaters (yes is always first)
         SetDebaters: function(player1, player2){
+            if (!this._state.is("first_mod")){
+                return "You can't manually set the debaters if you're not in the first_mod"
+            }
             if (player1 == player2) return "You cannot debate yourself";
             if (player1 < 0) return "Invalid debator 1";
             if (player2 < 0) return "Invalid debator 2";
@@ -78,7 +81,32 @@ function CreateGame(gameName, proxyCallback){
 
         //set the next debaters
         SetNextDebaters: function(){
+            if (!this._state.is("first_mod")){
+                return "You can't manually set the debaters if you're not in the first_mod"
+            }
+            //figure out who all is still in the game
+            arrayList = this._pressure.map(function(x,index){ (x<2) ? x:-1}).filter(x => x != -1);
+            console.log(arrayList);
 
+            //pick two moderators that haven't faced off before if possible
+
+        },
+
+        //Sets the topic of the particular session
+        SetTopic: function(topic){
+            if (this._state.can("topicpick")){
+                //set the topic to be picked
+                this._state.topicpick();
+                this._topic = topic;
+                return 0;
+            }
+            else {
+                return "Topic cannot be set in this state"
+            }
+        },
+
+        GetTopic: function(){
+            return this._topic;
         },
 
         //Gets the debator that is for the issue
