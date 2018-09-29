@@ -1,16 +1,26 @@
 <template>
 <div class="content">
     <h1>Arguable Game</h1>
-    <div>
-      <input type="text" class="form-control" placeholder="Your name" v-model="playerName" v-if="playerIndex==-1" />
-      <button @click="StartGame">Start Game</button>
+    <div v-if="playerIndex == -1">
+      <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
+      
       <button @click="JoinGame()">Join Game</button>
     </div>
-    {{playerList}}
-    {{state}}
-    Role: {{currentRole}}
-    Moderator: {{moderator}}
-    PlayerIndex: {{playerIndex}}
+    <button v-else-if="state=='lobby'" @click="StartGame">Start Game</button>
+   
+    <div is="ModeratorPickDebator" v-else-if="isModerator && state == 'first_mod'"></div>
+    <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'"></div>
+    <div v-else>
+      Waiting...
+    </div>
+
+    <pre>
+       {{playerList}}
+      {{state}}
+      Role: {{currentRole}}
+      Moderator: {{moderator}}
+      PlayerIndex: {{playerIndex}}
+    </pre>
     
 </div>
 </template>
@@ -19,6 +29,8 @@
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import ArgueGame  from "../common/argueGame";
+import ModeratorTopicPick  from "./ModeratorTopicPick";
+import ModeratorPickDebator  from "./ModeratorPickDebator";
 
 Vue.use(VueSocketio, window.location.origin);
 const ROOT = "Argue:";
@@ -31,6 +43,10 @@ export default {
         playerIndex: -1,
         playerName: "Default",
     }
+  },
+  components: {
+    ModeratorPickDebator,
+    ModeratorTopicPick
   },
   created: function() {
     this.gameRoom = this.$route.params.gameID || "";
@@ -47,6 +63,10 @@ export default {
     moderator: function(){
       if (this.currentGame == null) return [];
       return this.currentGame.Moderator();
+    },
+    isModerator: function(){
+      if (this.currentGame == null) return [];
+      return this.currentGame.Moderator() == this.playerIndex;
     },
     currentRole: function(){
       if (this.currentGame == null) return "none";

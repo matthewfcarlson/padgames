@@ -2,7 +2,7 @@
 <div class="content">
     <h1 class="speech-bubble">Arguable</h1>
     <h2 v-if="!ready">Connecting</h2>
-    <div class="container-fluid" v-else>
+    <div class="container-fluid">
       <div class="card border">
         <div class="card-header bg-primary text-white">
           The List of games
