@@ -8,7 +8,7 @@
     </div>
     <button v-else-if="state=='lobby'" @click="StartGame">Start Game</button>
    
-    <div is="ModeratorPickDebator" v-else-if="isModerator && state == 'first_mod'"></div>
+    <div is="ModeratorPickDebator" v-bind:players="pickAblePlayers" v-else-if="isModerator && state == 'first_mod'"></div>
     <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'"></div>
     <div v-else>
       Waiting...
@@ -52,6 +52,18 @@ export default {
     this.gameRoom = this.$route.params.gameID || "";
   },
   computed: {
+    pickAblePlayers: function(){
+      var players = this.playerList;
+      if (playerList.length == 0) return [];
+      const moderator = this.moderator;
+      //filter out the players that are out of the game
+      var availablePlayers = playerList.filter(function(val,index){
+        if (index == moderator) return false;
+        return true;
+      });
+      return availablePlayers;
+      //filter out the moderator
+    },
     playerList: function(){
       if (this.currentGame == null) return [];
       return this.currentGame.GetPlayers();
