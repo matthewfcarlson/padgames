@@ -24,6 +24,7 @@ export default {
       no: -1
     };
   },
-  props: ["players"]
+  //players is the list of all the players and available is a list of the index of all avaiable players
+  props: ["players","avaialble"]
 }
 </script>

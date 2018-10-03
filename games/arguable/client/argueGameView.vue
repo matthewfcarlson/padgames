@@ -8,7 +8,7 @@
     </div>
     <button v-else-if="state=='lobby'" @click="StartGame">Start Game</button>
    
-    <div is="ModeratorPickDebator" v-bind:players="pickAblePlayers" v-else-if="isModerator && state == 'first_mod'"></div>
+    <div is="ModeratorPickDebator" v-bind:players="playerList" v-bind:avaialble="pickAblePlayers" v-else-if="isModerator && state == 'first_mod'"></div>
     <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'"></div>
     <div v-else>
       Waiting...
@@ -52,16 +52,10 @@ export default {
     this.gameRoom = this.$route.params.gameID || "";
   },
   computed: {
-    pickAblePlayers: function(){
-      var players = this.playerList;
-      if (playerList.length == 0) return [];
-      const moderator = this.moderator;
-      //filter out the players that are out of the game
-      var availablePlayers = playerList.filter(function(val,index){
-        if (index == moderator) return false;
-        return true;
-      });
-      return availablePlayers;
+    pickAblePlayerIndexs: function(){
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetAvailablePlayerIndexs();
+      
       //filter out the moderator
     },
     playerList: function(){
@@ -155,4 +149,54 @@ export default {
   }
 }
 </script>
+<style scoped>
+.content{  /* https://bennettfeely.com/gradients/ */
+  background:var(--color1);
+  background: -moz-linear-gradient(top,var(--color1) 0%, var(--color5) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%,var(--color5)), color-stop(100%, var(--color5)));
+  background: -webkit-linear-gradient(top,var(--color1) 0%, var(--color5) 100%);
+  background: -o-linear-gradient(top,var(--color1) 0%, var(--color5) 100%);
+  background: -ms-linear-gradient(top,var(--color1) 0%, var(--color5) 100%);
+  background: linear-gradient(to bottom,var(--color1) 0%, var(--color5) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#273de6', GradientType=0 );
+  
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 100%;
+	
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+	
+  /* Set up positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.speech-bubble {
+	position: relative;
+	background: var(--color4);
+  color:white;
+  padding:0.75em;
+  text-transform: uppercase;
+  margin:0.5em;
+	border-radius: .2em;
+}
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-right-color: #000000;
+  border-right-color: var(--color4);
+	border-left: 0;
+	border-bottom: 0;
+	margin-top: -10px;
+	margin-left: -20px;
+}
+</style>
 

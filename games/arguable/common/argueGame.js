@@ -126,6 +126,18 @@ function CreateGame(gameName, proxyCallback){
             return this._players
         },
 
+        GetAvailablePlayerIndexs: function(){
+            if (playerList.length == 0) return [];
+            const moderator = this._moderator;
+            //filter out the players that are out of the game
+            var availablePlayers = playerList.map((x,index)=>index).filter(function(val,index){
+                if (index == moderator) return false;
+                return true;
+            });
+            console.log("Players you can pick: ",availablePlayers)
+            return availablePlayers;
+        },
+
         //Gets the current moderator
         Moderator: function(){
             return this._moderator;

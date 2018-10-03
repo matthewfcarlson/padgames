@@ -1,12 +1,13 @@
 <template>
 <div class="content">
     <h2>Pick Your Topic</h2>
+    {{topicList}}
 </div>
 </template>
 <script>
 import Vue from "vue";
 
-const topicList = [
+const allTopicList = [
     "Should men be allowed to vote",
     "Should women have to put the toliet seat down",
     "Should trucks be illegal",
@@ -22,5 +23,11 @@ export default {
       ready: false
     };
   },
+  mounted: function(){
+    for (var i=0;i<5;i++){
+      var randIndex = Math.floor(Math.random()*len(allTopicList));
+      this.topicList.append(randIndex);
+    }
+  }
 }
 </script>
