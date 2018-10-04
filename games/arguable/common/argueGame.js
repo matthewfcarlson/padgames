@@ -76,6 +76,7 @@ function CreateGame(gameName, proxyCallback){
             if (player1 < 0) return "Invalid debator 1";
             if (player2 < 0) return "Invalid debator 2";
             this._debaters = [player1, player2];
+            this._state.firstModerateDone()
             return 0;
         },
 
@@ -89,15 +90,16 @@ function CreateGame(gameName, proxyCallback){
             console.log(arrayList);
 
             //pick two moderators that haven't faced off before if possible
+            return 0;
 
         },
 
         //Sets the topic of the particular session
         SetTopic: function(topic){
-            if (this._state.can("topicpick")){
+            if (this._state.is("moderate_topic")){
                 //set the topic to be picked
-                this._state.topicpick();
                 this._topic = topic;
+                this._state.topicPick();                
                 return 0;
             }
             else {
@@ -127,10 +129,10 @@ function CreateGame(gameName, proxyCallback){
         },
 
         GetAvailablePlayerIndexs: function(){
-            if (playerList.length == 0) return [];
+            if (this._players.length == 0) return [];
             const moderator = this._moderator;
             //filter out the players that are out of the game
-            var availablePlayers = playerList.map((x,index)=>index).filter(function(val,index){
+            var availablePlayers = this._players.map((x,index)=>index).filter(function(val,index){
                 if (index == moderator) return false;
                 return true;
             });

@@ -1,6 +1,7 @@
 <template>
 <div class="content">
     <h1>Arguable Game</h1>
+    <h2 class="speech-bubble" v-if="topic != ''">{{topic}}</h2>
     <div v-if="playerIndex == -1">
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
       
@@ -8,18 +9,20 @@
     </div>
     <button v-else-if="state=='lobby'" @click="StartGame">Start Game</button>
    
-    <div is="ModeratorPickDebator" v-bind:players="playerList" v-bind:avaialble="pickAblePlayers" v-else-if="isModerator && state == 'first_mod'"></div>
-    <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'"></div>
+    <div is="ModeratorPickDebator"  v-else-if="isModerator && state == 'first_mod'" @submit="PickedDebators" v-bind:players="playerList" v-bind:avaialble="pickAblePlayerIndexs"></div>
+    <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'" @submit="PickedTopic"></div>
     <div v-else>
       Waiting...
     </div>
 
-    <pre>
+    <pre v-if="currentGame != null">
        {{playerList}}
       {{state}}
       Role: {{currentRole}}
       Moderator: {{moderator}}
       PlayerIndex: {{playerIndex}}
+      YES: {{currentGame.GetYesDebator()}}
+      NO: {{currentGame.GetNoDebator()}}
     </pre>
     
 </div>
@@ -50,6 +53,11 @@ export default {
   },
   created: function() {
     this.gameRoom = this.$route.params.gameID || "";
+    var names = ["Billy","Bob","Joe","Sue","Ellen","Tj","Safiye","Jeff","Kira","Matt","Jeremy","Star","James","Lily","Simon","Norman"]
+    if (this.playerName == "Default")
+      this.playerName = names[Math.floor(Math.random()*names.length)];
+
+    
   },
   computed: {
     pickAblePlayerIndexs: function(){
@@ -77,16 +85,28 @@ export default {
     currentRole: function(){
       if (this.currentGame == null) return "none";
       if (this.playerIndex == -1) return "spectator";
-      if (this.currentGame.Moderator() == this.playerIndex) return "moderator";
+      if (this.currentGame.Moderator()) return "moderator";
       if (this.currentGame.GetYesDebator() == this.playerIndex) return "debate_yes";
       if (this.currentGame.GetNoDebator() == this.playerIndex) return "debate_no";
       return "voter";
+    },
+    topic: function(){
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetTopic();
     }
     
   },
   methods: {
     StartGame: function() {
       this.currentGame.replicated.StartGame();
+    },
+    PickedDebators: function(yes,no){
+      console.log("Setting the debators ",yes,no)
+      this.currentGame.replicated.SetDebaters(yes,no);
+    },
+    PickedTopic: function(topic){
+      console.log("Setting the topic",topic);
+      this.currentGame.replicated.SetTopic(topic);
     },
     JoinGame: function(gameRoom, playerName) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
