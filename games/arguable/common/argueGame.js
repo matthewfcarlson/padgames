@@ -76,6 +76,7 @@ function CreateGame(gameName, proxyCallback){
             if (player1 < 0) return "Invalid debator 1";
             if (player2 < 0) return "Invalid debator 2";
             this._debaters = [player1, player2];
+            this._readyDebators = [];
             this._state.firstModerateDone()
             return 0;
         },
@@ -87,11 +88,37 @@ function CreateGame(gameName, proxyCallback){
             }
             //figure out who all is still in the game
             arrayList = this._pressure.map(function(x,index){ (x<2) ? x:-1}).filter(x => x != -1);
-            console.log(arrayList);
+            console.log("Setting next debators ",arrayList);
 
             //pick two moderators that haven't faced off before if possible
             return 0;
 
+        },
+
+        SetDebatorReady: function(playerIndex){
+            //TODO set a timer that will go off
+            if (!this._state.is("debate_waiting")) return "We are not in the right state for the debators to mark ready";
+            if (this._readyDebators.indexOf(playerIndex) != -1) return "This debator player is already ready" + playerIndex;
+            this._readyDebators.push(playerIndex);
+            if (this._readyDebators.length >= 2){
+                this._state.debateStart();
+            }
+            return 0;
+        },
+
+        FinishDebate: function(){
+            if (!this._state.is("debating")) return "We are not in the right state for the debate to finish";
+            //TODO check if enough time has elapsed?
+            this._state.debateEnd();
+            return 0;
+        },
+
+        GenCallObj: function(source, callName,args){
+            return {source:source,funcName:callName,argList:args}
+        },
+
+        StoreCall: function(callObj){
+            this.commands.push(callObj);
         },
 
         //Sets the topic of the particular session
@@ -99,7 +126,19 @@ function CreateGame(gameName, proxyCallback){
             if (this._state.is("moderate_topic")){
                 //set the topic to be picked
                 this._topic = topic;
-                this._state.topicPick();                
+                this._state.topicPick();
+                var self = this;
+                setTimeout(function(){
+                    console.log("TIMES UP - DEBATORS Prep time is up!",self);
+                    self.SetDebatorReady(self.GetNoDebator());
+                    self.SetDebatorReady(self.GetYesDebator());
+                    self.StoreCall(self.GenCallObj(
+                        "Server","SetDebatorReady",[self.GetNoDebator()]
+                    ));
+                    self.StoreCall(self.GenCallObj(
+                        "Server","SetDebatorReady",[self.GetYesDebator()]
+                    ));
+                },45*1000);
                 return 0;
             }
             else {
@@ -184,9 +223,10 @@ function CreateGame(gameName, proxyCallback){
             return 0;
         },
 
-        CallFunc: function (name,...args){
+        ApplyFunc: function (name,args){
             if (this.hasOwnProperty(name)){
-                console.log("Calling "+name+" with "+args);
+                console.log("Calling "+name+" with ",args);
+                
                 return this[name].apply(this, args);
             }
             else {

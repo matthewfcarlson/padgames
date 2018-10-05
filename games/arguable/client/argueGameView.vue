@@ -2,6 +2,8 @@
 <div class="content">
     <h1>Arguable Game</h1>
     <h2 class="speech-bubble" v-if="topic != ''">{{topic}}</h2>
+    <h2 class="speech-bubble" v-if="currentRole == 'debate_yes'">Yes!</h2>
+    <h2 class="speech-bubble" v-if="currentRole == 'debate_no'">No!</h2>
     <div v-if="playerIndex == -1">
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
       
@@ -11,6 +13,7 @@
    
     <div is="ModeratorPickDebator"  v-else-if="isModerator && state == 'first_mod'" @submit="PickedDebators" v-bind:players="playerList" v-bind:avaialble="pickAblePlayerIndexs"></div>
     <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'" @submit="PickedTopic"></div>
+    <div is="DebatorPickStrategies" v-else-if="isDebator && state == 'debate_waiting'" @submit="DebatorReady"></div>
     <div v-else>
       Waiting...
     </div>
@@ -34,6 +37,7 @@ import VueSocketio from "vue-socket.io";
 import ArgueGame  from "../common/argueGame";
 import ModeratorTopicPick  from "./ModeratorTopicPick";
 import ModeratorPickDebator  from "./ModeratorPickDebator";
+import DebatorPickStrategies  from "./DebatorPickStrategies";
 
 Vue.use(VueSocketio, window.location.origin);
 const ROOT = "Argue:";
@@ -49,7 +53,8 @@ export default {
   },
   components: {
     ModeratorPickDebator,
-    ModeratorTopicPick
+    ModeratorTopicPick,
+    DebatorPickStrategies
   },
   created: function() {
     this.gameRoom = this.$route.params.gameID || "";
@@ -82,6 +87,11 @@ export default {
       if (this.currentGame == null) return [];
       return this.currentGame.Moderator() == this.playerIndex;
     },
+    isDebator: function(){
+      if (this.currentGame == null) return false;
+      if (this.currentGame.GetYesDebator() == this.playerIndex) return true;
+      if (this.currentGame.GetNoDebator() == this.playerIndex) return true;
+    },
     currentRole: function(){
       if (this.currentGame == null) return "none";
       if (this.playerIndex == -1) return "spectator";
@@ -107,6 +117,10 @@ export default {
     PickedTopic: function(topic){
       console.log("Setting the topic",topic);
       this.currentGame.replicated.SetTopic(topic);
+    },
+    DebatorReady: function(){
+      console.log("I'm ready");
+      this.currentGame.replicated.SetDebatorReady(this.playerIndex);
     },
     JoinGame: function(gameRoom, playerName) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
@@ -164,7 +178,7 @@ export default {
       if (this.$socket.id == data.source) {
           console.log("Ignoring");
       }
-      else this.currentGame.CallFunc(data.funcName,data.argList);
+      else this.currentGame.ApplyFunc(data.funcName,data.argList);
     }
   }
 }

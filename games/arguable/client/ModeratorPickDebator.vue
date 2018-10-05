@@ -1,5 +1,5 @@
 <template>
-<div class="content">
+<div class="container">
     <h2>Pick Your Debators</h2>
     <div>Player List</div>
     Pick two players to debate for a topic:

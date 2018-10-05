@@ -57,9 +57,6 @@ function GetGameList() {
 function HashGameName(gameName) {
     return Buffer.from(gameName).toString("hex");
 }
-function GenCallObj(source, callName,args){
-    return {source:source,funcName:callName,argList:args}
-}
 
 function ReplicateCall(io,gameId, source, callName, args){
     var game = GetGameByID(gameId);
@@ -68,21 +65,22 @@ function ReplicateCall(io,gameId, source, callName, args){
         return false;
     }
     //Call the function on our game engine and if it succedded send it out
-    var result = game.CallFunc(callName,args);
+    var result = game.ApplyFunc(callName,args);
     if (result != 0){
         console.error("REP CALL: We found an error:", result);
         return false;
     }
-    game.commands.push([source,callName,args]);
+    var storedCall = game.GenCallObj(source, callName, args);
+    game.StoreCall(storedCall);
     
-    io.to(gameRoomRoot).emit(gameRoomRoot + "engine call", GenCallObj(source, callName, args));
+    io.to(gameRoomRoot).emit(gameRoomRoot + "engine call",storedCall);
     return true;
 }
 
 var gameID = HashGameName("test");
 console.log("Creating a new game", gameID);
 currentGames[gameID] = ArgueGame.CreateGame(gameID,function(callName,args){
-    console.log(callname,args);
+    console.log("Called on test: ",callname,args);
 });
 currentGames[gameID].name="test";
 currentGames[gameID].sockets = [];
@@ -109,7 +107,7 @@ function Init(socket, io) {
 
         console.log("Creating a new game", gameID);
         currentGames[gameID] = ArgueGame.CreateGame(gameID,function(callName,args){
-            console.log(callname,args);
+            console.log("Called on "+gameID, callname,args);
         });
         currentGames[gameID].name=gameName;
         currentGames[gameID].sockets = [];
@@ -128,14 +126,12 @@ function Init(socket, io) {
         }
         game.commands.forEach(function(storedCall){
             console.log("Playing back call",storedCall);
-            socket.emit(gameRoomRoot+"engine call",GenCallObj(storedCall[0],storedCall[1],storedCall[2]));
+            socket.emit(gameRoomRoot+"engine call",storedCall);
         });
     });
 
     //relay any sort of thing we get from other clients to all the clients
     socket.on(gameRoomRoot+"engine call", function(gameId, callName, args){
-        console.log("Got an request from "+socket.id+" for game "+gameId);
-        console.log(callName,args);
         var source = socket.id;
         var game = GetGameByID(gameId);
         if (game == null) {
@@ -143,8 +139,7 @@ function Init(socket, io) {
             return false;
         }
 
-        var result = ReplicateCall(io,gameId,socket.id,callName,args);
-        console.log(result)
+        var result = ReplicateCall(io,gameId,source,callName,args);
         
     });
     socket.on(gameRoomRoot + "rejoin game", function(gameId, playerName, playerIndex, previousSocket) {

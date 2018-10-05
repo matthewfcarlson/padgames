@@ -1,7 +1,6 @@
 <template>
-<div class="content">
+<div class="container">
     <h2>Pick Your Topic</h2>
-    {{topicList}}
     <ul class="list-group list-group-flush">
       <a v-for="topic,index in topicList" v-bind:key="index" @click="PickTopic(topic)" class="list-group-item list-group-item-action">{{topic}}?</a>
     </ul>
