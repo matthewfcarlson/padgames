@@ -72,6 +72,9 @@ export default {
         }
     }
   },
+  beforeDestroy: function(){
+      clearInterval(this.interval);
+  },
   mounted: function(){
     while(this.strategies.length < 2){
       var randIndex = Math.floor(Math.random()*allStrategies.length);

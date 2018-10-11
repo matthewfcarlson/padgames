@@ -4,6 +4,8 @@
     <h2 class="speech-bubble" v-if="topic != ''">{{topic}}</h2>
     <h2 class="speech-bubble" v-if="currentRole == 'debate_yes'">Yes!</h2>
     <h2 class="speech-bubble" v-if="currentRole == 'debate_no'">No!</h2>
+    <div is="DebatingTimeLimit" v-if="state == 'debating'" @submit="DebateFinished" v-bind:isModerator="isModerator"></div>
+
     <div v-if="playerIndex == -1">
       <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
       
@@ -13,7 +15,8 @@
    
     <div is="ModeratorPickDebator"  v-else-if="isModerator && state == 'first_mod'" @submit="PickedDebators" v-bind:players="playerList" v-bind:avaialble="pickAblePlayerIndexs"></div>
     <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'" @submit="PickedTopic"></div>
-    <div is="DebatorPickStrategies" v-else-if="isDebator && state == 'debate_waiting'" @submit="DebatorReady"></div>
+    <div is="DebatorPickStrategies" v-else-if="isDebator && state == 'debate_waiting'" @submit="DebatorReady"></div>    
+    <div is="Voting" v-else-if="!isDebator && state == 'voting'" @submit="Voted"></div>    
     <div v-else>
       Waiting...
     </div>
@@ -38,6 +41,8 @@ import ArgueGame  from "../common/argueGame";
 import ModeratorTopicPick  from "./ModeratorTopicPick";
 import ModeratorPickDebator  from "./ModeratorPickDebator";
 import DebatorPickStrategies  from "./DebatorPickStrategies";
+import DebatingTimeLimit from "./DebatingTimeLimit";
+import Voting from "./Voting";
 
 Vue.use(VueSocketio, window.location.origin);
 const ROOT = "Argue:";
@@ -54,15 +59,15 @@ export default {
   components: {
     ModeratorPickDebator,
     ModeratorTopicPick,
-    DebatorPickStrategies
+    DebatorPickStrategies,
+    DebatingTimeLimit,
+    Voting
   },
   created: function() {
     this.gameRoom = this.$route.params.gameID || "";
     var names = ["Billy","Bob","Joe","Sue","Ellen","Tj","Safiye","Jeff","Kira","Matt","Jeremy","Star","James","Lily","Simon","Norman"]
     if (this.playerName == "Default")
       this.playerName = names[Math.floor(Math.random()*names.length)];
-
-    
   },
   computed: {
     pickAblePlayerIndexs: function(){
@@ -121,6 +126,14 @@ export default {
     DebatorReady: function(){
       console.log("I'm ready");
       this.currentGame.replicated.SetDebatorReady(this.playerIndex);
+    },
+    DebateFinished: function(){
+      this.currentGame.replicated.FinishDebate();
+    },
+    Voted: function(vote){
+      console.log("I voted", vote);
+      this.currentGame.replicated.SetVote(this.playerIndex,vote.toLowerCase());
+      
     },
     JoinGame: function(gameRoom, playerName) {
       if (gameRoom == undefined) gameRoom = this.gameRoom;

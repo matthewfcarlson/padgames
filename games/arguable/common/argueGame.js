@@ -60,6 +60,7 @@ function CreateGame(gameName, proxyCallback){
         _debaters: [],
         _pressure: [], //0 = no pressure, 1 = under pressure, 2 = out of the game
         _topic: "",
+        _votes: [],
         _mt: null,
 
         //Sets a callback for transitions in state
@@ -109,8 +110,47 @@ function CreateGame(gameName, proxyCallback){
         FinishDebate: function(){
             if (!this._state.is("debating")) return "We are not in the right state for the debate to finish";
             //TODO check if enough time has elapsed?
+            this._votes = [];
             this._state.debateEnd();
             return 0;
+        },
+
+        SetVote: function(playerIndex, vote){
+            if (!this._state.is("voting")) return "We are not in the right state for the debate to finish";
+            while (playerIndex > this._votes.length) this._votes.push("");
+            if (this._votes[playerIndex] != "") return "You have already voted";
+            if (this.GetYesDebator() == playerIndex) return "You cannot vote when you're a debator";
+            if (this.GetNoDebator() == playerIndex) return "You cannot vote when you're a debator";
+
+            this._votes[playerIndex] = vote;
+
+            if (this.GetWinner() >= 0){
+                //end the debate
+                console.log("Ending the debate");
+                this._state.votingEnd();
+            }
+        },
+
+        GetWinner: function(){
+            var yes = 0;
+            var no = 0;
+            var unanswered = this._players.length-2; //there's always two debators
+            if (!this._state.is("vote_end") && !this._state.is("voting")) return "A debate is not ready";
+            
+            
+            for (var i=0;i<this._votes.length;i++){
+                var value = this._votes[i];
+                if (value == "") continue;
+                unanswered--;
+                if (value == "yes") yes++;
+                if (value == "no") no++;
+
+            }
+            if (unanswered != 0) return -1;
+            if (yes > no) return this.GetYesDebator();
+            if (no > yes) return this.GetNoDebator();
+            return -2; //there's a tie
+
         },
 
         GenCallObj: function(source, callName,args){

@@ -98,7 +98,7 @@ const allTopicList = [
     "Are we aliens",
     "Should guys be allowed to wear tight pants",
     "Should you plan your own funeral",
-    "Are diamons really a girl's best friend",
+    "Are diamonds really a girl's best friend",
     "Are girls weird when they are PMSi-ing",
     "Are memes good",
     "Should a dog's front legs be called arms",
