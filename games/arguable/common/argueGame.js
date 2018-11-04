@@ -6,7 +6,7 @@ function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
 
-function CreateGame(gameName, proxyCallback){
+function CreateGame(gameName, proxyCallback) {
 
     //We start in lobby and go to first_mod (first moderator)
     // -> Going to first_moderator we pick the first_moderator 
@@ -26,51 +26,51 @@ function CreateGame(gameName, proxyCallback){
     // -> If more than one player left, We automatically move to Moderate_topic
     // -> Otherwise we end the game
     //End_game
-    
+
     var transitionFunction = null;
     var fsm = new StateMachine({
         init: 'lobby',
         transitions: [
-          { name: 'start',    from: 'lobby',  to: 'first_mod' },
-          { name: 'firstModerateDone',  from: 'first_mod',  to: 'moderate_topic' },
-          { name: 'topicPick',  from: 'moderate_topic',  to: 'debate_waiting' },
-          { name: 'debateStart',  from: 'debate_waiting',  to: 'debating' },
-          { name: 'debateEnd',  from: 'debating',  to: 'voting' },
-          { name: 'votingEnd',  from: 'voting',  to: 'vote_end' },
-          { name: 'newDebate',  from: 'vote_end',  to: 'topicPick' },
-          { name: 'finishGame',  from: 'vote_end',  to: 'end_game' },
-          { name: 'endGame', from: 'moderate_topic',    to: 'end_game' }
+            { name: 'start', from: 'lobby', to: 'first_mod' },
+            { name: 'firstModerateDone', from: 'first_mod', to: 'moderate_topic' },
+            { name: 'topicPick', from: 'moderate_topic', to: 'debate_waiting' },
+            { name: 'debateStart', from: 'debate_waiting', to: 'debating' },
+            { name: 'debateEnd', from: 'debating', to: 'voting' },
+            { name: 'votingEnd', from: 'voting', to: 'vote_end' },
+            { name: 'newDebate', from: 'vote_end', to: 'moderate_topic' },
+            { name: 'finishGame', from: 'vote_end', to: 'end_game' },
+            { name: 'endGame', from: 'moderate_topic', to: 'end_game' }
         ],
         methods: {
-          onStart: function() { console.log('I start'); },
-          onEndGame: function() { console.log('I ended the hame') },
-          onTransition: function(lifecycle) { if (transitionFunction != null) transitionFunction(lifecycle) },
-          onInvalidTransition: function(transition, from, to) {
-            throw new Exception("transition not allowed from that state");
-          }
+            onTransition: function (lifecycle) { if (transitionFunction != null) transitionFunction(lifecycle) },
+            onInvalidTransition: function (transition, from, to) {
+                throw new Exception("transition not allowed from that state");
+            }
         }
-      });
-    
-    var default_game =  {  //python style
+    });
+
+    var default_game = {  //python style
         _state: fsm,
         _gameName: gameName || "DEFAULT",
         _players: [],
-        _answers: [],
         _moderator: -1,
         _debaters: [],
         _pressure: [], //0 = no pressure, 1 = under pressure, 2 = out of the game
         _topic: "",
         _votes: [],
+        _round: 0,
         _mt: null,
+        _lastModeratedRound: [],
+        _debatePairs: [],
 
         //Sets a callback for transitions in state
-        SetTransition: function(trans){
+        SetTransition: function (trans) {
             transitionFunction = trans;
         },
 
         //set the debaters (yes is always first)
-        SetDebaters: function(player1, player2){
-            if (!this._state.is("first_mod")){
+        SetDebaters: function (player1, player2) {
+            if (!this._state.is("first_mod")) {
                 return "You can't manually set the debaters if you're not in the first_mod"
             }
             if (player1 == player2) return "You cannot debate yourself";
@@ -78,67 +78,184 @@ function CreateGame(gameName, proxyCallback){
             if (player2 < 0) return "Invalid debator 2";
             this._debaters = [player1, player2];
             this._readyDebators = [];
+            this._debatePairs.push(this._debaters);
             this._state.firstModerateDone()
             return 0;
         },
 
         //set the next debaters
-        SetNextDebaters: function(){
-            if (!this._state.is("first_mod")){
+        _SetNextDebaters: function () {
+            if (!this._state.is("vote_end")) {
                 return "You can't manually set the debaters if you're not in the first_mod"
             }
             //figure out who all is still in the game
-            arrayList = this._pressure.map(function(x,index){ (x<2) ? x:-1}).filter(x => x != -1);
-            console.log("Setting next debators ",arrayList);
+            var arrayList = this.GetAvailablePlayerIndexs();
+            console.log("Setting next debators ", arrayList);
+            //go through all the eligible players
+            var self = this;
+            var timesDebated = arrayList.map(x=>{
+                //figure out how many times this person has been in a debate
+                return self._debatePairs.reduce((prev,curr)=>{
+                    if (curr.indexOf(x) != -1) return prev + 1;
+                    return prev;
+                },0);
+            });
+            console.log("Number of times they've debated",timesDebated);
+            var debator1 = 0;
+            var debator2 = 1;
+            var minTimesDebated = timesDebated[0];
+            timesDebated.forEach((curr,index)=>{
+                if (curr < minTimesDebated){
+                    debator1 = index;
+                    minTimesDebated = curr;
+                }
+            });
+            var minTimesDebated = timesDebated[1];
+            timesDebated.forEach((curr,index)=>{
+                if (curr < minTimesDebated && index != debator1){
+                    debator2 = index;
+                    minTimesDebated = curr;
+                }
+            });
 
-            //pick two moderators that haven't faced off before if possible
+            if (debator1 == -1 || debator2 == -1){
+                console.log("We have a winner!");
+                return "winner winner";
+            }
+
+            //convert back to the origional debator format
+            debator1 = arrayList[debator1];
+            debator2 = arrayList[debator2];
+
+            console.log("Possible debators: ",debator1, debator2);
+            var debators = [debator1,debator2];
+            //Check to make sure this configuration doesn't exist
+            if (this._debatePairs.indexOf(debators) != -1){
+                debators= [debator2,debator1];
+            }
+
+            if (this._debatePairs.indexOf(debators) != -1){
+                debators= [debator1,debator2];
+            }
+
+           
+
+            this._debaters = debators;
+            this._readyDebators = [];
+            this._debatePairs.push(this._debaters);
+            
             return 0;
 
         },
 
-        SetDebatorReady: function(playerIndex){
+        SetDebatorReady: function (playerIndex) {
             //TODO set a timer that will go off
             if (!this._state.is("debate_waiting")) return "We are not in the right state for the debators to mark ready";
             if (this._readyDebators.indexOf(playerIndex) != -1) return "This debator player is already ready" + playerIndex;
             this._readyDebators.push(playerIndex);
-            if (this._readyDebators.length >= 2){
+            if (this._readyDebators.length >= 2) {
                 this._state.debateStart();
             }
             return 0;
         },
 
-        FinishDebate: function(){
+        FinishDebate: function () {
             if (!this._state.is("debating")) return "We are not in the right state for the debate to finish";
             //TODO check if enough time has elapsed?
-            this._votes = [];
             this._state.debateEnd();
+
             return 0;
         },
 
-        SetVote: function(playerIndex, vote){
+        SetVote: function (playerIndex, vote) {
+            console.log(this._votes);
             if (!this._state.is("voting")) return "We are not in the right state for the debate to finish";
-            while (playerIndex > this._votes.length) this._votes.push("");
             if (this._votes[playerIndex] != "") return "You have already voted";
+            if (vote != "yes" && vote != "no") return "Invalid vote value";
             if (this.GetYesDebator() == playerIndex) return "You cannot vote when you're a debator";
             if (this.GetNoDebator() == playerIndex) return "You cannot vote when you're a debator";
 
             this._votes[playerIndex] = vote;
 
-            if (this.GetWinner() >= 0){
+            if (this.GetWinner() >= 0) {
                 //end the debate
                 console.log("Ending the debate");
                 this._state.votingEnd();
+                this.SetupNextRound();
             }
+            return 0;
         },
 
-        GetWinner: function(){
+        _GetNextModerator: function () {
+            //figure out who all is still in the game
+            var self = this;
+            var moderatorIndexs = this._players.map((x, i) => i).filter(x => self._pressure[x] >= 2);
+            var leastIndex = -1;
+            var leastValue = 99999;
+            var moderatorIndex = -1;
+            console.log("Eliminated players ",moderatorIndexs)
+            //preference is given to those that are out
+            moderatorIndexs.forEach((x)=>{
+                if (self._lastModeratedRound[x] < leastValue) {
+                    leastValue = self._lastModeratedRound[x];
+                    leastIndex = x;
+                }
+            });
+            console.log("leastIndex",leastIndex);
+            if (leastIndex != -1) moderatorIndex = leastIndex;
+            else {
+                moderatorIndexs = this._players.map((x, i) => i);
+                leastIndex = -1;
+                leastValue = 9999;                
+                //preference is given to those that are out
+                moderatorIndexs.forEach(x=>{
+                    if (self._lastModeratedRound[x] < leastValue) {
+                        leastValue = self._lastModeratedRound[x];
+                        leastIndex = x;
+                    }
+                });
+                moderatorIndex = leastIndex;
+            }
+
+            console.log("New moderator: ",moderatorIndex);
+            //update the last moderated round to this round
+            console.log("Setting round to: ",this._round);
+            this._lastModeratedRound[moderatorIndex] = this._round;
+
+            return moderatorIndex;
+        },
+
+        SetupNextRound: function () {
+            console.log("Setting up next round");
+            //add points
+            var winner = this.GetWinner();
+            var loserIndex = this.GetNoDebator();
+            if (winner == loserIndex) loserIndex = this.GetYesDebator();
+            console.log("loser is ", loserIndex);
+            this._pressure[loserIndex]++;
+            console.log("Pressure",this._pressure);
+            this._topic = "";
+            this._votes = this._players.map(x => ""); //set them all to empty strings
+            this._debaters = [];
+            this._round++;
+            //pick a new moderator
+            this._moderator = this._GetNextModerator();
+            console.log("New Moderator: ", this._moderator);
+            //pick new debators
+            this._SetNextDebaters();
+            //start the new debate
+            
+            this._state.newDebate();
+        },
+
+        GetWinner: function () {
             var yes = 0;
             var no = 0;
-            var unanswered = this._players.length-2; //there's always two debators
+            var unanswered = this._players.length - 2; //there's always two debators
             if (!this._state.is("vote_end") && !this._state.is("voting")) return "A debate is not ready";
-            
-            
-            for (var i=0;i<this._votes.length;i++){
+
+
+            for (var i = 0; i < this._votes.length; i++) {
                 var value = this._votes[i];
                 if (value == "") continue;
                 unanswered--;
@@ -153,32 +270,34 @@ function CreateGame(gameName, proxyCallback){
 
         },
 
-        GenCallObj: function(source, callName,args){
-            return {source:source,funcName:callName,argList:args}
+        GenCallObj: function (source, callName, args) {
+            return { source: source, funcName: callName, argList: args }
         },
 
-        StoreCall: function(callObj){
-            this.commands.push(callObj);
+        StoreCall: function (callObj) {
+            if (this.commands != null) this.commands.push(callObj);
         },
 
         //Sets the topic of the particular session
-        SetTopic: function(topic){
-            if (this._state.is("moderate_topic")){
+        SetTopic: function (topic) {
+            if (this._state.is("moderate_topic")) {
                 //set the topic to be picked
                 this._topic = topic;
                 this._state.topicPick();
                 var self = this;
-                setTimeout(function(){
-                    console.log("TIMES UP - DEBATORS Prep time is up!",self);
-                    self.SetDebatorReady(self.GetNoDebator());
-                    self.SetDebatorReady(self.GetYesDebator());
-                    self.StoreCall(self.GenCallObj(
-                        "Server","SetDebatorReady",[self.GetNoDebator()]
-                    ));
-                    self.StoreCall(self.GenCallObj(
-                        "Server","SetDebatorReady",[self.GetYesDebator()]
-                    ));
-                },45*1000);
+                setTimeout(function () {
+                    //console.log("TIMES UP - DEBATORS Prep time is up!",self);
+                    if (self._state.is("moderate_topic")) {
+                        self.SetDebatorReady(self.GetNoDebator());
+                        self.SetDebatorReady(self.GetYesDebator());
+                        self.StoreCall(self.GenCallObj(
+                            "Server", "SetDebatorReady", [self.GetNoDebator()]
+                        ));
+                        self.StoreCall(self.GenCallObj(
+                            "Server", "SetDebatorReady", [self.GetYesDebator()]
+                        ));
+                    }
+                }, 45 * 1000);
                 return 0;
             }
             else {
@@ -186,58 +305,60 @@ function CreateGame(gameName, proxyCallback){
             }
         },
 
-        GetTopic: function(){
+        GetTopic: function () {
             return this._topic;
         },
 
         //Gets the debator that is for the issue
-        GetYesDebator: function(){
+        GetYesDebator: function () {
             if (this._debaters.length == 0) return -1;
             return this._debaters[0];
         },
 
+        GetPressure: function (index) {
+            if (this._pressure.length <= index) return 0;
+            return this._pressure[index];
+        },
+
         //Gets the debator that is against the issue
-        GetNoDebator: function(){
+        GetNoDebator: function () {
             if (this._debaters.length == 0) return -1;
             return this._debaters[1];
         },
 
         //Get the list of players
-        GetPlayers: function(){
+        GetPlayers: function () {
             return this._players
         },
 
-        GetAvailablePlayerIndexs: function(){
+        GetAvailablePlayerIndexs: function () {
             if (this._players.length == 0) return [];
             const moderator = this._moderator;
+            var self = this;
             //filter out the players that are out of the game
-            var availablePlayers = this._players.map((x,index)=>index).filter(function(val,index){
+            var availablePlayers = this._players.map((x, index) => index).filter(function (val, index) {
                 if (index == moderator) return false;
+                if (self._pressure[index] >= 2) return false;
                 return true;
             });
-            console.log("Players you can pick: ",availablePlayers)
+            console.log("Players you can pick: ", availablePlayers)
             return availablePlayers;
         },
 
         //Gets the current moderator
-        Moderator: function(){
+        Moderator: function () {
             return this._moderator;
         },
 
-        //votes for a specific player
-        Vote: function(playerIndex, votedYes){
-
-        },
-        
         //Gets the current state
-        GetState: function(){
+        GetState: function () {
             return this._state.state
         },
 
         //Adds a player to the game
-        AddPlayer: function(name){
+        AddPlayer: function (name) {
             if (name == null) return "Malformed name";
-            if (!(typeof name === 'string')){
+            if (!(typeof name === 'string')) {
                 name = String(name);
             }
             if (name == null) return "Malformed name";
@@ -248,72 +369,80 @@ function CreateGame(gameName, proxyCallback){
             return 0;
         },
         //Ends the game
-        EndGame: function(){
+        EndGame: function () {
             this._state.endgame();
             return 0;
         },
 
         //starts the game, you must have three players
-        StartGame: function(){
+        StartGame: function () {
             //check if we can start
+
             if (this._players.length < 3) return "You need 3 players before you can start the game"
             if (this._state.cannot("start")) return "You cannot start the game";
-            this._state.start();            
-            this._moderator = this.GetRandomNumber(0,this._players.length-1);
+            console.log("Starting the game");
+            while (this._players.length > this._pressure.length) this._pressure.push(0);
+            while (this._players.length > this._votes.length) this._votes.push("");
+            while (this._players.length > this._lastModeratedRound.length) this._lastModeratedRound.push(-1);
+            console.log(this._votes);
+            this._state.start();
+
+            this._moderator = this.GetRandomNumber(0, this._players.length - 1);
+            this._lastModeratedRound[this._moderator] = 0; 
             return 0;
         },
 
-        ApplyFunc: function (name,args){
-            if (this.hasOwnProperty(name)){
-                console.log("Calling "+name+" with ",args);
-                
+        ApplyFunc: function (name, args) {
+            if (this.hasOwnProperty(name)) {
+                console.log("Calling " + name + " with ", args);
+
                 return this[name].apply(this, args);
             }
             else {
-                return "This call "+name+" does not exist";
+                return "This call " + name + " does not exist";
             }
         },
 
         //Gets a random number
-        GetRandomNumber: function(min,max){
+        GetRandomNumber: function (min, max) {
             if (this._mt == null) {
-                var hashCode = function(s){
-                    return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
+                var hashCode = function (s) {
+                    return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
                 }
                 var mt = Random.engines.mt19937();
                 mt.seed(hashCode(this._gameName)); //TODO FIGURE OUT HOW TO 
                 this._mt = mt;
                 //console.log("Seeding with",hashCode(this._gameName));
             }
-            var val = Random.integer(min,max)(this._mt);
+            var val = Random.integer(min, max)(this._mt);
             //console.log("Returning value",val);
             return val;
         }
 
-        
+
 
     };
 
     if (proxyCallback == undefined) {
-        proxyCallback = function(name, ...args){
-            console.log(name+" was called with "+args);
+        proxyCallback = function (name, ...args) {
+            console.log(name + " was called with " + args);
         };
     }
 
-    function ConvertFunction(context, func){
-        return function(...recievedArgs){
-            proxyCallback(func.name,recievedArgs);
-            return func.apply(context,recievedArgs);
+    function ConvertFunction(context, func) {
+        return function (...recievedArgs) {
+            proxyCallback(func.name, recievedArgs);
+            return func.apply(context, recievedArgs);
         }
     }
 
     default_game.replicated = {};
     for (var key in default_game) {
-        
-        if (isFunction(default_game[key])){
+
+        if (isFunction(default_game[key])) {
             var hiddenFunc = default_game[key];
             default_game.replicated[key] = ConvertFunction(default_game, hiddenFunc);
-        } 
+        }
     }
     /*
     for (var key in default_game) {

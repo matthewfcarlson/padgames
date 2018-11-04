@@ -52,6 +52,18 @@ describe("create game", () => {
     expect(game.Moderator()).toBeGreaterThan(-1);
     expect(game.Moderator()).toBeLessThan(game.GetPlayers().length);
   });
+
+  it("it should let me vote", () => {
+    const game = CreateGame();
+    game.AddPlayer("Matthew1");
+    game.AddPlayer("Matthew2")
+    game.AddPlayer("Matthew3");
+    var state = game.GetState();
+    game.StartGame();
+    var moderator = game.Moderator();
+    console.log(moderator);
+    
+  });
   it("should not let me start a game twice", () => {
     const game = CreateGame();
     game.replicated.AddPlayer("Matthew1");

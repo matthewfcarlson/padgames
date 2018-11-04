@@ -3,14 +3,14 @@
     <h2>Pick Your Debators</h2>
     <div>Player List</div>
     Pick two players to debate for a topic:
-    YES
+    <h3>YES</h3>
     <ul class="list-group list-group-flush" v-if="yes == -1">
-      <a v-for="index in avaialble" v-bind:key="index+'yes'" @click="PickYes(index)" class="list-group-item list-group-item-action">{{players[index]}} {{index}}</a>
+      <a v-for="index in avaialble" v-bind:key="index+'yes'" @click="PickYes(index)" class="list-group-item list-group-item-action">{{players[index]}}</a>
     </ul>
-    <div v-else>{{players[yes]}} was picked</div>
-    NO
+    <h3 v-else>{{players[yes]}} was picked</h3>
+    <h3>NO</h3>
     <ul class="list-group list-group-flush" v-if="yes != -1 && no == -1">
-      <a v-for="index in avaialble" v-if="index != yes" v-bind:key="index+'no'" @click="PickNo(index)" class="list-group-item list-group-item-action">{{players[index]}} {{index}}</a>
+      <a v-for="index in avaialble" v-if="index != yes" v-bind:key="index+'no'" @click="PickNo(index)" class="list-group-item list-group-item-action">{{players[index]}}</a>
     </ul>
     <div v-if="no != -1">{{players[no]}} was picked</div>
 
