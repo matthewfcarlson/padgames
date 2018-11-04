@@ -165,10 +165,8 @@ export default {
       if (this.playerIndex == -1) return "a Spectator";
       if (this.currentGame.Moderator() == this.playerIndex)
         return "The Moderator";
-      if (this.currentGame.GetYesDebator() == this.playerIndex)
-        return "Debating Yes";
-      if (this.currentGame.GetNoDebator() == this.playerIndex)
-        return "Debating No";
+      if (this.currentGame.GetYesDebator() == this.playerIndex || this.currentGame.GetNoDebator() == this.playerIndex)
+        return "Debating";
       if (
         this.currentGame.GetState() == "voting" ||
         this.currentGame.GetState() == "debating"
