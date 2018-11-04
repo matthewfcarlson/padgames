@@ -32,7 +32,7 @@
       Waiting...
     </div>
 
-    <pre v-if="currentGame != null">
+    <pre v-if="currentGame != null && debug">
       {{playerList}}
       {{state}}
       Role: {{currentRole}}
@@ -76,7 +76,8 @@ export default {
       currentGame: null,
       count: 0,
       playerIndex: -1,
-      playerName: "Default"
+      playerName: "Default",
+      debug: (location.hostname === "localhost" || location.hostname === "127.0.0.1")
     };
   },
   components: {
