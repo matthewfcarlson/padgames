@@ -7,15 +7,15 @@
     <div class="lead badge badge-warning " v-if="pressureLevel == 1">Under Pressure!</div>
     <div class="lead badge badge-danger " v-if="pressureLevel == 2">I'm out!</div>
     
-    <h2 class="speech-bubble" v-if="topic != ''">{{topic}}</h2>
-    
-    <h2 v-if="YesDebatorName != ''" class="card">
-      <div class="container" style="color:black">
-        <div class="row">
-          <div class="text-success col-5 text-left"><i class="fas fa-sm fa-user-check" v-if="yesDebatorReady"></i>{{YesDebatorName | uppercase}}</div> 
+    <h2 class="speech-bubble" v-if="topic != ''">
+      {{topic}}?
+      <hr/>
+      <div class="" v-if="YesDebatorName != ''" style="color:black">
+        <small class="row">
+          <div class="text-yes col-5 text-left"><i class="fas fa-xs fa-user-check" v-if="yesDebatorReady"></i>{{YesDebatorName | uppercase}}</div> 
           <div class="col-2 text-center ">vs</div> 
-          <div class="text-danger col-5 text-right"><i class="fas fa-sm fa-user-check" v-if="noDebatorReady"></i>{{NoDebatorName | uppercase}} </div>
-        </div>
+          <div class="text-no col-5 text-right"><i class="fas fa-xs fa-user-check" v-if="noDebatorReady"></i>{{NoDebatorName | uppercase}} </div>
+        </small>
       </div>
     </h2>
     
@@ -40,7 +40,12 @@
     <div is="ModeratorPickDebator"  v-else-if="isModerator && state == 'first_mod'" @submit="PickedDebators" v-bind:players="playerList" v-bind:avaialble="pickAblePlayerIndexs"></div>
     <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'" @submit="PickedTopic"></div>
     <div is="DebatorPickStrategies" v-else-if="isDebator && (state == 'debate_waiting'|| state == 'debating')" @submit="DebatorReady"></div>    
-    <div is="Voting" v-else-if="!isDebator && state == 'voting'" @submit="Voted"></div>    
+    <div is="Voting" v-else-if="!isDebator && state == 'voting'" @submit="Voted"></div>
+    <div v-else-if="state == 'end_game'">
+      <h2>Game over!</h2>
+      The winner is {{winningPlayerName}}
+
+    </div>
     
     <div v-else>
       Waiting...
@@ -147,6 +152,12 @@ export default {
       return this.currentGame.GetAvailablePlayerIndexs();
 
       //filter out the moderator
+    },
+    winningPlayerName: function(){
+      if (this.currentGame == null) return "";
+      var winner = this.currentGame.GetGameWinner();
+      if (winner == -1 ) return "";
+      return this.playerList[winner];
     },
     playerList: function() {
       if (this.currentGame == null) return [];
@@ -367,6 +378,20 @@ body,
   color:black;
 }
 
+.btn-yes {
+  background: var(--color-yes);
+  color:white;
+}
+.btn-no {
+  background: var(--color-no);
+  color:white;
+}
+.text-yes {
+  color: var(--color-yes);
+}
+.text-no {
+  color: var(--color-no);
+}
 </style>
 <style scoped>
 .content {
@@ -443,6 +468,9 @@ body,
 .speech-bubble-no {
   color: var(--color-no);
   background: white;
+}
+.speech-bubble-no:after,.speech-bubble-yes:after{
+  border-right-color: white
 }
 .speech-bubble-yes {
   color: var(--color-yes);
