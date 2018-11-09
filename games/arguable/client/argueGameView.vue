@@ -1,33 +1,47 @@
 <template>
-<div class="content">
-    <h1>Arguable Game 
-      <div class="pull-right lead badge badge-warning " v-if="pressureLevel == 1">Under Pressure!</div>
-      <div class="pull-right lead badge badge-danger " v-if="pressureLevel == 2">I'm out!</div>
+<div class="content" v-bind:class="{ 'content-moderator': isModerator, 'content-debate-yes': currentRole == 'debate_yes', 'content-debate-no': currentRole == 'debate_no' }">
+    <h1 class="speech-bubble"> 
+      <div v-if="currentRole != ''">I am {{currentRoleFriendly}}</div>
+      <div v-else>Arguable Game</div>
     </h1>
+    <div class="lead badge badge-warning " v-if="pressureLevel == 1">Under Pressure!</div>
+    <div class="lead badge badge-danger " v-if="pressureLevel == 2">I'm out!</div>
     
     <h2 class="speech-bubble" v-if="topic != ''">{{topic}}</h2>
     
-    <h2 v-if="YesDebatorName != ''" class="text-center well">
-      <span class="text-success">{{YesDebatorName | uppercase}}</span> 
-      <small>vs</small> 
-      <span class="text-danger">{{NoDebatorName | uppercase}} </span>
+    <h2 v-if="YesDebatorName != ''" class="card">
+      <div class="container" style="color:black">
+        <div class="row">
+          <div class="text-success col-5 text-left"><i class="fas fa-sm fa-user-check" v-if="yesDebatorReady"></i>{{YesDebatorName | uppercase}}</div> 
+          <div class="col-2 text-center ">vs</div> 
+          <div class="text-danger col-5 text-right"><i class="fas fa-sm fa-user-check" v-if="noDebatorReady"></i>{{NoDebatorName | uppercase}} </div>
+        </div>
+      </div>
     </h2>
-    <h3 v-if="currentRole != ''">You are {{currentRoleFriendly}}</h3>
-    <h2 class="speech-bubble" v-if="currentRole == 'debate_yes'">Yes!</h2>
-    <h2 class="speech-bubble" v-if="currentRole == 'debate_no'">No!</h2>
+    
+    <h2 class="speech-bubble speech-bubble-yes" v-if="currentRole == 'debate_yes'">Yes!</h2>
+    <h2 class="speech-bubble speech-bubble-no" v-if="currentRole == 'debate_no'">No!</h2>
     <div is="DebatingTimeLimit" v-if="state == 'debating'" @submit="DebateFinished" v-bind:isModerator="isModerator"></div>
 
-    <div v-if="playerIndex == -1">
-      <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
+   
+    <div v-else-if="state == 'lobby'" >
+      <div is="LobbyPlayerList" v-bind:players="playerList"></div>
       <br/>
-      <button class="btn btn-primary btn-block" @click="JoinGame()">Join Game</button>
+      <div v-if="playerIndex == -1">
+        <h3>Join game</h3>
+        <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
+        <br/>
+        <button class="btn btn-primary btn-block" @click="JoinGame()">Join Game</button>
+      </div>
+      <button v-else class="btn btn-primary btn-block" @click="StartGame">Start Game</button>
     </div>
-    <button v-else-if="state=='lobby'" class="btn btn-primary btn-block" @click="StartGame">Start Game</button>
+    
    
     <div is="ModeratorPickDebator"  v-else-if="isModerator && state == 'first_mod'" @submit="PickedDebators" v-bind:players="playerList" v-bind:avaialble="pickAblePlayerIndexs"></div>
     <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'" @submit="PickedTopic"></div>
     <div is="DebatorPickStrategies" v-else-if="isDebator && (state == 'debate_waiting'|| state == 'debating')" @submit="DebatorReady"></div>    
     <div is="Voting" v-else-if="!isDebator && state == 'voting'" @submit="Voted"></div>    
+    
     <div v-else>
       Waiting...
     </div>
@@ -38,8 +52,8 @@
       Role: {{currentRole}}
       Moderator: {{moderator}}
       PlayerIndex: {{playerIndex}}
-      YES: {{currentGame.GetYesDebator()}}
-      NO: {{currentGame.GetNoDebator()}}
+      YES: {{currentGame.GetYesDebator()}} Ready: {{yesDebatorReady}}
+      NO: {{currentGame.GetNoDebator()}}  Ready: {{noDebatorReady}}
       Pressure: {{pressureLevel}}
     </pre>
     
@@ -54,6 +68,7 @@ import ModeratorTopicPick from "./ModeratorTopicPick";
 import ModeratorPickDebator from "./ModeratorPickDebator";
 import DebatorPickStrategies from "./DebatorPickStrategies";
 import DebatingTimeLimit from "./DebatingTimeLimit";
+import LobbyPlayerList from "./LobbyPlayerList";
 import Voting from "./Voting";
 
 Vue.filter("uppercase", function(value) {
@@ -72,23 +87,35 @@ const ROOT = "Argue:";
 export default {
   name: "Arguable",
   data() {
+    var self = this;
+    var gameRoom = this.$route.params.gameID || "";
+    var debug =
+      location.hostname === "localhost" || location.hostname === "127.0.0.1";
     return {
-      currentGame: null,
+      currentGame: ArgueGame.CreateGame(gameRoom, function(name, args) {
+        console.log(
+          "Broadcast up to the server that we called this ",
+          name,
+          args
+        );
+        self.$socket.emit(ROOT + "engine call", gameRoom, name, args);
+      }),
       count: 0,
       playerIndex: -1,
-      playerName: "Default",
-      debug: (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+      playerName: debug ? "Default" : "",
+      gameRoom: gameRoom,
+      debug: debug
     };
   },
   components: {
     ModeratorPickDebator,
     ModeratorTopicPick,
     DebatorPickStrategies,
+    LobbyPlayerList,
     DebatingTimeLimit,
     Voting
   },
   created: function() {
-    this.gameRoom = this.$route.params.gameID || "";
     var names = [
       "Billy",
       "Bob",
@@ -133,8 +160,25 @@ export default {
       if (this.currentGame == null) return [];
       return this.currentGame.Moderator();
     },
+    yesDebatorReady: function() {
+      if (this.currentGame == null) return false;
+      var ready = this.currentGame.GetReadyDebators();
+      var index = this.currentGame.GetYesDebator();
+      if (index == -1) return false;
+      if (ready.indexOf(index) != -1) return true;
+      return false;
+    },
+    noDebatorReady: function() {
+      if (this.currentGame == null) return false;
+      var ready = this.currentGame.GetReadyDebators();
+      var index = this.currentGame.GetNoDebator();
+      if (index == -1) return false;
+      if (ready.indexOf(index) != -1) return true;
+      return false;
+    },
     isModerator: function() {
       if (this.currentGame == null) return [];
+      if (this.playerIndex == -1) return false;
       return this.currentGame.Moderator() == this.playerIndex;
     },
     isDebator: function() {
@@ -144,35 +188,46 @@ export default {
     },
     pressureLevel: function() {
       if (this.currentGame == null) return 0;
+      if (this.playerIndex == -1) return 0;
       return this.currentGame.GetPressure(this.playerIndex);
     },
     currentRole: function() {
       if (this.currentGame == null) return "none";
-      if (this.playerIndex == -1) return "spectator";
-      if (this.currentGame.Moderator() == this.playerIndex) return "moderator";
-      if (this.currentGame.GetYesDebator() == this.playerIndex)
-        return "debate_yes";
-      if (this.currentGame.GetNoDebator() == this.playerIndex)
-        return "debate_no";
-      if (
-        this.currentGame.GetState() == "voting" ||
-        this.currentGame.GetState() == "debating"
-      )
-        return "voter";
+      if (this.playerIndex == -1 && this.currentGame.GetState() != "lobby")
+        return "spectator";
+      if (this.playerIndex != -1) {
+        if (this.currentGame.Moderator() == this.playerIndex)
+          return "moderator";
+        if (this.currentGame.GetYesDebator() == this.playerIndex)
+          return "debate_yes";
+        if (this.currentGame.GetNoDebator() == this.playerIndex)
+          return "debate_no";
+        if (
+          this.currentGame.GetState() == "voting" ||
+          this.currentGame.GetState() == "debating"
+        )
+          return "voter";
+      }
       return "";
     },
     currentRoleFriendly: function() {
       if (this.currentGame == null) return "Nothing";
-      if (this.playerIndex == -1) return "a Spectator";
-      if (this.currentGame.Moderator() == this.playerIndex)
-        return "The Moderator";
-      if (this.currentGame.GetYesDebator() == this.playerIndex || this.currentGame.GetNoDebator() == this.playerIndex)
-        return "Debating";
-      if (
-        this.currentGame.GetState() == "voting" ||
-        this.currentGame.GetState() == "debating"
-      )
-        return "a Voter";
+      if (this.playerIndex == -1 && this.currentGame.GetState() != "lobby")
+        return "a Spectator";
+      if (this.playerIndex != -1) {
+        if (this.currentGame.Moderator() == this.playerIndex)
+          return "The Moderator";
+        if (
+          this.currentGame.GetYesDebator() == this.playerIndex ||
+          this.currentGame.GetNoDebator() == this.playerIndex
+        )
+          return "Debating";
+        if (
+          this.currentGame.GetState() == "voting" ||
+          this.currentGame.GetState() == "debating"
+        )
+          return "a Voter";
+      }
       return "";
     },
     topic: function() {
@@ -221,6 +276,7 @@ export default {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       if (playerName == undefined) playerName = this.playerName;
       if (playerName == "") return;
+      document.title = "Arguing - " + playerName;
       this.$socket.emit(ROOT + "join game", gameRoom, playerName);
     },
     RejoinGame: function(gameRoom, playerName, playerIndex, socketId) {
@@ -245,15 +301,6 @@ export default {
       this.$socket.emit(ROOT + "connect");
       this.$socket.emit(ROOT + "sync game", gameRoom);
       var self = this;
-      const game = ArgueGame.CreateGame(gameRoom, function(name, args) {
-        console.log(
-          "Broadcast up to the server that we called this ",
-          name,
-          args
-        );
-        self.$socket.emit(ROOT + "engine call", gameRoom, name, args);
-      });
-      this.currentGame = game;
 
       var previousGame = null;
       if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
@@ -299,13 +346,34 @@ export default {
       );
       if (this.$socket.id == data.source) {
         console.log("Ignoring");
-      } else this.currentGame.ApplyFunc(data.funcName, data.argList);
+      } else {
+        this.currentGame.ApplyFunc(data.funcName, data.argList);
+        Vue.set(this, "currentGame", this.currentGame);
+      }
     }
   }
 };
 </script>
+<style>
+html,
+body,
+:root {
+  margin: 0;
+  padding: 0;
+}
+.content-moderator .list-group, 
+.content-debate-no .list-group, 
+.content-debate-yes .list-group {
+  color:black;
+}
+
+</style>
 <style scoped>
 .content {
+  --color-yes: #01afef;
+  --color-mod: #18a246;
+  --color-no: #ee0181;
+  padding-top:0.2em;
   /* https://bennettfeely.com/gradients/ */
   background: var(--color1);
   background: -moz-linear-gradient(top, var(--color1) 0%, var(--color5) 100%);
@@ -326,18 +394,26 @@ export default {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#273de6', GradientType=0 );
 
   /* Set rules to fill background */
-  min-height: 100%;
-  min-width: 100%;
+  min-height: 100vh;
+  min-width: 100vw;
 
   /* Set up proportionate scaling */
   width: 100%;
   height: auto;
-
-  /* Set up positioning */
-  position: fixed;
-  top: 0;
-  left: 0;
 }
+.content-moderator {
+  background: var(--color-mod);
+  color: white;
+}
+.content-debate-yes {
+  background: var(--color-yes);
+  color: white;
+}
+.content-debate-no {
+  background: var(--color-no);
+  color: white;
+}
+
 
 .speech-bubble {
   position: relative;
@@ -362,6 +438,15 @@ export default {
   border-bottom: 0;
   margin-top: -10px;
   margin-left: -20px;
+}
+
+.speech-bubble-no {
+  color: var(--color-no);
+  background: white;
+}
+.speech-bubble-yes {
+  color: var(--color-yes);
+  background: white;
 }
 </style>
 

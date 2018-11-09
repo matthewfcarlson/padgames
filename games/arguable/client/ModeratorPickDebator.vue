@@ -1,25 +1,24 @@
 <template>
 <div class="container">
     <h2>Pick Your Debators</h2>
-    <div>Player List</div>
-    Pick two players to debate for a topic:
-    <h3>YES</h3>
+    <b>Pick two players to debate for a topic:</b>
+    <h3 v-if="yes == -1">YES</h3>
+    <h3 v-else>{{players[yes]}} was picked to debate YES</h3>
     <ul class="list-group list-group-flush" v-if="yes == -1">
       <a v-for="index in avaialble" v-bind:key="index+'yes'" @click="PickYes(index)" class="list-group-item list-group-item-action">{{players[index]}}</a>
     </ul>
-    <h3 v-else>{{players[yes]}} was picked</h3>
-    <h3>NO</h3>
+    <br/>
+
+    <h3 v-if="no == -1">NO</h3>
+    <h3 v-else>{{players[no]}} was picked to debate NO</h3>
     <ul class="list-group list-group-flush" v-if="yes != -1 && no == -1">
       <a v-for="index in avaialble" v-if="index != yes" v-bind:key="index+'no'" @click="PickNo(index)" class="list-group-item list-group-item-action">{{players[index]}}</a>
     </ul>
-    <div v-if="no != -1">{{players[no]}} was picked</div>
 
     <div v-if="yes != no && no != -1">
-      <button class="btn btn-success btn-block" @click="SelectDebators">Continue</button>
+      <button class="btn btn-dark btn-block" @click="SelectDebators">Continue</button>
     </div>
 
-    {{players}}
-    {{avaiable}}
 </div>
 </template>
 <script>
