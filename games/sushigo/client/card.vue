@@ -94,7 +94,22 @@ export default {
           return "";
         }
       }
+    },
+    longHint() {
+      if (this.card == undefined || this.card.type == undefined) return "N/A";
+      switch(this.card.type){
+        case "sashimi": return "Get 3 to get 10 points";
+        case "nigiri": return "Worth the value listed on the card";
+        case "maki": return "Whoever has the most at the end of the round gets 6 points, and the person with the second most gets 3 points"; //most 6/3
+        case "dumpling": return "Depending on the number you get this round, you get 1, 3, 5, 10, or 15 points for 1 dumpling, 2 dumplings, and so on. There is no limit to the number of dumplings you can get"; //
+        case "chopsticks": return "You take the chopsticks and next round you are allowed to take two cards at once, loudly declaring Sushi Go"; //end most=6, least= -6
+        case "tempura": return "For every pair of Tempura, you get 5 points";
+        case "wasabi": return "The next nigiri card you pick up after this wasabi card is worth 3x"
+        case "pudding": return "Pudding points are counted at the end of the game. Whoever has the most gets 6 points, whoever has the least gets -6";
+        default: return "";        
+      }
     }
+   
   }
 };
 </script>
