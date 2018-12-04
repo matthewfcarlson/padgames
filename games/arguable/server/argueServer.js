@@ -92,6 +92,7 @@ function Init(socket, io) {
         //lists all the games that are available
         socket.join(gameRoomRoot);
         socket.emit(gameRoomRoot+"connected");
+        socket.emit(gameRoomRoot + "list games", GetGameList());
     });
     socket.on(gameRoomRoot + "list games", function() {
         //lists all the games that are available
@@ -125,7 +126,7 @@ function Init(socket, io) {
             return false;
         }
         game.commands.forEach(function(storedCall){
-            console.log("Playing back call",storedCall);
+            //console.log("Playing back call",storedCall);
             socket.emit(gameRoomRoot+"engine call",storedCall);
         });
     });
@@ -155,7 +156,14 @@ function Init(socket, io) {
         }
 
         var oldIndex = GetPlayerIndex(gameID,playerName);
+        if (oldIndex == -1){
+            //player was not found
+            console.log("Player "+playerName+" was not found ",gameID);
+            return;
+        }
         var oldSocket = game.sockets[oldIndex];
+
+        console.log("Attempting to rejoin "+playerName+" to game "+gameID);
         
         if (playerIndex == oldIndex && oldSocket == previousSocket){
             game.sockets[playerIndex] = socket.id;
@@ -163,6 +171,10 @@ function Init(socket, io) {
                 gameRoomRoot + "set player", playerIndex
             );
             console.log("Player rejoined as "+playerName);
+            console.log("Redefined from ",oldSocket,socket.id)
+        }
+        else{
+            console.error("Invalid rejoin", playerIndex, oldIndex, oldSocket, previousSocket);
         }
     });
     socket.on(gameRoomRoot + "join game", function(gameId, playerName) {

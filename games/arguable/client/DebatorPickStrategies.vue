@@ -63,11 +63,17 @@ export default {
     return {
         strategies : [],
         ready: false,
-        timer: 30,
         counter: false,
         interval: null,
         secondsLeft: "0:25"
     };
+  },
+  computed: {
+      secondsLeft: function(){
+          var seconds = Math.round(this.timer / 1000);
+          if (seconds < 10) seconds = "0"+seconds;
+          return "0:"+seconds;
+      }
   },
   methods: {
     DebatorReady: function(){
@@ -79,15 +85,12 @@ export default {
     startTimer() {
         this.interval = setInterval(this.countDown, 1000);
     },
+    
+    props: ["timer"],
     countDown() {
         console.log("counting down", this.timer)
-        this.timer -= 1;
-        var n = this.timer;
-        if (n > 0) {
-            this.secondsLeft = Math.floor(n/60) + ":" + (n%60);
-        } 
-        else {
-           
+        this.timer -= 1000;
+        if (this.timer <= 0) {
             this.DebatorReady();
         }
     }

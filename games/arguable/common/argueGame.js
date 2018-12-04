@@ -31,50 +31,50 @@ function CreateGame(gameName, proxyCallback) {
     var fsm = new StateMachine({
         init: 'lobby',
         transitions: [{
-                name: 'start',
-                from: 'lobby',
-                to: 'first_mod'
-            },
-            {
-                name: 'firstModerateDone',
-                from: 'first_mod',
-                to: 'moderate_topic'
-            },
-            {
-                name: 'topicPick',
-                from: 'moderate_topic',
-                to: 'debate_waiting'
-            },
-            {
-                name: 'debateStart',
-                from: 'debate_waiting',
-                to: 'debating'
-            },
-            {
-                name: 'debateEnd',
-                from: 'debating',
-                to: 'voting'
-            },
-            {
-                name: 'votingEnd',
-                from: 'voting',
-                to: 'vote_end'
-            },
-            {
-                name: 'newDebate',
-                from: 'vote_end',
-                to: 'moderate_topic'
-            },
-            {
-                name: 'finishGame',
-                from: 'vote_end',
-                to: 'end_game'
-            },
-            {
-                name: 'endGame',
-                from: 'moderate_topic',
-                to: 'end_game'
-            }
+            name: 'start',
+            from: 'lobby',
+            to: 'first_mod'
+        },
+        {
+            name: 'firstModerateDone',
+            from: 'first_mod',
+            to: 'moderate_topic'
+        },
+        {
+            name: 'topicPick',
+            from: 'moderate_topic',
+            to: 'debate_waiting'
+        },
+        {
+            name: 'debateStart',
+            from: 'debate_waiting',
+            to: 'debating'
+        },
+        {
+            name: 'debateEnd',
+            from: 'debating',
+            to: 'voting'
+        },
+        {
+            name: 'votingEnd',
+            from: 'voting',
+            to: 'vote_end'
+        },
+        {
+            name: 'newDebate',
+            from: 'vote_end',
+            to: 'moderate_topic'
+        },
+        {
+            name: 'finishGame',
+            from: 'vote_end',
+            to: 'end_game'
+        },
+        {
+            name: 'endGame',
+            from: 'moderate_topic',
+            to: 'end_game'
+        }
         ],
         methods: {
             onTransition: function (lifecycle) {
@@ -100,10 +100,16 @@ function CreateGame(gameName, proxyCallback) {
         _lastModeratedRound: [],
         _debatePairs: [],
         _readyDebators: [],
+        _lastCommandTime: 0,
+        _timeOut: -1,
 
         //Sets a callback for transitions in state
         SetTransition: function (trans) {
             transitionFunction = trans;
+        },
+
+        GetTimeOutInMs: function(){
+            return this._timeOut;
         },
 
         //set the debaters (yes is always first)
@@ -117,7 +123,8 @@ function CreateGame(gameName, proxyCallback) {
             this._debaters = [player1, player2];
             this._readyDebators.splice(0, this._readyDebators.length);
             this._debatePairs.push(this._debaters);
-            this._state.firstModerateDone()
+            this._state.firstModerateDone();
+            this._DidExecuteCommand();
             return 0;
         },
 
@@ -195,7 +202,9 @@ function CreateGame(gameName, proxyCallback) {
             this._readyDebators.push(playerIndex);
             if (this._readyDebators.length >= 2) {
                 this._state.debateStart();
+                this._timeOut = 120 * 1000; //2 minutes
             }
+            this._DidExecuteCommand();
             return 0;
         },
 
@@ -205,7 +214,7 @@ function CreateGame(gameName, proxyCallback) {
             if (!this._state.is("debating")) return "We are not in the right state for the debate to finish";
             //TODO check if enough time has elapsed?
             this._state.debateEnd();
-
+            this._DidExecuteCommand();
             return 0;
         },
 
@@ -238,6 +247,7 @@ function CreateGame(gameName, proxyCallback) {
                 this._state.votingEnd();
                 this.SetupNextRound();
             }
+            this._DidExecuteCommand();
             return 0;
         },
 
@@ -301,7 +311,7 @@ function CreateGame(gameName, proxyCallback) {
                 this._moderator = -1;
                 this._debaters = [];
                 this._state.finishGame();
-            } else { 
+            } else {
                 //pick a new moderator
                 this._moderator = this._GetNextModerator();
                 console.log("New Moderator: ", this._moderator);
@@ -342,15 +352,27 @@ function CreateGame(gameName, proxyCallback) {
         },
 
         GenCallObj: function (source, callName, args) {
+            var date = new Date();
+            var current_time = date.getTime();
             return {
                 source: source,
                 funcName: callName,
-                argList: args
+                argList: args,
+                time: current_time
             }
         },
 
         StoreCall: function (callObj) {
             if (this.commands != null) this.commands.push(callObj);
+        },
+
+        GetLastCommandTime: function () {
+            if (this.commands != null) {
+                var last_index = this.commands.length - 1;
+                var last_command = this.commands[last_index];
+                return last_command.time;
+            }
+            return 0;
         },
 
         //Sets the topic of the particular session
@@ -360,8 +382,22 @@ function CreateGame(gameName, proxyCallback) {
                 this._topic = topic;
                 this._state.topicPick();
                 var self = this;
+
+                var currentTime = this._GetCurrentTime();
+                var elapsedTime = currentTime - this._lastCommandTime;
+                var timeoutTime = 45 * 1000;
+                if (elapsedTime > 0){
+                    timeoutTime = elapsedTime - timeoutTime;
+                }
+                
+                if (timeoutTime <= 0) timeoutTime = 1;
+                this._timeOut = timeoutTime;
+
+                console.log("We got this ", this._lastCommandTime, currentTime, elapsedTime);
+                console.log("Time left", timeoutTime);
+                
                 setTimeout(function () {
-                    //console.log("TIMES UP - DEBATORS Prep time is up!",self);
+                    console.log("TIMES UP - DEBATORS Prep time is up!"); //, self);
                     if (self._state.is("moderate_topic")) {
                         self.SetDebatorReady(self.GetNoDebator());
                         self.SetDebatorReady(self.GetYesDebator());
@@ -372,7 +408,8 @@ function CreateGame(gameName, proxyCallback) {
                             "Server", "SetDebatorReady", [self.GetYesDebator()]
                         ));
                     }
-                }, 45 * 1000);
+                }, timeoutTime);
+                this._DidExecuteCommand();
                 return 0;
             } else {
                 return "Topic cannot be set in this state"
@@ -444,11 +481,13 @@ function CreateGame(gameName, proxyCallback) {
             if (!this._state.is("lobby")) return "The game has already started";
             if (this._players.indexOf(name) != -1) return "You cannot join the same game twice";
             this._players.push(name)
+            this._DidExecuteCommand();
             return 0;
         },
         //Ends the game
         EndGame: function () {
             this._state.endgame();
+            this._DidExecuteCommand();
             return 0;
         },
 
@@ -464,16 +503,26 @@ function CreateGame(gameName, proxyCallback) {
             while (this._players.length > this._lastModeratedRound.length) this._lastModeratedRound.push(-1);
             console.log(this._votes);
             this._state.start();
-
             this._moderator = this.GetRandomNumber(0, this._players.length - 1);
             this._lastModeratedRound[this._moderator] = 0;
+            this._DidExecuteCommand();
             return 0;
         },
 
-        ApplyFunc: function (name, args) {
+        _DidExecuteCommand: function () {
+            var current_time = this._GetCurrentTime();
+            this._lastCommandTime = current_time;
+        },
+        _GetCurrentTime: function () {
+            var date = new Date();
+            var current_time = date.getTime();
+            return current_time;
+        },
+
+        ApplyFunc: function (name, args, time) {
             if (this.hasOwnProperty(name)) {
                 console.log("Calling " + name + " with ", args);
-
+                this._lastCommandTime = time;
                 return this[name].apply(this, args);
             } else {
                 return "This call " + name + " does not exist";

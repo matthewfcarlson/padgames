@@ -21,7 +21,7 @@
     
     <h2 class="speech-bubble speech-bubble-yes" v-if="currentRole == 'debate_yes'">Yes!</h2>
     <h2 class="speech-bubble speech-bubble-no" v-if="currentRole == 'debate_no'">No!</h2>
-    <div is="DebatingTimeLimit" v-if="state == 'debating'" @submit="DebateFinished" v-bind:isModerator="isModerator"></div>
+    <div is="DebatingTimeLimit" v-if="state == 'debating'" @submit="DebateFinished" v-bind:timer="timeoutTime" v-bind:isModerator="isModerator"></div>
 
    
     <div v-else-if="state == 'lobby'" >
@@ -33,13 +33,14 @@
         <br/>
         <button class="btn btn-primary btn-block" @click="JoinGame()">Join Game</button>
       </div>
-      <button v-else class="btn btn-primary btn-block" @click="StartGame">Start Game</button>
+      <button v-else-if="isFirstPlayer" class="btn btn-primary btn-block" @click="StartGame">Start Game</button>
+      <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
     </div>
     
    
     <div is="ModeratorPickDebator"  v-else-if="isModerator && state == 'first_mod'" @submit="PickedDebators" v-bind:players="playerList" v-bind:avaialble="pickAblePlayerIndexs"></div>
     <div is="ModeratorTopicPick" v-else-if="isModerator && state == 'moderate_topic'" @submit="PickedTopic"></div>
-    <div is="DebatorPickStrategies" v-else-if="isDebator && (state == 'debate_waiting'|| state == 'debating')" @submit="DebatorReady"></div>    
+    <div is="DebatorPickStrategies" v-else-if="isDebator && (state == 'debate_waiting'|| state == 'debating')" v-bind:timer="timeoutTime" @submit="DebatorReady"></div>    
     <div is="Voting" v-else-if="!isDebator && state == 'voting'" @submit="Voted"></div>
     <div v-else-if="state == 'end_game'">
       <h2>Game over!</h2>
@@ -159,6 +160,10 @@ export default {
       if (winner == -1 ) return "";
       return this.playerList[winner];
     },
+    timeoutTime: function(){
+      if (this.currentGame == null) return -1;
+      return this.currentGame.GetTimeOutInMs();
+    },
     playerList: function() {
       if (this.currentGame == null) return [];
       return this.currentGame.GetPlayers();
@@ -170,6 +175,10 @@ export default {
     moderator: function() {
       if (this.currentGame == null) return [];
       return this.currentGame.Moderator();
+    },
+    isFirstPlayer: function(){
+      if (this.playerIndex == 0) return true;
+      return false;
     },
     yesDebatorReady: function() {
       if (this.currentGame == null) return false;
@@ -314,7 +323,7 @@ export default {
       var self = this;
 
       var previousGame = null;
-      if (localStorage.getItem(gameRoom) && this.playerIndex == -1 && !this.debug) {
+      if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
         previousGame = JSON.parse(localStorage.getItem(gameRoom));
         console.log(this);
         this.RejoinGame(
@@ -323,6 +332,7 @@ export default {
           previousGame.index,
           previousGame.socketId
         );
+        this.playerName = previousGame.playerName;
         localStorage.removeItem(gameRoom);
       }
       console.log("Previous game", previousGame);
@@ -338,11 +348,12 @@ export default {
       console.log("Player ID" + playerIndex);
       //TODO do this better
       this.playerIndex = playerIndex;
+      console.log("Storing the game for later");
       localStorage.setItem(
         this.gameRoom,
         JSON.stringify({
           playerName: this.playerName,
-          index: this.playerIndex,
+          index: playerIndex,
           socketId: this.$socket.id
         })
       );
@@ -358,7 +369,7 @@ export default {
       if (this.$socket.id == data.source) {
         console.log("Ignoring");
       } else {
-        this.currentGame.ApplyFunc(data.funcName, data.argList);
+        this.currentGame.ApplyFunc(data.funcName, data.argList,data.time);
         Vue.set(this, "currentGame", this.currentGame);
       }
     }

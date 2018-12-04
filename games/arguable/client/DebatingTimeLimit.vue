@@ -51,7 +51,7 @@ export default {
   mounted: function(){
     this.startTimer();
   },
-  props: ["isModerator"]
+  props: ["isModerator", "timer"]
 
 }
 </script>
