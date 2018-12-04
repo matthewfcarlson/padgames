@@ -156,7 +156,7 @@ function Init(socket, io) {
 
         var oldIndex = GetPlayerIndex(gameID,playerName);
         var oldSocket = game.sockets[oldIndex];
-        return;
+        
         if (playerIndex == oldIndex && oldSocket == previousSocket){
             game.sockets[playerIndex] = socket.id;
             socket.emit(

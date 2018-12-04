@@ -314,7 +314,7 @@ export default {
       var self = this;
 
       var previousGame = null;
-      if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
+      if (localStorage.getItem(gameRoom) && this.playerIndex == -1 && !this.debug) {
         previousGame = JSON.parse(localStorage.getItem(gameRoom));
         console.log(this);
         this.RejoinGame(
