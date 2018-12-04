@@ -16,7 +16,7 @@ export default {
   data() {
     return {
         ready: false,
-        timer: 120,
+        timeLeft: 0,
         counter: false,
         interval: null,
         secondsLeft: "2:00"
@@ -31,16 +31,16 @@ export default {
     },
     startTimer() {
         this.interval = setInterval(this.countDown, 1000);
+        this.timeLeft = this.timer;
     },
     countDown() {
-        console.log("counting down", this.timer)
-        this.timer -= 1;
-        var n = this.timer;
+        console.log("counting down", this.timeLeft)
+        this.timeLeft -= 1;
+        var n = this.timeLeft;
         if (n > 0) {
             this.secondsLeft = Math.floor(n/60) + ":" + (n%60);
         } 
-        else {
-           
+        else {           
             this.DebateDone();
         }
     }

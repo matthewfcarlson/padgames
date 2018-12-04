@@ -387,7 +387,7 @@ function CreateGame(gameName, proxyCallback) {
                 var elapsedTime = currentTime - this._lastCommandTime;
                 var timeoutTime = 45 * 1000;
                 if (elapsedTime > 0){
-                    timeoutTime = elapsedTime - timeoutTime;
+                    timeoutTime =  timeoutTime - elapsedTime;
                 }
                 
                 if (timeoutTime <= 0) timeoutTime = 1;

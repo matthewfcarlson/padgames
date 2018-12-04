@@ -65,12 +65,13 @@ export default {
         ready: false,
         counter: false,
         interval: null,
+        timeLeft: 0,
         secondsLeft: "0:25"
     };
   },
   computed: {
       secondsLeft: function(){
-          var seconds = Math.round(this.timer / 1000);
+          var seconds = this.timeLeft;
           if (seconds < 10) seconds = "0"+seconds;
           return "0:"+seconds;
       }
@@ -84,11 +85,12 @@ export default {
     },
     startTimer() {
         this.interval = setInterval(this.countDown, 1000);
+        this.timeLeft = Math.round(this.timer /1000);
     },    
     countDown() {
-        console.log("counting down", this.timer)
-        this.timer -= 1000;
-        if (this.timer <= 0) {
+        console.log("counting down", this.timeLeft)
+        this.timeLeft -= 1000;
+        if (this.timeLeft <= 0) {
             this.DebatorReady();
         }
     }
