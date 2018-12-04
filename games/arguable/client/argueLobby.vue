@@ -110,7 +110,6 @@ export default {
   height: auto;
 	
   /* Set up positioning */
-  position: fixed;
   top: 0;
   left: 0;
 }
