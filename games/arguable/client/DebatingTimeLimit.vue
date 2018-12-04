@@ -31,7 +31,7 @@ export default {
     },
     startTimer() {
         this.interval = setInterval(this.countDown, 1000);
-        this.timeLeft = this.timer;
+        this.timeLeft = Math.round(this.timer/1000);
     },
     countDown() {
         console.log("counting down", this.timeLeft)
