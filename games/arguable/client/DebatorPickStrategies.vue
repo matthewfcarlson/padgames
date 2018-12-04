@@ -84,9 +84,7 @@ export default {
     },
     startTimer() {
         this.interval = setInterval(this.countDown, 1000);
-    },
-    
-    props: ["timer"],
+    },    
     countDown() {
         console.log("counting down", this.timer)
         this.timer -= 1000;
@@ -95,6 +93,7 @@ export default {
         }
     }
   },
+  props: ["timer"],
   beforeDestroy: function(){
       clearInterval(this.interval);
   },
