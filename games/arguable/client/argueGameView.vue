@@ -35,6 +35,7 @@
       </div>
       <button v-else-if="isFirstPlayer" class="btn btn-primary btn-block" @click="StartGame">Start Game</button>
       <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
+      <vue-qrcode v-bind:val="windowLocation"></vue-qrcode>
     </div>
     
    
@@ -76,6 +77,7 @@ import DebatorPickStrategies from "./DebatorPickStrategies";
 import DebatingTimeLimit from "./DebatingTimeLimit";
 import LobbyPlayerList from "./LobbyPlayerList";
 import Voting from "./Voting";
+import VueQrcode from '@chenfengyuan/vue-qrcode';
 
 Vue.filter("uppercase", function(value) {
   if (!value) return "";
@@ -106,7 +108,8 @@ export default {
         );
         self.$socket.emit(ROOT + "engine call", gameRoom, name, args);
       }),
-      count: 0,
+      windowLocation: window.location.href,
+      syncTimer:null,
       playerIndex: -1,
       playerName: debug ? "Default" : "",
       gameRoom: gameRoom,
@@ -119,7 +122,8 @@ export default {
     DebatorPickStrategies,
     LobbyPlayerList,
     DebatingTimeLimit,
-    Voting
+    Voting,
+    VueQrcode
   },
   created: function() {
     var names = [
@@ -299,6 +303,19 @@ export default {
       document.title = "Arguing - " + playerName;
       this.$socket.emit(ROOT + "join game", gameRoom, playerName);
     },
+    TimedSync: function(){
+      if (this.currentGame == null) return;
+      var lastCommand = this.currentGame.GetLastCommandTime();
+      var date = new Date();
+      var current_time = date.getTime();
+      var elapsedTime = current_time - lastCommand;
+      console.log("There have been "+elapsedTime+" since we last synced or recieved a command");
+      if (elapsedTime > 5000){
+        this.$socket.emit(ROOT + "sync game", gameRoom, lastCommand);
+      }      
+      //otherwise we check how long it has been since we got the last command
+
+    },
     RejoinGame: function(gameRoom, playerName, playerIndex, socketId) {
       console.log("Attempting to rejoin the game!");
       this.$socket.emit(
@@ -319,7 +336,7 @@ export default {
       console.log("socket connected for room " + gameRoom);
       this.connected = true;
       this.$socket.emit(ROOT + "connect");
-      this.$socket.emit(ROOT + "sync game", gameRoom);
+      this.$socket.emit(ROOT + "sync game", gameRoom, 0);
       var self = this;
 
       var previousGame = null;
@@ -336,6 +353,9 @@ export default {
         localStorage.removeItem(gameRoom);
       }
       console.log("Previous game", previousGame);
+      // set a timer to sync
+      this.syncTimer =  setInterval(this.timedSync, 5000);
+      
     },
     "Argue:error": function(message, leave) {
       alert(message + leave);
@@ -436,6 +456,7 @@ body,
   /* Set up proportionate scaling */
   width: 100%;
   height: auto;
+  padding-bottom:1em;
 }
 .content-moderator {
   background: var(--color-mod);

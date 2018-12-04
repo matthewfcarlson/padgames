@@ -9,6 +9,7 @@
     "mongoose": "^5.2.17",
     "random-js": "^1.0.8",
     "socket.io": "^2.1.1",
+    "@chenfengyuan/vue-qrcode": "^1.0.0",
     "socket.io-client": "^2.1.1",
     "underscore": "^1.9.1",
     "vue": "^2.5.17",

@@ -112,6 +112,10 @@ function CreateGame(gameName, proxyCallback) {
             return this._timeOut;
         },
 
+        GetLastCommandTime: function(){
+            return this._lastCommandTime;
+        },
+
         //set the debaters (yes is always first)
         SetDebaters: function (player1, player2) {
             if (!this._state.is("first_mod")) {
@@ -201,8 +205,15 @@ function CreateGame(gameName, proxyCallback) {
             if (this._readyDebators.indexOf(playerIndex) != -1) return "This debator player is already ready" + playerIndex;
             this._readyDebators.push(playerIndex);
             if (this._readyDebators.length >= 2) {
+                var currentTime = this._GetCurrentTime();
+                var elapsedTime = currentTime - this._lastCommandTime;
+                var timeoutTime = 120 * 1000;
+                if (elapsedTime > 0){
+                    timeoutTime =  timeoutTime - elapsedTime;
+                }
+                if (timeoutTime <= 0) timeoutTime = 1;
+                this._timeOut = timeoutTime;
                 this._state.debateStart();
-                this._timeOut = 120 * 1000; //2 minutes
             }
             this._DidExecuteCommand();
             return 0;

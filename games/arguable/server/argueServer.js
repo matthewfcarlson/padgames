@@ -119,15 +119,20 @@ function Init(socket, io) {
         io.to(gameRoomRoot).emit(gameRoomRoot + "list games", GetGameList());
     });
 
-    socket.on(gameRoomRoot+"sync game", function(gameId){
+    socket.on(gameRoomRoot+"sync game", function(gameId, lastTimeSeen){
         var game = GetGameByID(gameId);
         if (game == null) {
             console.error("SYNC GAME: this game does not exist");
             return false;
         }
         game.commands.forEach(function(storedCall){
-            //console.log("Playing back call",storedCall);
-            socket.emit(gameRoomRoot+"engine call",storedCall);
+            if (storedCall.time > lastTimeSeen) {
+                //console.log("Playing back call",storedCall);
+                socket.emit(gameRoomRoot+"engine call",storedCall);
+            }
+            else {
+                console.log("Skipping command ", storedCall)
+            }
         });
     });
 
