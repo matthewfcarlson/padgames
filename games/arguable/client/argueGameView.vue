@@ -35,7 +35,7 @@
       </div>
       <button v-else-if="isFirstPlayer" class="btn btn-primary btn-block" @click="StartGame">Start Game</button>
       <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
-      <vue-qrcode v-bind:val="windowLocation"></vue-qrcode>
+      <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
     </div>
     
    
@@ -52,6 +52,8 @@
     <div v-else>
       Waiting...
     </div>
+
+    <div is="SpectatorView" v-bind:game="currentGame" v-if="currentRole == 'spectator'"></div>
 
     <pre v-if="currentGame != null && debug">
       {{playerList}}
@@ -78,6 +80,7 @@ import DebatingTimeLimit from "./DebatingTimeLimit";
 import LobbyPlayerList from "./LobbyPlayerList";
 import Voting from "./Voting";
 import VueQrcode from '@chenfengyuan/vue-qrcode';
+import SpectatorView from "./SpectatorView";
 
 Vue.filter("uppercase", function(value) {
   if (!value) return "";
@@ -123,7 +126,8 @@ export default {
     LobbyPlayerList,
     DebatingTimeLimit,
     Voting,
-    VueQrcode
+    VueQrcode,
+    SpectatorView
   },
   created: function() {
     var names = [
@@ -157,6 +161,11 @@ export default {
       return this.currentGame.GetAvailablePlayerIndexs();
 
       //filter out the moderator
+    },
+    qrWidth: function(){
+      var value = window.screen.width;
+      if (value > 750) return 750;
+      return window.screen.width;
     },
     winningPlayerName: function(){
       if (this.currentGame == null) return "";
