@@ -7,6 +7,7 @@ import TestAI from "./codewords/client/TestAI";
 import ArgueLobby from "./arguable/client/ArgueLobby"
 import ArgueGame from "./arguable/client/ArgueGameView"
 import DixitLobby from "./dixit/client/DixitLobby"
+import DixitGame from "./dixit/client/DixitGame"
 
 export const GameRoutes = [
   /* This is the format
@@ -77,5 +78,12 @@ export const GameRoutes = [
     title: "Dixit",
     isGame: true,
     component: DixitLobby
+  },
+  {
+    path: "/dixit/:gameID",
+    name: "dixit game",
+    title: "Dixit",
+    isGame: false,
+    component: DixitGame
   },
 ];
