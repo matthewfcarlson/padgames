@@ -6,17 +6,32 @@ function GetGameByID(gameID) {
     return currentGames[gameID];
 }
 
+function ClearOutGamesList() {
+    var cutoffTime = new Date().getTime() - (1000 * 60 * 60 * 2); //2 hour ago
+    Object.keys(currentGames).filter(x => {
+        return currentGames[x].creationDate < cutoffTime;
+    }).forEach(x=> {
+        console.log("Clearing out game ",x)
+        delete currentGames[x];
+    });
+}
+
 function GetGameList() {
     if (currentGames == null || currentGames.length == 0) return [];
+
+    ClearOutGamesList();
+    
     return Object.keys(currentGames).map(x => {
         return {
             id: x,
             name: currentGames[x].name,
             state: x.state,
             numPlayers: currentGames[x].players.length,
-            createdBy: "unknown"
+            createdBy: "unknown",
+            createdAt: currentGames[x].creationDate
         };
     }).filter(x => x.state != "gameover");
+    //delete any game over an hour old
 }
 
 function HashGameName(gameName) {
@@ -70,12 +85,14 @@ function Init(socket, io) {
             return false;
         }
 
+        
         console.log("Creating a new game", gameID);
         currentGames[gameID] = {};
         currentGames[gameID].name = gameName;
         currentGames[gameID].sockets = [];
         currentGames[gameID].players = [];
         currentGames[gameID].commands = [];
+        currentGames[gameID].creationDate = new Date().getTime();
 
         socket.emit(gameRoomRoot + "list games", GetGameList());
 

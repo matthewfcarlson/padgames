@@ -7,7 +7,7 @@
         <h1>Play  {{game.title}}</h1>          
       </router-link>
     </div>
-    
+    Find an issue? <a href="https://github.com/matthewfcarlson/codewords/issues">Please log it here.</a>
     
   </div>
 </template>
