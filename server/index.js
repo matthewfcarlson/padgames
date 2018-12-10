@@ -25,8 +25,6 @@ app.get("/index.html", function(req, res) {
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-app.use("/static", express.static(path.join(__dirname, "../dist/static")));
-
 var gameList = [];
 
 function GenerateWordList() {

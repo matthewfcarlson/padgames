@@ -6,6 +6,7 @@ import GoSGame from "./stuff/client/game";
 import TestAI from "./codewords/client/TestAI";
 import ArgueLobby from "./arguable/client/ArgueLobby"
 import ArgueGame from "./arguable/client/ArgueGameView"
+import DixitLobby from "./dixit/client/DixitLobby"
 
 export const GameRoutes = [
   /* This is the format
@@ -69,5 +70,12 @@ export const GameRoutes = [
     title: "Code Words AT",
     isGame: false,
     component: TestAI
-  }
+  },
+  {
+    path: "/dixit",
+    name: "dixit",
+    title: "Dixit",
+    isGame: true,
+    component: DixitLobby
+  },
 ];
