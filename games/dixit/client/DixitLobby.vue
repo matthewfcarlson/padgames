@@ -94,7 +94,8 @@ export default {
     return {
       gamesList: [],
       gameName: "",
-      ready: false
+      ready: false,
+      syncTimer:null
     };
   },
   methods: {
@@ -102,7 +103,14 @@ export default {
       console.log("Creating Dixit game");
       this.$socket.emit("Dixit:create game", this.gameName);
       this.gameName = "";
+    },
+    ResetIfNotConnected(){
+        if (!this.ready) location.reload();
     }
+  },
+  created: function(){
+    //check to make sure we are connected within 3 seconds
+    syncTimer = setTimeout(this.ResetIfNotConnected,3000);
   },
   sockets: {
     connect: function() {
