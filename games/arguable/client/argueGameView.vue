@@ -363,7 +363,7 @@ export default {
       }
       console.log("Previous game", previousGame);
       // set a timer to sync
-      this.syncTimer =  setInterval(this.timedSync, 5000);
+      this.syncTimer =  setInterval(this.TimedSync, 5000);
       
     },
     "Argue:error": function(message, leave) {

@@ -1,0 +1,1143 @@
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1[data-v-1d61af3e],
+h2[data-v-1d61af3e] {
+  font-weight: normal;
+}
+ul[data-v-1d61af3e] {
+  list-style-type: none;
+  padding: 0;
+}
+li[data-v-1d61af3e] {
+  display: inline-block;
+  margin: 0 10px;
+}
+a[data-v-1d61af3e] {
+  color: #42b983;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.card-view-title[data-v-48a03a9e] {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  position: absolute;
+  transform-origin: left top; 
+  top:10pt;
+}
+.card-view[data-v-48a03a9e] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+  height: 105pt;
+}
+.card-viewer[data-v-48a03a9e] {
+  width: max-content;
+  padding-left:20pt;
+  position: relative;
+}
+
+.sushi-card[data-v-737ef0f0] {
+  font-size: 11pt;
+  padding-left: 0;
+  padding-right: 0;
+  width: 75pt;
+  margin-right:2pt;
+  height: 100pt;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  display:inline-block;
+  background-color:#888;
+}
+.sushi-card[data-v-737ef0f0]:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.sushi-card .card-header[data-v-737ef0f0] {
+  height:75pt;
+  padding:0;
+  position: relative;
+}
+.sushi-card .card-header img[data-v-737ef0f0]{
+  width:100%;
+  position: absolute;
+  bottom:0;
+  right:0;
+  left:0;
+}
+.sushi-card .card-header .card-value[data-v-737ef0f0]{
+  position: absolute;
+  top:2pt;
+  right:2pt;
+}
+.sushi-card .card-body[data-v-737ef0f0] {  
+  padding:0;
+  padding-left:1pt;
+  padding-right:1pt;
+  color:white;
+}
+.sushi-card.picked[data-v-737ef0f0] {
+  border-color: rgba(255, 0, 0, 0.5);
+  border-width: 2pt;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.upsidedown[data-v-5e44db1a] {
+  -webkit-transform: rotate(-180deg);
+  -moz-transform: rotate(-180deg);
+  -o-transform: rotate(-180deg);
+  transform: rotate(-180deg);
+  ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
+.upsidedown.card-header[data-v-5e44db1a] {
+  padding: 0;
+}
+.codeword[data-v-5e44db1a] {
+  margin-top: 0.5em;
+}
+body[data-v-5e44db1a] {
+  height: 100vh;
+  background-color: #eee;
+}
+.card-block[data-v-5e44db1a] {
+  display: flex;
+  align-items: center;
+  /* Vertical center alignment */
+  justify-content: center;
+  /* Horizontal center alignment */
+}
+.card.red[data-v-5e44db1a] {
+  border: 2px solid darkred;
+  color: white;
+  background-color: red;
+}
+.card.blue[data-v-5e44db1a] {
+  border: 2px solid darkblue;
+  color: white;
+  background-color: blue;
+}
+.card.none[data-v-5e44db1a] {
+  border: 2px solid yellow;
+  color: white;
+  background-color: gold;
+}
+.card.death[data-v-5e44db1a] {
+  border: 2px solid black;
+  color: white;
+  background-color: #222;
+}
+.card-block b[data-v-5e44db1a] {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 2vw;
+}
+.card-block span[data-v-5e44db1a] {
+  font-size: 2vw;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:root {
+  --color1: #F9F4CA; /* beige*/
+  --color2: #B9B696; /* khaki */
+  --color3: #797763; /*navajowhite */
+  --color4: #3A392F;
+  --color5: #DFDBB5; /* palegoldenrod */
+  --color6: blanchedalmond /* blanched almond*/
+}
+
+.content[data-v-e69c0136]{  /* https://bennettfeely.com/gradients/ */
+  background:var(--color1);
+  background: -moz-linear-gradient(top,var(--color1) 0%, var(--color5) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%,var(--color5)), color-stop(100%, var(--color5)));
+  background: -webkit-linear-gradient(top,var(--color1) 0%, var(--color5) 100%);
+  background: -o-linear-gradient(top,var(--color1) 0%, var(--color5) 100%);
+  background: -ms-linear-gradient(top,var(--color1) 0%, var(--color5) 100%);
+  background: linear-gradient(to bottom,var(--color1) 0%, var(--color5) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#273de6', GradientType=0 );
+  
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 100%;
+	
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+	
+  /* Set up positioning */
+  top: 0;
+  left: 0;
+}
+.speech-bubble[data-v-e69c0136] {
+	position: relative;
+	background: var(--color4);
+  color:white;
+  padding:0.75em;
+  text-transform: uppercase;
+  margin:0.5em;
+	border-radius: .2em;
+}
+.speech-bubble[data-v-e69c0136]:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-right-color: #000000;
+  border-right-color: var(--color4);
+	border-left: 0;
+	border-bottom: 0;
+	margin-top: -10px;
+	margin-left: -20px;
+}
+
+html,
+body,
+:root {
+  margin: 0;
+  padding: 0;
+}
+.content-moderator .list-group, 
+.content-debate-no .list-group, 
+.content-debate-yes .list-group {
+  color:black;
+}
+.btn-yes {
+  background: var(--color-yes);
+  color:white;
+}
+.btn-no {
+  background: var(--color-no);
+  color:white;
+}
+.text-yes {
+  color: var(--color-yes);
+}
+.text-no {
+  color: var(--color-no);
+}
+
+.content[data-v-23c11422] {
+  --color-yes: #01afef;
+  --color-mod: #18a246;
+  --color-no: #ee0181;
+  padding-top:0.2em;
+  /* https://bennettfeely.com/gradients/ */
+  background: var(--color1);
+  background: -moz-linear-gradient(top, var(--color1) 0%, var(--color5) 100%);
+  background: -webkit-gradient(
+    left top,
+    left bottom,
+    color-stop(0%, var(--color5)),
+    color-stop(100%, var(--color5))
+  );
+  background: -webkit-linear-gradient(
+    top,
+    var(--color1) 0%,
+    var(--color5) 100%
+  );
+  background: -o-linear-gradient(top, var(--color1) 0%, var(--color5) 100%);
+  background: -ms-linear-gradient(top, var(--color1) 0%, var(--color5) 100%);
+  background: linear-gradient(to bottom, var(--color1) 0%, var(--color5) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#273de6', GradientType=0 );
+
+  /* Set rules to fill background */
+  min-height: 100vh;
+  min-width: 100vw;
+
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+  padding-bottom:1em;
+}
+.content-moderator[data-v-23c11422] {
+  background: var(--color-mod);
+  color: white;
+}
+.content-debate-yes[data-v-23c11422] {
+  background: var(--color-yes);
+  color: white;
+}
+.content-debate-no[data-v-23c11422] {
+  background: var(--color-no);
+  color: white;
+}
+.speech-bubble[data-v-23c11422] {
+  position: relative;
+  background: var(--color4);
+  color: white;
+  padding: 0.75em;
+  text-transform: uppercase;
+  margin: 0.5em;
+  border-radius: 0.2em;
+}
+.speech-bubble[data-v-23c11422]:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-right-color: #000000;
+  border-right-color: var(--color4);
+  border-left: 0;
+  border-bottom: 0;
+  margin-top: -10px;
+  margin-left: -20px;
+}
+.speech-bubble-no[data-v-23c11422] {
+  color: var(--color-no);
+  background: white;
+}
+.speech-bubble-no[data-v-23c11422]:after,.speech-bubble-yes[data-v-23c11422]:after{
+  border-right-color: white
+}
+.speech-bubble-yes[data-v-23c11422] {
+  color: var(--color-yes);
+  background: white;
+}
+
+@font-face {
+  font-family: DixitFont;
+  src: url("/static/dixit/dixit.ttf");
+}
+#app {
+  min-height: 100vh;
+}
+
+.parallax > use[data-v-5aa8b23e] {
+  animation: move-forever-data-v-5aa8b23e 16s linear infinite;
+}
+.parallax[data-v-5aa8b23e] :nth-child(1) {
+  animation-delay: -2s;
+}
+.parallax[data-v-5aa8b23e] :nth-child(2) {
+  animation-delay: -2s;
+  animation-duration: 10s;
+}
+.parallax[data-v-5aa8b23e] :nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 7s;
+}
+.parallax[data-v-5aa8b23e] :nth-child(4) {
+  animation-delay: -5s;
+  animation-duration: 5s;
+}
+@keyframes move-forever-data-v-5aa8b23e {
+0% {
+    transform: translate(-90px, 0%);
+}
+100% {
+    transform: translate(85px, 0%);
+}
+}
+.editorial[data-v-5aa8b23e] {
+  display: block;
+  width: 100%;
+  height: 10em;
+  max-height: 100vh;
+  margin: 0;
+}
+.content[data-v-5aa8b23e] {
+  background-color: #f3cd5d;
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 9em 0 0 0;
+}
+.text-content[data-v-5aa8b23e] {
+  font-family: "Lato", sans-serif;
+  background-color: #d64130;
+  min-height: 75vh;
+  margin: -0.1em 0 0 0;
+  padding: 1em;
+  color: #222;
+  font-weight: 300;
+}
+.text-content h1[data-v-5aa8b23e] {
+  margin-top: -1.3em;
+  font-weight: 100;
+  font-size: 12em;
+  user-select: none;
+  cursor: default;
+  text-align: center;
+  color: #463e49; /*#26171A;*/
+  -webkit-text-stroke-width: 2pt;
+  text-shadow: 3px 3px 10px #000;
+  -webkit-text-stroke-color: #f1b955;
+  outline: none;
+  font-family: DixitFont;
+}
+
+/*prevent many large-by-comparison ripples by shrinking the height*/
+@media (max-width: 50em) {
+.content h1[data-v-5aa8b23e] {
+    font-size: 16vmax;
+}
+.editorial[data-v-5aa8b23e] {
+    height: 17vw;
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*# sourceMappingURL=app.3fd23f6d02e6c0c3aa2e49ae0b62a2ca.css.map*/
