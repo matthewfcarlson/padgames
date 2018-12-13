@@ -20,7 +20,14 @@ export default {
     var debug =
       location.hostname === "localhost" || location.hostname === "127.0.0.1";
     return {
-      currentGame: null,
+      currentGame: ArgueGame.CreateGame(gameRoom, function(name, args) {
+        console.log(
+          "Broadcast up to the server that we called this ",
+          name,
+          args
+        );
+        self.$socket.emit(ROOT + "engine call", gameRoom, name, args);
+      }),
       windowLocation: window.location.href,
       syncTimer:null,
       playerIndex: -1,

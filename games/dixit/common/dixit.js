@@ -5,11 +5,18 @@ function isFunction(functionToCheck) {
 }
 
 function CreateGame(gameName, proxyCallback) {
-
+    var STATES = Object.freeze({
+        "lobby": 1, //before we start a game
+        "firstcard": 2, //when the story teller is picking a card
+        "allcards": 3, //when everyone else is picking a card
+        "voting":4, //when everyone is voting
+        "endgame":5 //when we start the game
+    });
     var default_game = { //python style
         _gameName: gameName || "DEFAULT",
+        _state: states.lobby,
         _players: [],
-        _padViewers:0,
+        _padViewers: 0,
         _judge: -1,
         _points: [],
         _imagesSelected: [],
@@ -19,7 +26,28 @@ function CreateGame(gameName, proxyCallback) {
         _lastCommandTime: 0,
         _timeOut: -1
     };
-    
+
+    function GetState(){
+        var state = this._state
+        var key = Object.keys(STATES).find(k => STATES[k] === state);
+        if (key == undefined) return this._state;
+        return key;
+    }
+
+    function _Transition(){ //this is the only place that should modify state
+        var newState = this._state;
+        //Check if we can transition:
+        switch (this._state) {
+            case STATES.lobby:
+            case STATES.firstcard:
+            case STATES.allcards:
+            case STATES.voting:
+            case STATES.endgame:
+            default:
+        }
+        this._state = newState;
+    }
+
     if (proxyCallback == undefined) {
         proxyCallback = function (name, ...args) {
             console.log(name + " was called with " + args);
@@ -47,4 +75,4 @@ function CreateGame(gameName, proxyCallback) {
 
 module.exports = {
     CreateGame
-}
+};
