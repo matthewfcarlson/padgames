@@ -9,12 +9,12 @@ function CreateGame(gameName, proxyCallback) {
         "lobby": 1, //before we start a game
         "firstcard": 2, //when the story teller is picking a card
         "allcards": 3, //when everyone else is picking a card
-        "voting":4, //when everyone is voting
-        "endgame":5 //when we start the game
+        "voting": 4, //when everyone is voting
+        "endgame": 5 //when we start the game
     });
     var default_game = { //python style
         _gameName: gameName || "DEFAULT",
-        _state: states.lobby,
+        _state: STATES.lobby,
         _players: [],
         _padViewers: 0,
         _judge: -1,
@@ -24,29 +24,37 @@ function CreateGame(gameName, proxyCallback) {
         _round: 0,
         _mt: null,
         _lastCommandTime: 0,
-        _timeOut: -1
-    };
+        _timeOut: -1,
 
-    function GetState(){
-        var state = this._state
-        var key = Object.keys(STATES).find(k => STATES[k] === state);
-        if (key == undefined) return this._state;
-        return key;
-    }
+        GetState: function() {
+            var state = this._state;
+            var key = Object.keys(STATES).find(k => STATES[k] === state);
+            if (key == undefined) return this._state;
+            return key;
+        },
+        
+        GetTimeOutInMs: function () {
+            return this._timeOut;
+        },
 
-    function _Transition(){ //this is the only place that should modify state
-        var newState = this._state;
-        //Check if we can transition:
-        switch (this._state) {
-            case STATES.lobby:
-            case STATES.firstcard:
-            case STATES.allcards:
-            case STATES.voting:
-            case STATES.endgame:
-            default:
+        GetLastCommandTime: function () {
+            return this._lastCommandTime;
+        },
+
+        _Transition: function () { //this is the only place that should modify state
+            var newState = this._state;
+            //Check if we can transition:
+            switch (this._state) {
+                case STATES.lobby:
+                case STATES.firstcard:
+                case STATES.allcards:
+                case STATES.voting:
+                case STATES.endgame:
+                default:
+            }
+            this._state = newState;
         }
-        this._state = newState;
-    }
+    };
 
     if (proxyCallback == undefined) {
         proxyCallback = function (name, ...args) {
