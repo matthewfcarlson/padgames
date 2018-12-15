@@ -52,7 +52,7 @@ function CreateGame(gameName, proxyCallback) {
             return this._lastCommandTime;
         },
 
-        GetPlayers () {
+        GetPlayers() {
             return this._players;
         },
 
@@ -81,15 +81,16 @@ function CreateGame(gameName, proxyCallback) {
                     break;
                 case STATES.endgame:
                 //we can't leave the end game state
+                    break;
                 default:
             }
             //call our transition handler
-            this._OnTransition(this._state, newState);
+            if (this._state != newState) this._OnTransition(this._state, newState);
             this._state = newState;
         },
 
         _OnTransition: function (oldState, newState) {
-
+            console.log("Transition from " + oldState + " to " + newState);
             switch (oldState) {
                 case STATES.lobby:
                     //set the timesJudged array
@@ -142,6 +143,14 @@ function CreateGame(gameName, proxyCallback) {
         RemovePad: function () {
             this._padViewers--;
         },
+
+        StartGame() {
+            console.log("Starting game");
+            this._Transition();
+        },
+
+
+        // Replication stuff
 
         GenCallObj: function (source, callName, args) {
             var date = new Date();

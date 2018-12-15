@@ -92,6 +92,7 @@ function GetGameByID(gameID) {
 function Init(socket, io) {
     socket.on(gameRoomRoot + "connect", function () {
         //lists all the games that are available
+        console.log("Connected to new socket");
         socket.join(gameRoomRoot);
         socket.emit(gameRoomRoot + "connected");
         socket.emit(gameRoomRoot + "list games", GetGameList());
@@ -102,7 +103,7 @@ function Init(socket, io) {
     });
     socket.on(gameRoomRoot + "sync game", function (gameId, lastTimeSeen) {
         var game = GetGameByID(gameId);
-        console.log("Sync request for game "+gameId);
+        console.log("Sync request for game " + gameId);
         if (game == null) {
             console.error("SYNC GAME: this game does not exist");
             socket.emit(gameRoomRoot + "error", { msg: "This game does not exist: " + gameId, leave: true });
@@ -146,11 +147,7 @@ function Init(socket, io) {
     socket.on(gameRoomRoot + "join game", function (gameId, playerName) {
         var game = GetGameByID(gameId);
         if (game == null) {
-            socket.emit(
-                gameRoomRoot + "error",
-                "This game does not exist: " + gameId,
-                true
-            );
+            socket.emit(gameRoomRoot + "error", { msg: "This game does not exist: " + gameId, leave: true });
             console.error("SOCKET JOIN GAME: this game does not exist");
             return;
         }

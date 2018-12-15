@@ -1,6 +1,6 @@
 webpackJsonp([3],{
 
-/***/ "QO+p":
+/***/ "8P1/":
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -104,6 +104,9 @@ var Component = normalizeComponent(
 //
 //
 //
+//
+//
+//
 
 
 
@@ -112,13 +115,17 @@ var Component = normalizeComponent(
 
 
 vue_esm["a" /* default */].use(build_default.a, window.location.origin);
+
+const SYNC_TIME = 10000;
 const ROOT = "Dixit:";
+
 /* harmony default export */ var DixitGame = ({
   name: "Dixit",
   data() {
     var self = this;
     var gameRoom = this.$route.params.gameID || "";
     var debug = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
     return {
       currentGame: dixit_default.a.CreateGame(gameRoom, function (name, args) {
         console.log("Broadcast up to the server that we called this ", name, args);
@@ -135,6 +142,13 @@ const ROOT = "Dixit:";
   components: {
     VueQrcode: vue_qrcode_esm["a" /* default */],
     LobbyPlayerList: dixit_client_LobbyPlayerList
+  },
+  mounted: function () {
+    console.log(this.sockets);
+    console.log(this.$options.sockets);
+    console.log(this);
+    console.log(this.$socket);
+    this.$socket.emit(ROOT + "connect");
   },
   created: function () {
     var names = ["Billy", "Bob", "Joe", "Sue", "Ellen", "Tj", "Safiye", "Jeff", "Kira", "Matt", "Jeremy", "Star", "James", "Lily", "Simon", "Norman", "Ruby", "Craig", "Dominica", "Ruth"];
@@ -174,7 +188,7 @@ const ROOT = "Dixit:";
       var current_time = date.getTime();
       var elapsedTime = current_time - lastCommand;
       console.log("There have been " + elapsedTime + " since we last synced or recieved a command");
-      if (elapsedTime > 5000) {
+      if (elapsedTime > SYNC_TIME) {
         this.$socket.emit(ROOT + "sync game", gameRoom, lastCommand);
       }
       //otherwise we check how long it has been since we got the last command
@@ -188,13 +202,21 @@ const ROOT = "Dixit:";
     }
   },
   sockets: {
-    connect: function () {
+
+    disconnect: function () {
+      //let us know that we are disconnected
+    },
+    "Dixit:connected": function () {
       var gameRoom = this.gameRoom;
       console.log("socket connected for room " + gameRoom);
-      this.connected = true;
-      this.$socket.emit(ROOT + "connect");
       this.$socket.emit(ROOT + "sync game", gameRoom, 0);
+
+      if (this.connected) return;
+
+      this.connected = true;
       var self = this;
+
+      //how to figure out if we've connected before
 
       var previousGame = null;
       if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
@@ -209,11 +231,12 @@ const ROOT = "Dixit:";
       if (this.syncTimer != null) clearInterval(this.syncTimer);
       this.syncTimer = setInterval(this.TimedSync, 5000);
     },
-    "Dixit:error": function (alert) {
+    "Dixit:error": function (response) {
       var message = "N/A";
       var leave = false;
-      if (alert["msg"] != undefined) message = alert["msg"];
-      if (alert["leave"] != undefined) leave = alert["leave"];
+      console.error(response);
+      if (response["msg"] != undefined) message = response["msg"];
+      if (response["leave"] != undefined) leave = response["leave"];
       alert(message);
       if (leave != undefined && leave == true) {
         console.log("Leaving game");
@@ -242,14 +265,14 @@ const ROOT = "Dixit:";
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-2b95a7de","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/DixitGame.vue
-var DixitGame_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content"},[_vm._v("\r\n    Dixit\r\n    \r\n    "),_c('pre',[_vm._v("\r\n        state: "+_vm._s(_vm.state)+"\r\n        "+_vm._s(_vm.currentGame)+"\r\n    ")]),_vm._v(" "),(_vm.state == 'lobby')?_c('div',[_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('br'),_vm._v(" "),(_vm.playerIndex == -1)?_c('div',[_c('h3',[_vm._v("Join game")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.playerName),expression:"playerName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"Your name"},domProps:{"value":(_vm.playerName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.playerName=$event.target.value}}}),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":function($event){_vm.JoinGame()}}},[_vm._v("Join Game")])]):(_vm.isFirstPlayer)?_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":_vm.StartGame}},[_vm._v("Start Game")]):_c('div',{staticClass:"btn btn-info btn-block",attrs:{"disabled":""}},[_vm._v("Waiting for the game to start")]),_vm._v(" "),_c('vue-qrcode',{staticClass:"text-center",attrs:{"value":_vm.windowLocation,"options":{ width: _vm.qrWidth }}})],1):_vm._e()])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-564a81f2","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/DixitGame.vue
+var DixitGame_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content"},[_vm._v("Dixit\n  "),_c('pre',[_vm._v("      state: "+_vm._s(_vm.state)+"\n      "+_vm._s(_vm.currentGame)+"\n      connected: "+_vm._s(_vm.connected)+"\n  ")]),_vm._v(" "),(_vm.state == 'lobby')?_c('div',[_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('br'),_vm._v(" "),(_vm.playerIndex == -1)?_c('div',[_c('h3',[_vm._v("Join game")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.playerName),expression:"playerName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"Your name"},domProps:{"value":(_vm.playerName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.playerName=$event.target.value}}}),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":function($event){_vm.JoinGame()}}},[_vm._v("Join Game")])]):(_vm.isFirstPlayer)?_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":_vm.StartGame}},[_vm._v("Start Game")]):_c('div',{staticClass:"btn btn-info btn-block",attrs:{"disabled":""}},[_vm._v("Waiting for the game to start")]),_vm._v(" "),_c('vue-qrcode',{staticClass:"text-center",attrs:{"value":_vm.windowLocation,"options":{ width: _vm.qrWidth }}})],1):_vm._e()])}
 var DixitGame_staticRenderFns = []
 var DixitGame_esExports = { render: DixitGame_render, staticRenderFns: DixitGame_staticRenderFns }
 /* harmony default export */ var client_DixitGame = (DixitGame_esExports);
 // CONCATENATED MODULE: ./games/dixit/client/DixitGame.vue
 function injectStyle (ssrContext) {
-  __webpack_require__("QO+p")
+  __webpack_require__("8P1/")
 }
 var DixitGame_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -336,7 +359,7 @@ function CreateGame(gameName, proxyCallback) {
             return this._lastCommandTime;
         },
 
-        GetPlayers () {
+        GetPlayers() {
             return this._players;
         },
 
@@ -365,15 +388,16 @@ function CreateGame(gameName, proxyCallback) {
                     break;
                 case STATES.endgame:
                 //we can't leave the end game state
+                    break;
                 default:
             }
             //call our transition handler
-            this._OnTransition(this._state, newState);
+            if (this._state != newState) this._OnTransition(this._state, newState);
             this._state = newState;
         },
 
         _OnTransition: function (oldState, newState) {
-
+            console.log("Transition from " + oldState + " to " + newState);
             switch (oldState) {
                 case STATES.lobby:
                     //set the timesJudged array
@@ -426,6 +450,14 @@ function CreateGame(gameName, proxyCallback) {
         RemovePad: function () {
             this._padViewers--;
         },
+
+        StartGame() {
+            console.log("Starting game");
+            this._Transition();
+        },
+
+
+        // Replication stuff
 
         GenCallObj: function (source, callName, args) {
             var date = new Date();
@@ -3959,4 +3991,4 @@ var index = {
 /***/ })
 
 });
-//# sourceMappingURL=3.b20270a2d3c103837296.js.map
+//# sourceMappingURL=3.7a02d7c3d4a011afc861.js.map

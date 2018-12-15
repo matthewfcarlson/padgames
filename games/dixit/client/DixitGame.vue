@@ -1,37 +1,43 @@
 <template>
-<div class="content" >
-    Dixit
-    
+  <div class="content">Dixit
     <pre>
         state: {{state}}
         {{currentGame}}
+        connected: {{connected}}
     </pre>
-    
+
     <div v-if="state == 'lobby'">
       <div is="LobbyPlayerList" v-bind:players="playerList"></div>
-      <br/>
+      <br>
       <div v-if="playerIndex == -1">
         <h3>Join game</h3>
-        <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
-        <br/>
+        <input type="text" class="form-control" placeholder="Your name" v-model="playerName">
+        <br>
         <button class="btn btn-primary btn-block" @click="JoinGame()">Join Game</button>
       </div>
-      <button v-else-if="isFirstPlayer" class="btn btn-primary btn-block" @click="StartGame">Start Game</button>
+      <button
+        v-else-if="isFirstPlayer"
+        class="btn btn-primary btn-block"
+        @click="StartGame"
+      >Start Game</button>
       <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
       <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
-import VueQrcode from '@chenfengyuan/vue-qrcode';
+import VueQrcode from "@chenfengyuan/vue-qrcode";
 import DixitGame from "../common/dixit";
 import LobbyPlayerList from "./LobbyPlayerList";
 
 Vue.use(VueSocketio, window.location.origin);
+
+const SYNC_TIME = 10000;
 const ROOT = "Dixit:";
+
 export default {
   name: "Dixit",
   data() {
@@ -39,6 +45,7 @@ export default {
     var gameRoom = this.$route.params.gameID || "";
     var debug =
       location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
     return {
       currentGame: DixitGame.CreateGame(gameRoom, function(name, args) {
         console.log(
@@ -49,7 +56,7 @@ export default {
         self.$socket.emit(ROOT + "engine call", gameRoom, name, args);
       }),
       windowLocation: window.location.href,
-      syncTimer:null,
+      syncTimer: null,
       playerIndex: -1,
       playerName: debug ? "Default" : "",
       gameRoom: gameRoom,
@@ -59,6 +66,13 @@ export default {
   components: {
     VueQrcode,
     LobbyPlayerList
+  },
+  mounted: function() {
+    console.log(this.sockets);
+    console.log(this.$options.sockets);
+    console.log(this);
+    console.log(this.$socket);
+    this.$socket.emit(ROOT + "connect");
   },
   created: function() {
     var names = [
@@ -87,19 +101,19 @@ export default {
       this.playerName = names[Math.floor(Math.random() * names.length)];
   },
   computed: {
-    qrWidth: function(){
+    qrWidth: function() {
       var value = window.screen.width;
       if (value > 750) return 750;
       return window.screen.width;
     },
-    state: function(){
+    state: function() {
       if (this.currentGame == null) return "";
-      return this.currentGame.GetState()
+      return this.currentGame.GetState();
     },
-    isFirstPlayer: function(){
+    isFirstPlayer: function() {
       if (this.playerIndex == 0) return true;
       return false;
-    },
+    }
   },
   methods: {
     StartGame: function() {
@@ -112,19 +126,22 @@ export default {
       document.title = "Dixit - " + playerName;
       this.$socket.emit(ROOT + "join game", gameRoom, playerName);
     },
-    TimedSync: function(){
+    TimedSync: function() {
       if (this.currentGame == null) return;
       var lastCommand = this.currentGame.GetLastCommandTime();
       var date = new Date();
       var gameRoom = this.gameRoom;
       var current_time = date.getTime();
       var elapsedTime = current_time - lastCommand;
-      console.log("There have been "+elapsedTime+" since we last synced or recieved a command");
-      if (elapsedTime > 5000){
+      console.log(
+        "There have been " +
+          elapsedTime +
+          " since we last synced or recieved a command"
+      );
+      if (elapsedTime > SYNC_TIME) {
         this.$socket.emit(ROOT + "sync game", gameRoom, lastCommand);
-      }      
+      }
       //otherwise we check how long it has been since we got the last command
-
     },
     RejoinGame: function(gameRoom, playerName, playerIndex, socketId) {
       console.log("Attempting to rejoin the game!");
@@ -141,13 +158,21 @@ export default {
     }
   },
   sockets: {
-    connect: function() {
+
+    disconnect: function(){
+      //let us know that we are disconnected
+    },
+    "Dixit:connected": function() {
       var gameRoom = this.gameRoom;
-      console.log("socket connected for room " + gameRoom);
-      this.connected = true;
-      this.$socket.emit(ROOT + "connect");
+      console.log("socket connected for room " + gameRoom);      
       this.$socket.emit(ROOT + "sync game", gameRoom, 0);
+
+      if (this.connected) return;
+
+      this.connected = true;
       var self = this;
+
+      //how to figure out if we've connected before
 
       var previousGame = null;
       if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
@@ -166,15 +191,13 @@ export default {
       // set a timer to sync
       if (this.syncTimer != null) clearInterval(this.syncTimer);
       this.syncTimer = setInterval(this.TimedSync, 5000);
-      
     },
-    "Dixit:error": function(alert) {
+    "Dixit:error": function(response) {
       var message = "N/A";
       var leave = false;
-      if (alert["msg"] != undefined)
-        message = alert["msg"];
-      if (alert["leave"] != undefined)
-        leave = alert["leave"];
+      console.error(response);
+      if (response["msg"] != undefined) message = response["msg"];
+      if (response["leave"] != undefined) leave = response["leave"];
       alert(message);
       if (leave != undefined && leave == true) {
         console.log("Leaving game");
@@ -206,7 +229,7 @@ export default {
       if (this.$socket.id == data.source) {
         console.log("Ignoring");
       } else {
-        this.currentGame.ApplyFunc(data.funcName, data.argList,data.time);
+        this.currentGame.ApplyFunc(data.funcName, data.argList, data.time);
         Vue.set(this, "currentGame", this.currentGame);
       }
     }
@@ -214,6 +237,5 @@ export default {
 };
 </script>
 <style>
-
 </style>
 
