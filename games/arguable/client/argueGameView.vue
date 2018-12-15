@@ -324,7 +324,6 @@ export default {
         this.$socket.emit(ROOT + "sync game", gameRoom, lastCommand);
       }      
       //otherwise we check how long it has been since we got the last command
-
     },
     RejoinGame: function(gameRoom, playerName, playerIndex, socketId) {
       console.log("Attempting to rejoin the game!");

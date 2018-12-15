@@ -890,15 +890,15 @@ const ROOT = "Argue:";
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-1b982f6e","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/arguable/client/ArgueGameView.vue
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-17bc75ab","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/arguable/client/ArgueGameView.vue
 var ArgueGameView_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content",class:{ 'content-moderator': _vm.isModerator, 'content-debate-yes': _vm.currentRole == 'debate_yes', 'content-debate-no': _vm.currentRole == 'debate_no' }},[_c('h1',{staticClass:"speech-bubble"},[(_vm.currentRole != '')?_c('div',[_vm._v("I am "+_vm._s(_vm.currentRoleFriendly))]):_c('div',[_vm._v("Arguable Game")])]),_vm._v(" "),(_vm.pressureLevel == 1)?_c('div',{staticClass:"lead badge badge-warning "},[_vm._v("Under Pressure!")]):_vm._e(),_vm._v(" "),(_vm.pressureLevel == 2)?_c('div',{staticClass:"lead badge badge-danger "},[_vm._v("I'm out!")]):_vm._e(),_vm._v(" "),(_vm.topic != '')?_c('h2',{staticClass:"speech-bubble"},[_vm._v("\r\n      "+_vm._s(_vm.topic)+"?\r\n      "),_c('hr'),_vm._v(" "),(_vm.YesDebatorName != '')?_c('div',{staticStyle:{"color":"black"}},[_c('small',{staticClass:"row"},[_c('div',{staticClass:"text-yes col-5 text-left"},[(_vm.yesDebatorReady)?_c('i',{staticClass:"fas fa-xs fa-user-check"}):_vm._e(),_vm._v(_vm._s(_vm._f("uppercase")(_vm.YesDebatorName)))]),_vm._v(" "),_c('div',{staticClass:"col-2 text-center "},[_vm._v("vs")]),_vm._v(" "),_c('div',{staticClass:"text-no col-5 text-right"},[(_vm.noDebatorReady)?_c('i',{staticClass:"fas fa-xs fa-user-check"}):_vm._e(),_vm._v(_vm._s(_vm._f("uppercase")(_vm.NoDebatorName))+" ")])])]):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.currentRole == 'debate_yes')?_c('h2',{staticClass:"speech-bubble speech-bubble-yes"},[_vm._v("Yes!")]):_vm._e(),_vm._v(" "),(_vm.currentRole == 'debate_no')?_c('h2',{staticClass:"speech-bubble speech-bubble-no"},[_vm._v("No!")]):_vm._e(),_vm._v(" "),(_vm.state == 'debating')?_c("DebatingTimeLimit",{tag:"div",attrs:{"timer":_vm.timeoutTime,"isModerator":_vm.isModerator},on:{"submit":_vm.DebateFinished}}):(_vm.state == 'lobby')?_c('div',[_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('br'),_vm._v(" "),(_vm.playerIndex == -1)?_c('div',[_c('h3',[_vm._v("Join game")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.playerName),expression:"playerName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"Your name"},domProps:{"value":(_vm.playerName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.playerName=$event.target.value}}}),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":function($event){_vm.JoinGame()}}},[_vm._v("Join Game")])]):(_vm.isFirstPlayer)?_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":_vm.StartGame}},[_vm._v("Start Game")]):_c('div',{staticClass:"btn btn-info btn-block",attrs:{"disabled":""}},[_vm._v("Waiting for the game to start")]),_vm._v(" "),_c('vue-qrcode',{staticClass:"text-center",attrs:{"value":_vm.windowLocation,"options":{ width: _vm.qrWidth }}})],1):(_vm.isModerator && _vm.state == 'first_mod')?_c("ModeratorPickDebator",{tag:"div",attrs:{"players":_vm.playerList,"avaialble":_vm.pickAblePlayerIndexs},on:{"submit":_vm.PickedDebators}}):(_vm.isModerator && _vm.state == 'moderate_topic')?_c("ModeratorTopicPick",{tag:"div",on:{"submit":_vm.PickedTopic}}):(_vm.isDebator && (_vm.state == 'debate_waiting'|| _vm.state == 'debating'))?_c("DebatorPickStrategies",{tag:"div",attrs:{"timer":_vm.timeoutTime},on:{"submit":_vm.DebatorReady}}):(!_vm.isDebator && _vm.state == 'voting')?_c("Voting",{tag:"div",on:{"submit":_vm.Voted}}):(_vm.state == 'end_game')?_c('div',[_c('h2',[_vm._v("Game over!")]),_vm._v("\r\n      The winner is "+_vm._s(_vm.winningPlayerName)+"\r\n\r\n    ")]):_c('div',[_vm._v("\r\n      Waiting...\r\n    ")]),_vm._v(" "),(_vm.currentRole == 'spectator')?_c("SpectatorView",{tag:"div",attrs:{"game":_vm.currentGame}}):_vm._e(),_vm._v(" "),(_vm.currentGame != null && _vm.debug)?_c('pre',[_vm._v("\r\n      "+_vm._s(_vm.playerList)+"\r\n      "+_vm._s(_vm.state)+"\r\n      Role: "+_vm._s(_vm.currentRole)+"\r\n      Moderator: "+_vm._s(_vm.moderator)+"\r\n      PlayerIndex: "+_vm._s(_vm.playerIndex)+"\r\n      YES: "+_vm._s(_vm.currentGame.GetYesDebator())+" Ready: "+_vm._s(_vm.yesDebatorReady)+"\r\n      NO: "+_vm._s(_vm.currentGame.GetNoDebator())+"  Ready: "+_vm._s(_vm.noDebatorReady)+"\r\n      Pressure: "+_vm._s(_vm.pressureLevel)+"\r\n    ")]):_vm._e()])}
 var ArgueGameView_staticRenderFns = []
 var ArgueGameView_esExports = { render: ArgueGameView_render, staticRenderFns: ArgueGameView_staticRenderFns }
 /* harmony default export */ var client_ArgueGameView = (ArgueGameView_esExports);
 // CONCATENATED MODULE: ./games/arguable/client/ArgueGameView.vue
 function injectStyle (ssrContext) {
-  __webpack_require__("I8P5")
-  __webpack_require__("BP9e")
+  __webpack_require__("QNjf")
+  __webpack_require__("Z9eJ")
 }
 var ArgueGameView_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -911,7 +911,7 @@ var ArgueGameView___vue_template_functional__ = false
 /* styles */
 var ArgueGameView___vue_styles__ = injectStyle
 /* scopeId */
-var ArgueGameView___vue_scopeId__ = "data-v-1b982f6e"
+var ArgueGameView___vue_scopeId__ = "data-v-17bc75ab"
 /* moduleIdentifier (server only) */
 var ArgueGameView___vue_module_identifier__ = null
 var ArgueGameView_Component = ArgueGameView_normalizeComponent(
@@ -925,13 +925,6 @@ var ArgueGameView_Component = ArgueGameView_normalizeComponent(
 
 /* harmony default export */ var arguable_client_ArgueGameView = __webpack_exports__["default"] = (ArgueGameView_Component.exports);
 
-
-/***/ }),
-
-/***/ "BP9e":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 
@@ -1546,7 +1539,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ "I8P5":
+/***/ "QNjf":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "Z9eJ":
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -5704,4 +5704,4 @@ var index = {
 /***/ })
 
 });
-//# sourceMappingURL=2.ec9b177e9738d023155e.js.map
+//# sourceMappingURL=2.ecbe2effcd9114f8d716.js.map

@@ -45,7 +45,7 @@ function ReplicateCall(io, gameId, source, callName, args) {
         console.error("REP CALL: this game does not exist");
         return false;
     }
-    //Call the function on our game engine and if it succedded send it out
+    //Call the function on our game engine and if it succeeded send it out
     var result = game.ApplyFunc(callName, args);
     if (result != 0) {
         console.error("REP CALL: We found an error:", result);
@@ -54,7 +54,7 @@ function ReplicateCall(io, gameId, source, callName, args) {
     var storedCall = game.GenCallObj(source, callName, args);
     game.StoreCall(storedCall);
 
-    io.to(gameRoomRoot).emit(gameRoomRoot + "engine call", storedCall);
+    io.to(gameRoomRoot + gameId).emit(gameRoomRoot + "engine call", storedCall);
     return true;
 }
 
@@ -98,13 +98,31 @@ function Init(socket, io) {
     });
     socket.on(gameRoomRoot + "list games", function () {
         //lists all the games that are available
-        socket.join(gameRoomRoot);
         socket.emit(gameRoomRoot + "list games", GetGameList());
+    });
+    socket.on(gameRoomRoot + "sync game", function (gameId, lastTimeSeen) {
+        var game = GetGameByID(gameId);
+        console.log("Sync request for game "+gameId);
+        if (game == null) {
+            console.error("SYNC GAME: this game does not exist");
+            socket.emit(gameRoomRoot + "error", { msg: "This game does not exist: " + gameId, leave: true });
+            return false;
+        }
+        game.commands.forEach(function (storedCall) {
+            if (storedCall.time > lastTimeSeen) {
+                //console.log("Playing back call",storedCall);
+                socket.emit(gameRoomRoot + "engine call", storedCall);
+            }
+            else {
+                console.log("Skipping command ", storedCall)
+            }
+        });
     });
     socket.on(gameRoomRoot + "create game", function (gameName) {
         var gameID = HashGameName(gameName);
         if (currentGames[gameID] != undefined || gameName == "") {
             console.error("You can't create the same game twice");
+            socket.emit(gameRoomRoot + "error", { msg: "This already exists: " + gameId, leave: false });
             return false;
         }
 
@@ -113,7 +131,7 @@ function Init(socket, io) {
         currentGames[gameID] = DixitGame.CreateGame(gameID, function (callName, args) {
             console.log("Called on " + gameID, callname, args);
         });
-        
+
         currentGames[gameID].name = gameName;
         currentGames[gameID].sockets = [];
         currentGames[gameID].players = [];
@@ -137,6 +155,8 @@ function Init(socket, io) {
             return;
         }
 
+        socket.join(gameRoomRoot + gameId);
+
         var playerIndex = JoinGame(io, gameId, playerName, socket.id);
 
         if (playerIndex === false) {
@@ -144,6 +164,8 @@ function Init(socket, io) {
             return;
         }
         else {
+            console.log("Broadcasting");
+
             socket.emit(
                 gameRoomRoot + "set player", playerIndex
             );

@@ -95,7 +95,11 @@ export default {
     state: function(){
       if (this.currentGame == null) return "";
       return this.currentGame.GetState()
-    }
+    },
+    isFirstPlayer: function(){
+      if (this.playerIndex == 0) return true;
+      return false;
+    },
   },
   methods: {
     StartGame: function() {
@@ -164,11 +168,17 @@ export default {
       this.syncTimer = setInterval(this.TimedSync, 5000);
       
     },
-    "Dixit:error": function(message, leave) {
-      alert(message + leave);
+    "Dixit:error": function(alert) {
+      var message = "N/A";
+      var leave = false;
+      if (alert["msg"] != undefined)
+        message = alert["msg"];
+      if (alert["leave"] != undefined)
+        leave = alert["leave"];
+      alert(message);
       if (leave != undefined && leave == true) {
         console.log("Leaving game");
-        LeaveGame();
+        this.LeaveGame();
       }
     },
     "Dixit:set player": function(playerIndex) {
