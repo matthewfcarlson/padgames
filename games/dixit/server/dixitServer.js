@@ -10,8 +10,8 @@ function ClearOutGamesList() {
     var cutoffTime = new Date().getTime() - (1000 * 60 * 60 * 2); //2 hour ago
     Object.keys(currentGames).filter(x => {
         return currentGames[x].creationDate < cutoffTime;
-    }).forEach(x=> {
-        console.log("Clearing out game ",x)
+    }).forEach(x => {
+        console.log("Clearing out game ", x)
         delete currentGames[x];
     });
 }
@@ -20,7 +20,7 @@ function GetGameList() {
     if (currentGames == null || currentGames.length == 0) return [];
 
     ClearOutGamesList();
-    
+
     return Object.keys(currentGames).map(x => {
         return {
             id: x,
@@ -66,6 +66,28 @@ function GetPlayerIndex(gameId, playerName) {
     return playerIndex;
 }
 
+function JoinGame(io,gameId, playerName, socketID) {
+    var game = GetGameByID(gameId);
+    if (game == null) {
+        console.error("JOIN GAME: this game does not exist");
+        return false;
+    }
+    console.log("Attempting to add "+playerName+" to game: "+gameId);
+    if (ReplicateCall(io,gameId, "server","AddPlayer",[playerName])){
+        var playerIndex = GetPlayerIndex(gameId,playerName);
+        if (game.sockets.length <= playerIndex) game.sockets.push("");
+        game.sockets[playerIndex] = socketID;
+        return playerIndex;
+    }
+    console.error("JOIN GAME: unable to replicate this call");
+    return false;
+}
+
+function GetGameByID(gameID) {
+    if (currentGames[gameID] == null) return null;
+    return currentGames[gameID];
+}
+
 function Init(socket, io) {
     socket.on(gameRoomRoot + "connect", function () {
         //lists all the games that are available
@@ -85,7 +107,7 @@ function Init(socket, io) {
             return false;
         }
 
-        
+
         console.log("Creating a new game", gameID);
         currentGames[gameID] = {};
         currentGames[gameID].name = gameName;
@@ -97,6 +119,31 @@ function Init(socket, io) {
         socket.emit(gameRoomRoot + "list games", GetGameList());
 
         io.to(gameRoomRoot).emit(gameRoomRoot + "list games", GetGameList());
+    });
+
+    socket.on(gameRoomRoot + "join game", function (gameId, playerName) {
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            socket.emit(
+                gameRoomRoot + "error",
+                "This game does not exist: " + gameId,
+                true
+            );
+            console.error("SOCKET JOIN GAME: this game does not exist");
+            return;
+        }
+
+        var playerIndex = JoinGame(io, gameId, playerName, socket.id);
+
+        if (playerIndex === false) {
+            console.error("Player tried to join with bogus playerIndex");
+            return;
+        }
+        else {
+            socket.emit(
+                gameRoomRoot + "set player", playerIndex
+            );
+        }
     });
 }
 

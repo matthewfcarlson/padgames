@@ -1,10 +1,25 @@
 <template>
 <div class="content" >
     Dixit
-    <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
+    
     <pre>
+        state: {{state}}
         {{currentGame}}
     </pre>
+    
+    <div v-if="state == 'lobby'">
+      <div is="LobbyPlayerList" v-bind:players="playerList"></div>
+      <br/>
+      <div v-if="playerIndex == -1">
+        <h3>Join game</h3>
+        <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
+        <br/>
+        <button class="btn btn-primary btn-block" @click="JoinGame()">Join Game</button>
+      </div>
+      <button v-else-if="isFirstPlayer" class="btn btn-primary btn-block" @click="StartGame">Start Game</button>
+      <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
+      <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
+    </div>
 </div>
 </template>
 
@@ -12,7 +27,8 @@
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import VueQrcode from '@chenfengyuan/vue-qrcode';
-import DixitGame from "../common/dixit"
+import DixitGame from "../common/dixit";
+import LobbyPlayerList from "./LobbyPlayerList";
 
 Vue.use(VueSocketio, window.location.origin);
 const ROOT = "Dixit:";
@@ -42,6 +58,7 @@ export default {
   },
   components: {
     VueQrcode,
+    LobbyPlayerList
   },
   created: function() {
     var names = [
@@ -75,6 +92,10 @@ export default {
       if (value > 750) return 750;
       return window.screen.width;
     },
+    state: function(){
+      if (this.currentGame == null) return "";
+      return this.currentGame.GetState()
+    }
   },
   methods: {
     StartGame: function() {
@@ -84,7 +105,7 @@ export default {
       if (gameRoom == undefined) gameRoom = this.gameRoom;
       if (playerName == undefined) playerName = this.playerName;
       if (playerName == "") return;
-      document.title = "Arguing - " + playerName;
+      document.title = "Dixit - " + playerName;
       this.$socket.emit(ROOT + "join game", gameRoom, playerName);
     },
     TimedSync: function(){

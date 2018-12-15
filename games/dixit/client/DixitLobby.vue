@@ -130,7 +130,7 @@ export default {
   },
   created: function(){
     //check to make sure we are connected within 3 seconds
-    syncTimer = setTimeout(this.ResetIfNotConnected,3000);
+    this.syncTimer = setTimeout(this.ResetIfNotConnected,3000);
   },
   sockets: {
     connect: function() {
@@ -242,7 +242,7 @@ export default {
 .bird {
   background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/174479/bird-cells.svg);
   background-size: auto 100%;
-  width: 83px;
+  width: 80px;
   height: 125px;
   will-change: background-position;
   -webkit-animation-name: fly-cycle;

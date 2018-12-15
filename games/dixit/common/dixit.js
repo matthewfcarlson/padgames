@@ -4,14 +4,16 @@ function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
 
+var STATES = Object.freeze({
+    "lobby": 1, //before we start a game
+    "firstcard": 2, //when the story teller is picking a card
+    "allcards": 3, //when everyone else is picking a card
+    "voting": 4, //when everyone is voting
+    "endgame": 5 //when we start the game
+});
+
 function CreateGame(gameName, proxyCallback) {
-    var STATES = Object.freeze({
-        "lobby": 1, //before we start a game
-        "firstcard": 2, //when the story teller is picking a card
-        "allcards": 3, //when everyone else is picking a card
-        "voting": 4, //when everyone is voting
-        "endgame": 5 //when we start the game
-    });
+   
     var default_game = { //python style
         _gameName: gameName || "DEFAULT",
         _state: STATES.lobby,
@@ -53,7 +55,16 @@ function CreateGame(gameName, proxyCallback) {
                 default:
             }
             this._state = newState;
-        }
+        },
+        ApplyFunc: function (name, args, time) {
+            if (this.hasOwnProperty(name)) {
+                console.log("Calling " + name + " with ", args);
+                this._lastCommandTime = time;
+                return this[name].apply(this, args);
+            } else {
+                return "This call " + name + " does not exist";
+            }
+        },
     };
 
     if (proxyCallback == undefined) {
@@ -82,5 +93,6 @@ function CreateGame(gameName, proxyCallback) {
 }
 
 module.exports = {
-    CreateGame
+    CreateGame,
+    STATES
 };
