@@ -2,6 +2,9 @@
 <div class="content" >
     Dixit
     <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
+    <pre>
+        {{currentGame}}
+    </pre>
 </div>
 </template>
 
@@ -9,6 +12,7 @@
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import VueQrcode from '@chenfengyuan/vue-qrcode';
+import DixitGame from "../common/dixit"
 
 Vue.use(VueSocketio, window.location.origin);
 const ROOT = "Dixit:";
@@ -20,7 +24,14 @@ export default {
     var debug =
       location.hostname === "localhost" || location.hostname === "127.0.0.1";
     return {
-      currentGame: null,
+      currentGame: DixitGame.CreateGame(gameRoom, function(name, args) {
+        console.log(
+          "Broadcast up to the server that we called this ",
+          name,
+          args
+        );
+        self.$socket.emit(ROOT + "engine call", gameRoom, name, args);
+      }),
       windowLocation: window.location.href,
       syncTimer:null,
       playerIndex: -1,
@@ -80,6 +91,7 @@ export default {
       if (this.currentGame == null) return;
       var lastCommand = this.currentGame.GetLastCommandTime();
       var date = new Date();
+      var gameRoom = this.gameRoom;
       var current_time = date.getTime();
       var elapsedTime = current_time - lastCommand;
       console.log("There have been "+elapsedTime+" since we last synced or recieved a command");

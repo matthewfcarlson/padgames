@@ -318,6 +318,7 @@ export default {
       var date = new Date();
       var current_time = date.getTime();
       var elapsedTime = current_time - lastCommand;
+      var gameRoom = this.gameRoom;
       console.log("There have been "+elapsedTime+" since we last synced or recieved a command");
       if (elapsedTime > 5000){
         this.$socket.emit(ROOT + "sync game", gameRoom, lastCommand);
