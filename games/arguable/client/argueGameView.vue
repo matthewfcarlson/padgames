@@ -339,13 +339,21 @@ export default {
       this.$router.push("/argue");
     }
   },
+  mounted (){
+    this.$socket.emit(ROOT + "connect");
+  },
   sockets: {
-    connect: function() {
-      var gameRoom = this.gameRoom;
-      console.log("socket connected for room " + gameRoom);
-      this.connected = true;
+    connect () {
       this.$socket.emit(ROOT + "connect");
+    },
+    "Argue:connected": function() {
+      var gameRoom = this.gameRoom;
+      console.log("socket connected for room " + gameRoom);      
       this.$socket.emit(ROOT + "sync game", gameRoom, 0);
+
+      if (this.connected) return;
+
+      this.connected = true;
       var self = this;
 
       var previousGame = null;

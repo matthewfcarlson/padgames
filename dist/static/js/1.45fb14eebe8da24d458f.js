@@ -1,5 +1,12 @@
 webpackJsonp([1],{
 
+/***/ "1XYC":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "CHo/":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -874,6 +881,9 @@ console.log("Connecting to " + window.location.origin);
 
   sockets: {
     connect: function () {
+      this.$socket.emit("sushi:connect");
+    },
+    "sushi:connected": function () {
       console.log("socket connected");
       this.connected = true;
       if (!this.isPhone) this.$socket.emit("sync sushi game", this.gameRoom);
@@ -926,14 +936,14 @@ console.log("Connecting to " + window.location.origin);
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-45efef4c","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/sushigo/client/Sushi.vue
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-40752b5d","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/sushigo/client/Sushi.vue
 var Sushi_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"game-content"},[(!_vm.isPhone)?_c('div',[_vm._l((_vm.game.players),function(player,playerIndex){return _c('div',{key:'player'+playerIndex,staticClass:"panel"},[_c('h3',[_vm._v(" "+_vm._s(player)+" "+_vm._s(_vm.game.playersReady[playerIndex])+" ")])])}),_vm._v(" "),_vm._l((_vm.game.players),function(playerName,playerID){return _c('card-view',{key:playerName,attrs:{"cards":_vm.game.playerRoundDeck[playerID],"title":playerName}})}),_vm._v("\n    Scores: "+_vm._s(_vm.game.playerScores)+"\n    "),_c('hr'),_vm._v(" "),_c('pre',{staticClass:"hidden-lg"},[_vm._v(_vm._s(_vm.game))]),_vm._v(" "),_c('button',{on:{"click":function($event){_vm.isPhone = true}}},[_vm._v("Play as a player")])],2):(!_vm.isLandscape)?_c('div',[_c('h2',[_vm._v("Please turn your phone sideways.\n  ")])]):(_vm.isPhone && _vm.playerID == -1 && !_vm.game.isPlaying)?_c('div',{staticClass:"container-fluid"},[_c('h2',[_vm._v("Sushi GO!")]),_vm._v(" "),_c('hr'),_vm._v(" "),_c('h3',[_vm._v("Please Input Your Name")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.playerName),expression:"playerName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"Your name"},domProps:{"value":(_vm.playerName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.playerName=$event.target.value}}}),_vm._v(" "),_c('button',{staticClass:"btn btn-success btn-block",on:{"click":function($event){_vm.JoinGame()}}},[_vm._v("Join Game")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-danger",on:{"click":_vm.LeaveGame}},[_vm._v("Leave Game")])]):(_vm.isPhone && _vm.playerID == -1 && _vm.game.isPlaying)?_c('div',{staticClass:"container-fluid"},[_c('h2',[_vm._v("Sushi GO!")]),_vm._v(" "),_c('hr'),_vm._v(" "),_c('h3',[_vm._v("This game is in progress. I'm working on being able to rejoin games but I'm not there yet")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-danger",on:{"click":_vm.LeaveGame}},[_vm._v("Leave Game")])]):(_vm.isPhone && _vm.playerID != -1)?_c('div',{staticClass:"container-fluid"},[_c('div',[_vm._v("Player "+_vm._s(_vm.playerID)+" Round "+_vm._s(_vm.game.round))]),_vm._v(" "),(_vm.game.isPlaying == true)?_c('div',[_c('div',{staticClass:"row"},_vm._l((_vm.game.players),function(player,index){return _c('div',{key:'player'+index,staticClass:"col-sm"},[(index == _vm.playerID)?_c('i',{staticClass:"fas fa-user"}):_vm._e(),_vm._v(" "+_vm._s(player)+" \n            "),(_vm.game.playersReady.length >= index)?_c('span',[_vm._v(_vm._s(_vm.game.playersReady[index]))]):_vm._e(),_vm._v(" "),(_vm.game.playerScores.length >= index)?_c('span',[_vm._v(_vm._s(_vm.game.playerScores[index]))]):_vm._e(),_vm._v(" "),(_vm.game.playerScores.length >= index)?_c('span',[_vm._v(_vm._s(_vm.roundScores[index]))]):_vm._e()])})),_vm._v(" "),_c('card-view',{staticClass:"row",attrs:{"cards":_vm.game.playerHands[_vm.playerID],"cards-set-aside":_vm.pickedCard,"id":"player-hand","title":"Hand"},on:{"picked-card":_vm.PickCard}}),_vm._v(" "),_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-1"},[_c('button',{staticClass:"btn btn-success",attrs:{"disabled":_vm.cardsSetAside.length > 0},on:{"click":_vm.ReadyToPick}},[_vm._v("Play")])]),_vm._v(" "),_c('card-view',{staticClass:"col",attrs:{"cards":_vm.game.playerRoundDeck[_vm.playerID],"id":"player-deck","title":"Deck"}})],1)],1):(_vm.game.gameOver)?_c('div',[_c('h2',[_vm._v("Game over!")]),_vm._v(" "),_c('ul',_vm._l((_vm.game.players),function(player,index){return _c('li',[_vm._v(" "+_vm._s(player)+" "+_vm._s(_vm.game.scores[index])+" ")])}))]):_c('div',[_c('p',[_vm._v("Waiting for the game to start")]),_vm._v(" "),_c('p',[_vm._v("Players waiting:")]),_vm._v(" "),_c('ul',_vm._l((_vm.game.players),function(player){return _c('li',[_vm._v(" "+_vm._s(player)+" ")])}))]),_vm._v(" "),(!_vm.game.isPlaying && _vm.playerID == 0)?_c('button',{staticClass:"btn",on:{"click":_vm.StartGame}},[_vm._v("StartGame")]):_vm._e(),_vm._v(" "),(!_vm.game.isPlaying && _vm.playerID == 0)?_c('button',{staticClass:"btn",on:{"click":_vm.AddAI}},[_vm._v("Add AI")]):_vm._e(),_vm._v(" "),_c('br'),_vm._v(" "),_c('hr'),_vm._v(" "),_c('button',{staticClass:"btn btn-danger",on:{"click":_vm.LeaveGame}},[_vm._v("Leave Game")])]):_c('div',[_vm._v("\n    Unknown state\n  ")])])}
 var Sushi_staticRenderFns = []
 var Sushi_esExports = { render: Sushi_render, staticRenderFns: Sushi_staticRenderFns }
 /* harmony default export */ var client_Sushi = (Sushi_esExports);
 // CONCATENATED MODULE: ./games/sushigo/client/Sushi.vue
 function Sushi_injectStyle (ssrContext) {
-  __webpack_require__("sgIX")
+  __webpack_require__("1XYC")
 }
 var Sushi_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -946,7 +956,7 @@ var Sushi___vue_template_functional__ = false
 /* styles */
 var Sushi___vue_styles__ = Sushi_injectStyle
 /* scopeId */
-var Sushi___vue_scopeId__ = "data-v-45efef4c"
+var Sushi___vue_scopeId__ = "data-v-40752b5d"
 /* moduleIdentifier (server only) */
 var Sushi___vue_module_identifier__ = null
 var Sushi_Component = Sushi_normalizeComponent(
@@ -964,13 +974,6 @@ var Sushi_Component = Sushi_normalizeComponent(
 /***/ }),
 
 /***/ "bbKo":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "sgIX":
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -1234,4 +1237,4 @@ module.exports = { ScoreCards, GetDeck, Card, ScoreGame, GetLastScoreReasons };
 /***/ })
 
 });
-//# sourceMappingURL=1.043dd2161fc9605e2902.js.map
+//# sourceMappingURL=1.45fb14eebe8da24d458f.js.map

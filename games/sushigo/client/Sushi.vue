@@ -178,7 +178,10 @@ export default {
   },
 
   sockets: {
-    connect: function() {
+    connect : function() {
+      this.$socket.emit("sushi:connect");
+    },
+    "sushi:connected": function() {
       console.log("socket connected");
       this.connected = true;
       if (!this.isPhone) this.$socket.emit("sync sushi game", this.gameRoom);

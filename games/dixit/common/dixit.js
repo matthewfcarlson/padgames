@@ -55,6 +55,9 @@ function CreateGame(gameName, proxyCallback) {
         GetPlayers() {
             return this._players;
         },
+        GetStoryTeller() {
+            return this._storyteller;
+        },
 
         _Transition: function () { //this is the only place that should modify state
             var newState = this._state;
@@ -80,7 +83,7 @@ function CreateGame(gameName, proxyCallback) {
                     }
                     break;
                 case STATES.endgame:
-                //we can't leave the end game state
+                    //we can't leave the end game state
                     break;
                 default:
             }

@@ -27,8 +27,8 @@ function GetGameList() {
             id: x,
             name: currentGames[x].name,
             state: x.state,
-            numPlayers: currentGames[x].players.length,
-            createdBy: "unknown",
+            numPlayers: currentGames[x].GetPlayers().length,
+            createdBy: currentGames[x].GetPlayers()[0] || "Unknown",
             createdAt: currentGames[x].creationDate
         };
     }).filter(x => x.state != "gameover");

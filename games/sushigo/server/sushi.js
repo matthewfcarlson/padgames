@@ -119,6 +119,13 @@ function Init(socket, io) {
     socket.emit("list sushi games", GetGameList());
   });
 
+  socket.on("sushi:connect", function() {
+    //lists all the games that are available
+    socket.join("SushiGo");
+    socket.emit("sushi:connected");
+    socket.emit("list sushi games", GetGameList());
+  });
+
   socket.on("sync sushi game", function(gameID) {
     var currentGame = GetPlayerGameByID(gameID);
     if (currentGame == null)

@@ -113,6 +113,12 @@ export default {
     isFirstPlayer: function() {
       if (this.playerIndex == 0) return true;
       return false;
+    },
+    isStoryTeller: function(){
+      if (this.playerIndex == -1) return false;
+      if (this.currentGame == null) return false;
+      if (this.currentGame.GetStoryTeller() == this.playerIndex) return true;
+      return false;
     }
   },
   methods: {
