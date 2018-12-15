@@ -160,6 +160,7 @@ export default {
       }
       console.log("Previous game", previousGame);
       // set a timer to sync
+      if (this.syncTimer != null) clearInterval(this.syncTimer);
       this.syncTimer = setInterval(this.TimedSync, 5000);
       
     },

@@ -26,5 +26,5 @@ export default new Router({
   routes: routes,
   //abstract: true,
   history: true,
-  mode: 'history'  
+  mode: 'history',
 });

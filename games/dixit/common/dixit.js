@@ -14,8 +14,10 @@ const STATES = Object.freeze({
 
 const MAX_SCORE = 50;
 
+
+
 function CreateGame(gameName, proxyCallback) {
-    
+
     var default_game = { //python style
         _gameName: gameName || "DEFAULT",
         _state: STATES.lobby,
@@ -50,6 +52,10 @@ function CreateGame(gameName, proxyCallback) {
             return this._lastCommandTime;
         },
 
+        GetPlayers () {
+            return this._players;
+        },
+
         _Transition: function () { //this is the only place that should modify state
             var newState = this._state;
             //Check if we can transition:
@@ -74,14 +80,14 @@ function CreateGame(gameName, proxyCallback) {
                     }
                     break;
                 case STATES.endgame:
-                    //we can't leave the end game state
+                //we can't leave the end game state
                 default:
             }
             //call our transition handler
             this._OnTransition(this._state, newState);
             this._state = newState;
         },
-        
+
         _OnTransition: function (oldState, newState) {
 
             switch (oldState) {
@@ -114,27 +120,38 @@ function CreateGame(gameName, proxyCallback) {
         },
 
         //Methods you can use to manipulate game state
-        AddPlayer: function(playerName) {
+        AddPlayer: function (playerName) {
             index = this._players.indexOf(playerName);
             if (index != -1) return "This player has already joined";
             this._players.push(playerName);
             return 0;
         },
-        RemovePlayer: function(playerName) {
+        RemovePlayer: function (playerName) {
             index = this._players.indexOf(playerName);
             if (index == -1) return "This player has not joined";
             if (this._state == STATES.voting) return "You cannot remove a player during voting";
-            this._players.splice(index,1);
-            this._votes.splice(index,1);
-            this._points.splice(index,1);
-            this._timesJudged.splice(index,1);
+            this._players.splice(index, 1);
+            this._votes.splice(index, 1);
+            this._points.splice(index, 1);
+            this._timesJudged.splice(index, 1);
             return 0;
         },
-        AddPad: function() {
-            this._padViewers ++;
+        AddPad: function () {
+            this._padViewers++;
         },
-        RemovePad: function() {
-            this._padViewers --;
+        RemovePad: function () {
+            this._padViewers--;
+        },
+
+        GenCallObj: function (source, callName, args) {
+            var date = new Date();
+            var current_time = date.getTime();
+            return {
+                source: source,
+                funcName: callName,
+                argList: args,
+                time: current_time
+            }
         },
         ApplyFunc: function (name, args, time) {
             if (this.hasOwnProperty(name)) {
@@ -144,6 +161,9 @@ function CreateGame(gameName, proxyCallback) {
             } else {
                 return "This call " + name + " does not exist";
             }
+        },
+        StoreCall: function (callObj) {
+            if (this.commands != null) this.commands.push(callObj);
         },
     };
 

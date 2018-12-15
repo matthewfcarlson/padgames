@@ -1,5 +1,6 @@
 var gameRoomRoot = "Dixit:";
 var currentGames = {};
+var DixitGame = require("../common/dixit");
 
 function GetGameByID(gameID) {
     if (currentGames[gameID] == null) return null;
@@ -66,15 +67,15 @@ function GetPlayerIndex(gameId, playerName) {
     return playerIndex;
 }
 
-function JoinGame(io,gameId, playerName, socketID) {
+function JoinGame(io, gameId, playerName, socketID) {
     var game = GetGameByID(gameId);
     if (game == null) {
         console.error("JOIN GAME: this game does not exist");
         return false;
     }
-    console.log("Attempting to add "+playerName+" to game: "+gameId);
-    if (ReplicateCall(io,gameId, "server","AddPlayer",[playerName])){
-        var playerIndex = GetPlayerIndex(gameId,playerName);
+    console.log("Attempting to add " + playerName + " to game: " + gameId);
+    if (ReplicateCall(io, gameId, "server", "AddPlayer", [playerName])) {
+        var playerIndex = GetPlayerIndex(gameId, playerName);
         if (game.sockets.length <= playerIndex) game.sockets.push("");
         game.sockets[playerIndex] = socketID;
         return playerIndex;
@@ -107,9 +108,12 @@ function Init(socket, io) {
             return false;
         }
 
-
         console.log("Creating a new game", gameID);
-        currentGames[gameID] = {};
+
+        currentGames[gameID] = DixitGame.CreateGame(gameID, function (callName, args) {
+            console.log("Called on " + gameID, callname, args);
+        });
+        
         currentGames[gameID].name = gameName;
         currentGames[gameID].sockets = [];
         currentGames[gameID].players = [];

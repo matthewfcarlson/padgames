@@ -1,13 +1,13 @@
-import SushiClient from "./sushigo/client/Sushi";
+//import SushiClient from "./sushigo/client/Sushi";
 import SushiLobby from "./sushigo/client/lobby";
 import CWClient from "./codewords/client/CodeWords";
 import GoSLobby from "./stuff/client/lobby";
 import GoSGame from "./stuff/client/game";
 import TestAI from "./codewords/client/TestAI";
 import ArgueLobby from "./arguable/client/ArgueLobby"
-import ArgueGame from "./arguable/client/ArgueGameView"
+//import ArgueGame from "./arguable/client/ArgueGameView"
 import DixitLobby from "./dixit/client/DixitLobby"
-import DixitGame from "./dixit/client/DixitGame"
+//import DixitGame from "./dixit/client/DixitGame"
 
 export const GameRoutes = [
   /* This is the format
@@ -35,14 +35,14 @@ export const GameRoutes = [
     name: "Arguable-Game",
     title: "Arguable",
     isGame: false,
-    component: ArgueGame
+    component: () => import("./arguable/client/ArgueGameView") // ArgueGame
   },
   {
     path: "/sushi/:gameID",
     name: "Sushi-on-the-go",
     title: "Sushies",
     isGame: false,
-    component: SushiClient
+    component:  () => import("./sushigo/client/Sushi") // SushiClient
   },
   {
     path: "/codewords",
@@ -84,6 +84,6 @@ export const GameRoutes = [
     name: "dixit game",
     title: "Dixit",
     isGame: false,
-    component: DixitGame
+    component: () => import("./dixit/client/DixitGame") //DixitGame
   },
 ];
