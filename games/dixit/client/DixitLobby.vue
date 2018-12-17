@@ -132,6 +132,9 @@ export default {
     //check to make sure we are connected within 3 seconds
     this.syncTimer = setTimeout(this.ResetIfNotConnected,3000);
   },
+  mounted () {
+    this.$socket.emit("Dixit:connect");
+  },
   sockets: {
     connect: function() {
       console.log("socket connected");

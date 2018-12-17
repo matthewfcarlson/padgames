@@ -67,11 +67,12 @@ function CreateGame(gameName, proxyCallback) {
                     if (this._players.length >= 3) newState = STATES.firstcard;
                     break;
                 case STATES.firstcard:
-                    if (this._imagesSelected.length == 1) newState = STATES.allcards;
+                    if (this._imagesSelected[this.storytellerIndex] != -1) newState = STATES.allcards;
                     break;
                 case STATES.allcards:
+                    var selectedCards = this._imagesSelected.filter(x => x != -1); //get the cards that have been picked
                     //Q: if you don't play a card within the time frame, one will be played for you?
-                    if (this._imagesSelected.length >= 6 || this._imagesSelected.length == this._players.length)
+                    if (selectedCards.length >= 5 || selectedCards.length == this._players.length - 1)
                         newState = STATES.voting;
                     break;
                 case STATES.voting:
@@ -119,6 +120,9 @@ function CreateGame(gameName, proxyCallback) {
                     for (var i = 0; i < this._votes.length; i++) this._votes[i] = -1; //this would be better with a map but eh
                     //resets the imagesSelected
                     this._imagesSelected.splice(0, this._imagesSelected.length);
+                    while (this._imagesSelected.length < this._players.length) this._imagesSelected.push(-1);
+                    break;
+                case STATES.allcards:
                     break;
             }
         },
@@ -142,14 +146,35 @@ function CreateGame(gameName, proxyCallback) {
         },
         AddPad: function () {
             this._padViewers++;
+            return 0;
         },
         RemovePad: function () {
             this._padViewers--;
+            return 0;
         },
 
         StartGame() {
             console.log("Starting game");
             this._Transition();
+            return 0;
+        },
+
+        PickCard(playerIndex, cardId) {
+            if (cardId < 0) return "Bad Card ID";
+            //choose depending on state
+            if (this._state == STATES.firstcard) {
+                if (playerIndex != this._storyteller) return "You are not the story teller";
+            }
+            else if (this._state == STATES.allcards) {
+                if (playerIndex == this._storyteller) return "The story teller cannot pick another card";
+                if (this._imagesSelected[playerIndex] != -1) return "You cannot pick another card";
+                this._imagesSelected[playerIndex] = cardId;
+            } 
+            else {
+                return "You cannot pick a card in this state";
+            }
+            this._Transition();
+            return 0;
         },
 
 

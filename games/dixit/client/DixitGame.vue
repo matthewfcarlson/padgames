@@ -1,19 +1,16 @@
 <template>
   <div class="content">Dixit
-    <pre>
-        state: {{state}}
-        {{currentGame}}
-        connected: {{connected}}
-    </pre>
+    
 
     <div v-if="state == 'lobby'">
       <div is="LobbyPlayerList" v-bind:players="playerList"></div>
       <br>
-      <div v-if="playerIndex == -1">
+      <div v-if="playerIndex == -1 && !isPad">
         <h3>Join game</h3>
         <input type="text" class="form-control" placeholder="Your name" v-model="playerName">
         <br>
         <button class="btn btn-primary btn-block" @click="JoinGame()">Join Game</button>
+        <button class="btn btn-info btn-block" @click="JoinGameAsPad()">Join Game as iPad/Large Screen</button>
       </div>
       <button
         v-else-if="isFirstPlayer"
@@ -23,6 +20,25 @@
       <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
       <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
     </div>
+    <div v-else-if="state == 'firstcard'">
+        <div v-if="isStoryTeller">
+            Pick a card and tell your story
+            <div is="cardPicker" story-teller=true @submit="PickCard"></div> 
+        </div>
+        <div v-else>
+            Waiting for the story teller to pick a card and tell you the story.
+        </div>
+    </div>
+    <div v-else-if="state == 'allcards'">
+        <div v-if="!isPad && !isStoryTeller">
+             <div is="cardPicker" story-teller=false @submit="PickCard"></div> 
+        </div>
+    </div>
+    <pre>
+        state: {{state}}
+        {{currentGame}}
+        connected: {{connected}}
+    </pre>
   </div>
 </template>
 
@@ -32,6 +48,7 @@ import VueSocketio from "vue-socket.io";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 import DixitGame from "../common/dixit";
 import LobbyPlayerList from "./LobbyPlayerList";
+import CardPicker from "./CardPicker";
 
 Vue.use(VueSocketio, window.location.origin);
 
@@ -60,12 +77,14 @@ export default {
       playerIndex: -1,
       playerName: debug ? "Default" : "",
       gameRoom: gameRoom,
-      debug: debug
+      debug: debug,
+      isPad: false,
     };
   },
   components: {
     VueQrcode,
-    LobbyPlayerList
+    LobbyPlayerList,
+    CardPicker
   },
   mounted: function() {
     console.log(this.sockets);
@@ -114,6 +133,10 @@ export default {
       if (this.playerIndex == 0) return true;
       return false;
     },
+    playerList () {
+        if (this.currentGame == null) return [];
+        return this.currentGame.GetPlayers();
+    },
     isStoryTeller: function(){
       if (this.playerIndex == -1) return false;
       if (this.currentGame == null) return false;
@@ -149,6 +172,10 @@ export default {
       }
       //otherwise we check how long it has been since we got the last command
     },
+    JoinGameAsPad () {
+        var gameRoom = this.gameRoom;
+        this.$socket.emit(ROOT + "join game pad", gameRoom);
+    },
     RejoinGame: function(gameRoom, playerName, playerIndex, socketId) {
       console.log("Attempting to rejoin the game!");
       this.$socket.emit(
@@ -161,6 +188,10 @@ export default {
     },
     LeaveGame: function() {
       this.$router.push("/dixit");
+    },
+    PickCard: function(cardIndex){
+        console.log("Attempting to pick a card ",cardIndex);
+        this.currentGame.replicated.PickCard(this.playerIndex, cardIndex);
     }
   },
   sockets: {
@@ -170,7 +201,8 @@ export default {
     },
     "Dixit:connected": function() {
       var gameRoom = this.gameRoom;
-      console.log("socket connected for room " + gameRoom);      
+      this.$socket.emit(ROOT + "listen", gameRoom);
+      console.log("socket connected for room " + gameRoom);
       this.$socket.emit(ROOT + "sync game", gameRoom, 0);
 
       if (this.connected) return;
@@ -202,18 +234,26 @@ export default {
       var message = "N/A";
       var leave = false;
       console.error(response);
-      if (response["msg"] != undefined) message = response["msg"];
+      
       if (response["leave"] != undefined) leave = response["leave"];
-      alert(message);
       if (leave != undefined && leave == true) {
         console.log("Leaving game");
         this.LeaveGame();
+      }
+      else if (response["msg"] != undefined) {
+          message = response["msg"];
+        alert(message);
       }
     },
     "Dixit:set player": function(playerIndex) {
       console.log("Player ID" + playerIndex);
       //TODO do this better
       this.playerIndex = playerIndex;
+
+      if (this.playerIndex == -1) {
+          this.isPad = true;
+          return;
+      }
       console.log("Storing the game for later");
       localStorage.setItem(
         this.gameRoom,

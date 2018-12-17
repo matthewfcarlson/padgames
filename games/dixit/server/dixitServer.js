@@ -2,9 +2,9 @@ var gameRoomRoot = "Dixit:";
 var currentGames = {};
 var DixitGame = require("../common/dixit");
 
-function GetGameByID(gameID) {
-    if (currentGames[gameID] == null) return null;
-    return currentGames[gameID];
+function GetGameByID(gameId) {
+    if (currentGames[gameId] == null) return null;
+    return currentGames[gameId];
 }
 
 function ClearOutGamesList() {
@@ -84,9 +84,9 @@ function JoinGame(io, gameId, playerName, socketID) {
     return false;
 }
 
-function GetGameByID(gameID) {
-    if (currentGames[gameID] == null) return null;
-    return currentGames[gameID];
+function GetGameByID(gameId) {
+    if (currentGames[gameId] == null) return null;
+    return currentGames[gameId];
 }
 
 function Init(socket, io) {
@@ -97,16 +97,33 @@ function Init(socket, io) {
         socket.emit(gameRoomRoot + "connected");
         socket.emit(gameRoomRoot + "list games", GetGameList());
     });
+    socket.on(gameRoomRoot + "listen", function (gameId) {
+        var game = GetGameByID(gameId);
+        //console.log("Sync request for game " + gameId);
+        if (game == null) {
+            console.error("SYNC GAME: this game does not exist");
+            socket.emit(gameRoomRoot + "error", {
+                msg: "This game does not exist: " + gameId,
+                leave: true
+            });
+            return false;
+        }
+        socket.join(gameRoomRoot + gameId);
+        
+    });
     socket.on(gameRoomRoot + "list games", function () {
         //lists all the games that are available
         socket.emit(gameRoomRoot + "list games", GetGameList());
     });
     socket.on(gameRoomRoot + "sync game", function (gameId, lastTimeSeen) {
         var game = GetGameByID(gameId);
-        console.log("Sync request for game " + gameId);
+        //console.log("Sync request for game " + gameId);
         if (game == null) {
             console.error("SYNC GAME: this game does not exist");
-            socket.emit(gameRoomRoot + "error", { msg: "This game does not exist: " + gameId, leave: true });
+            socket.emit(gameRoomRoot + "error", {
+                msg: "This game does not exist: " + gameId,
+                leave: true
+            });
             return false;
         }
         game.commands.forEach(function (storedCall) {
@@ -114,59 +131,93 @@ function Init(socket, io) {
                 //console.log("Playing back call",storedCall);
                 socket.emit(gameRoomRoot + "engine call", storedCall);
             }
-            else {
-                console.log("Skipping command ", storedCall)
-            }
         });
     });
     socket.on(gameRoomRoot + "create game", function (gameName) {
-        var gameID = HashGameName(gameName);
-        if (currentGames[gameID] != undefined || gameName == "") {
+        var gameId = HashGameName(gameName);
+        if (currentGames[gameId] != undefined || gameName == "") {
             console.error("You can't create the same game twice");
-            socket.emit(gameRoomRoot + "error", { msg: "This already exists: " + gameId, leave: false });
+            socket.emit(gameRoomRoot + "error", {
+                msg: "This already exists: " + gameId,
+                leave: false
+            });
             return false;
         }
 
-        console.log("Creating a new game", gameID);
+        console.log("Creating a new game", gameId);
 
-        currentGames[gameID] = DixitGame.CreateGame(gameID, function (callName, args) {
-            console.log("Called on " + gameID, callname, args);
+        currentGames[gameId] = DixitGame.CreateGame(gameId, function (callName, args) {
+            console.log("Called on " + gameId, callname, args);
         });
 
-        currentGames[gameID].name = gameName;
-        currentGames[gameID].sockets = [];
-        currentGames[gameID].players = [];
-        currentGames[gameID].commands = [];
-        currentGames[gameID].creationDate = new Date().getTime();
+        currentGames[gameId].name = gameName;
+        currentGames[gameId].sockets = [];
+        currentGames[gameId].players = [];
+        currentGames[gameId].commands = [];
+        currentGames[gameId].creationDate = new Date().getTime();
 
         socket.emit(gameRoomRoot + "list games", GetGameList());
 
         io.to(gameRoomRoot).emit(gameRoomRoot + "list games", GetGameList());
     });
 
-    socket.on(gameRoomRoot + "join game", function (gameId, playerName) {
+    socket.on(gameRoomRoot + "join game pad", function (gameId) {
         var game = GetGameByID(gameId);
         if (game == null) {
-            socket.emit(gameRoomRoot + "error", { msg: "This game does not exist: " + gameId, leave: true });
+            socket.emit(gameRoomRoot + "error", {
+                msg: "This game does not exist: " + gameId,
+                leave: true
+            });
             console.error("SOCKET JOIN GAME: this game does not exist");
             return;
         }
+        
+        socket.emit(gameRoomRoot + "set player", -1);
 
-        socket.join(gameRoomRoot + gameId);
+        ReplicateCall(io, gameId, "server", "AddPad", []);
+        // add the pad player to the list of sockets
+        if (game._padsockets == undefined) game._padsockets = [];
+        game._padsockets.push(socket.id);
+
+    });
+
+    socket.on(gameRoomRoot + "join game", function (gameId, playerName) {
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            socket.emit(gameRoomRoot + "error", {
+                msg: "This game does not exist: " + gameId,
+                leave: true
+            });
+            console.error("SOCKET JOIN GAME: this game does not exist");
+            return;
+        }
 
         var playerIndex = JoinGame(io, gameId, playerName, socket.id);
 
         if (playerIndex === false) {
             console.error("Player tried to join with bogus playerIndex");
             return;
-        }
-        else {
+        } else {
             console.log("Broadcasting");
-
+            //update the game list for everyone
+            io.to(gameRoomRoot).emit(gameRoomRoot + "list games", GetGameList());
             socket.emit(
                 gameRoomRoot + "set player", playerIndex
             );
         }
+    });
+
+    //relay any sort of thing we get from other clients to all the clients
+    socket.on(gameRoomRoot+"engine call", function(gameId, callName, args){
+        var source = socket.id;
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            console.error("ENGINE CALL: this game does not exist");
+            return false;
+        }
+
+        var result = ReplicateCall(io,gameId,source,callName,args);
+        
     });
 }
 
