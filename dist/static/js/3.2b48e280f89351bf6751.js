@@ -1,12 +1,5 @@
 webpackJsonp([3],{
 
-/***/ "/iBR":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ "n8ol":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -93,7 +86,8 @@ var Component = normalizeComponent(
     name: "CardPicker",
     data() {
         return {
-            cardIndex: 1
+            cardIndex: Math.round(Math.random() * 30),
+            cardPicked: false
         };
     },
     //players is the list of all the players and available is a list of the index of all avaiable players
@@ -101,11 +95,12 @@ var Component = normalizeComponent(
     methods: {
         PickCard() {
             this.$emit("submit", this.cardIndex);
+            this.cardPicked = true;
         }
     }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-b4f302e2","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardPicker.vue
-var CardPicker_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('h2',[_vm._v("Card List")]),_vm._v("\r\n    "+_vm._s(_vm.storyTeller)+"\r\n    "),_c('button',{on:{"click":_vm.PickCard}},[_vm._v("pick A card")])])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-56d24b18","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardPicker.vue
+var CardPicker_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('h2',[_vm._v("Card List")]),_vm._v("\r\n    "+_vm._s(_vm.storyTeller)+"\r\n    "),(!_vm.cardPicked)?_c('button',{on:{"click":_vm.PickCard}},[_vm._v("pick A card")]):_vm._e()])}
 var CardPicker_staticRenderFns = []
 var CardPicker_esExports = { render: CardPicker_render, staticRenderFns: CardPicker_staticRenderFns }
 /* harmony default export */ var client_CardPicker = (CardPicker_esExports);
@@ -134,6 +129,119 @@ var CardPicker_Component = CardPicker_normalizeComponent(
 )
 
 /* harmony default export */ var dixit_client_CardPicker = (CardPicker_Component.exports);
+
+// CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./games/dixit/client/CardVoter.vue
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ var CardVoter = ({
+  name: "CardPicker",
+  data() {
+    return {
+      voted: false
+    };
+  },
+  //players is the list of all the players and available is a list of the index of all avaiable players
+  props: ["isPad", "cardList"],
+  methods: {
+    PickCard(cardValue) {
+      this.$emit("submit", cardValue);
+      this.voted = true;
+    }
+  }
+});
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-3cf719fb","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardVoter.vue
+var CardVoter_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('h2',[_vm._v("Card List")]),_vm._v("\n  "+_vm._s(_vm.isPad)+"\n  "+_vm._s(_vm.cardList)+"\n  "),(!_vm.isPad && !_vm.voted)?_c('div',[_vm._v("\n    TODO if we have a pad view, just let us pick the numbers instead of showing the pictures\n\n    "),_vm._l((_vm.cardList),function(card){return _c('button',{key:card,on:{"click":function($event){_vm.PickCard(card)}}},[_vm._v("Vote on "+_vm._s(card))])})],2):_vm._e()])}
+var CardVoter_staticRenderFns = []
+var CardVoter_esExports = { render: CardVoter_render, staticRenderFns: CardVoter_staticRenderFns }
+/* harmony default export */ var client_CardVoter = (CardVoter_esExports);
+// CONCATENATED MODULE: ./games/dixit/client/CardVoter.vue
+var CardVoter_normalizeComponent = __webpack_require__("VU/8")
+/* script */
+
+
+/* template */
+
+/* template functional */
+var CardVoter___vue_template_functional__ = false
+/* styles */
+var CardVoter___vue_styles__ = null
+/* scopeId */
+var CardVoter___vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var CardVoter___vue_module_identifier__ = null
+var CardVoter_Component = CardVoter_normalizeComponent(
+  CardVoter,
+  client_CardVoter,
+  CardVoter___vue_template_functional__,
+  CardVoter___vue_styles__,
+  CardVoter___vue_scopeId__,
+  CardVoter___vue_module_identifier__
+)
+
+/* harmony default export */ var dixit_client_CardVoter = (CardVoter_Component.exports);
+
+// CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./games/dixit/client/Scores.vue
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ var Scores = ({
+  name: "Scores",
+  data() {
+    return {};
+  },
+  //players is the list of all the players and available is a list of the index of all avaiable players
+  props: ["isPad", "scores", "players"]
+});
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-48609ff0","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/Scores.vue
+var Scores_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('h2',[_vm._v("Scores")]),_vm._v(" "),_vm._l((_vm.players),function(player,index){return _c('div',{key:(player+index)},[_vm._v(_vm._s(player)+": "+_vm._s(_vm.scores[index]))])}),_vm._v("\r\n    TODO if in pad mode, show bunnies\r\n")],2)}
+var Scores_staticRenderFns = []
+var Scores_esExports = { render: Scores_render, staticRenderFns: Scores_staticRenderFns }
+/* harmony default export */ var client_Scores = (Scores_esExports);
+// CONCATENATED MODULE: ./games/dixit/client/Scores.vue
+var Scores_normalizeComponent = __webpack_require__("VU/8")
+/* script */
+
+
+/* template */
+
+/* template functional */
+var Scores___vue_template_functional__ = false
+/* styles */
+var Scores___vue_styles__ = null
+/* scopeId */
+var Scores___vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var Scores___vue_module_identifier__ = null
+var Scores_Component = Scores_normalizeComponent(
+  Scores,
+  client_Scores,
+  Scores___vue_template_functional__,
+  Scores___vue_styles__,
+  Scores___vue_scopeId__,
+  Scores___vue_module_identifier__
+)
+
+/* harmony default export */ var dixit_client_Scores = (Scores_Component.exports);
 
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./games/dixit/client/DixitGame.vue
 //
@@ -180,6 +288,28 @@ var CardPicker_Component = CardPicker_normalizeComponent(
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -217,7 +347,9 @@ const ROOT = "Dixit:";
   components: {
     VueQrcode: vue_qrcode_esm["a" /* default */],
     LobbyPlayerList: dixit_client_LobbyPlayerList,
-    CardPicker: dixit_client_CardPicker
+    CardPicker: dixit_client_CardPicker,
+    CardVoter: dixit_client_CardVoter,
+    Scores: dixit_client_Scores
   },
   mounted: function () {
     console.log(this.sockets);
@@ -248,11 +380,25 @@ const ROOT = "Dixit:";
       if (this.currentGame == null) return [];
       return this.currentGame.GetPlayers();
     },
+    scores() {
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetScores();
+    },
     isStoryTeller: function () {
       if (this.playerIndex == -1) return false;
       if (this.currentGame == null) return false;
       if (this.currentGame.GetStoryTeller() == this.playerIndex) return true;
       return false;
+    },
+    hasPad() {
+      //if there is an ipad attached
+      if (this.currentGame == null) return false;
+      return this.currentGame.GetPadAttached();
+    },
+    shuffledCardVoteList() {
+      //the list of cards we can vote on
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetVoteCardList(); //how to shuffle this the same way every time?
     }
   },
   methods: {
@@ -288,15 +434,20 @@ const ROOT = "Dixit:";
       this.$socket.emit(ROOT + "rejoin game", gameRoom, playerName, playerIndex, socketId);
     },
     LeaveGame: function () {
-      this.$router.push("/dixit");
+      var newPage = location.origin + "/dixit";
+      console.log("Leaving", newPage);
+      window.location.assign(newPage);
     },
     PickCard: function (cardIndex) {
       console.log("Attempting to pick a card ", cardIndex);
       this.currentGame.replicated.PickCard(this.playerIndex, cardIndex);
+    },
+    VoteCard: function (cardIndex) {
+      console.log("Attempting to vote on the card at ", cardIndex);
+      this.currentGame.replicated.VoteCard(this.playerIndex, cardIndex);
     }
   },
   sockets: {
-
     disconnect: function () {
       //let us know that we are disconnected
     },
@@ -367,14 +518,14 @@ const ROOT = "Dixit:";
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-b1cba152","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/DixitGame.vue
-var DixitGame_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content"},[_vm._v("Dixit\n  \n\n  "),(_vm.state == 'lobby')?_c('div',[_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('br'),_vm._v(" "),(_vm.playerIndex == -1 && !_vm.isPad)?_c('div',[_c('h3',[_vm._v("Join game")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.playerName),expression:"playerName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"Your name"},domProps:{"value":(_vm.playerName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.playerName=$event.target.value}}}),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":function($event){_vm.JoinGame()}}},[_vm._v("Join Game")]),_vm._v(" "),_c('button',{staticClass:"btn btn-info btn-block",on:{"click":function($event){_vm.JoinGameAsPad()}}},[_vm._v("Join Game as iPad/Large Screen")])]):(_vm.isFirstPlayer)?_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":_vm.StartGame}},[_vm._v("Start Game")]):_c('div',{staticClass:"btn btn-info btn-block",attrs:{"disabled":""}},[_vm._v("Waiting for the game to start")]),_vm._v(" "),_c('vue-qrcode',{staticClass:"text-center",attrs:{"value":_vm.windowLocation,"options":{ width: _vm.qrWidth }}})],1):(_vm.state == 'firstcard')?_c('div',[(_vm.isStoryTeller)?_c('div',[_vm._v("\n          Pick a card and tell your story\n          "),_c("cardPicker",{tag:"div",attrs:{"story-teller":"true"},on:{"submit":_vm.PickCard}})]):_c('div',[_vm._v("\n          Waiting for the story teller to pick a card and tell you the story.\n      ")])]):(_vm.state == 'allcards')?_c('div',[(!_vm.isPad && !_vm.isStoryTeller)?_c('div',[_c("cardPicker",{tag:"div",attrs:{"story-teller":"false"},on:{"submit":_vm.PickCard}})]):_vm._e()]):_vm._e(),_vm._v(" "),_c('pre',[_vm._v("      state: "+_vm._s(_vm.state)+"\n      "+_vm._s(_vm.currentGame)+"\n      connected: "+_vm._s(_vm.connected)+"\n  ")])])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-e778999e","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/DixitGame.vue
+var DixitGame_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content"},[_vm._v("Dixit\n  "),(_vm.state == 'lobby')?_c('div',[_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('br'),_vm._v(" "),(_vm.playerIndex == -1 && !_vm.isPad)?_c('div',[_c('h3',[_vm._v("Join game")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.playerName),expression:"playerName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"Your name"},domProps:{"value":(_vm.playerName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.playerName=$event.target.value}}}),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":function($event){_vm.JoinGame()}}},[_vm._v("Join Game")]),_vm._v(" "),_c('button',{staticClass:"btn btn-info btn-block",on:{"click":function($event){_vm.JoinGameAsPad()}}},[_vm._v("Join Game as iPad/Large Screen")])]):(_vm.isFirstPlayer)?_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":_vm.StartGame}},[_vm._v("Start Game")]):_c('div',{staticClass:"btn btn-info btn-block",attrs:{"disabled":""}},[_vm._v("Waiting for the game to start")]),_vm._v(" "),_c('vue-qrcode',{staticClass:"text-center",attrs:{"value":_vm.windowLocation,"options":{ width: _vm.qrWidth }}})],1):(_vm.state == 'firstcard')?_c('div',[(_vm.isStoryTeller)?_c('div',[_vm._v("Pick a card and tell your story\n      "),_c("cardPicker",{tag:"div",attrs:{"story-teller":"true"},on:{"submit":_vm.PickCard}})]):_c('div',[_vm._v("Waiting for the story teller to pick a card and tell you the story.")])]):(_vm.state == 'allcards')?_c('div',[(!_vm.isPad && !_vm.isStoryTeller)?_c('div',[_c("cardPicker",{tag:"div",attrs:{"story-teller":"false"},on:{"submit":_vm.PickCard}})]):_c('div',[_vm._v("\n      Waiting for players to put in their cards\n      TODO: Add list of players who have answered\n    ")])]):(_vm.state == 'voting')?_c('div',[(!_vm.isStoryTeller)?_c('div',[_c("CardVoter",{tag:"div",attrs:{"isPad":_vm.isPad,"cardList":_vm.shuffledCardVoteList},on:{"submit":_vm.VoteCard}})]):_c('div',[_vm._v("Waiting for players to vote")])]):(_vm.state == 'endgame')?_c('div',[_c('h2',[_vm._v("Game Over!")])]):_vm._e(),_vm._v(" "),(_vm.state != 'lobby')?_c("Scores",{tag:"div",attrs:{"players":_vm.playerList,"isPad":_vm.isPad,"scores":_vm.scores}}):_vm._e(),_vm._v(" "),(_vm.state != 'lobby' && _vm.isFirstPlayer)?_c('div',[_c('h2',[_vm._v("Admin Controls")]),_vm._v(" "),_c('hr'),_vm._v(" "),_c('h3',[_vm._v("Boot player")]),_vm._v(" "),_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('button',{staticClass:"btn btn-danger btn-block",on:{"click":_vm.EndGame}},[_vm._v("End Game")])]):_vm._e(),_vm._v(" "),(_vm.debug)?_c('pre',[_vm._v("      state: "+_vm._s(_vm.state)+"\n      "+_vm._s(_vm.currentGame)+"\n      connected: "+_vm._s(_vm.connected)+"\n  ")]):_vm._e()])}
 var DixitGame_staticRenderFns = []
 var DixitGame_esExports = { render: DixitGame_render, staticRenderFns: DixitGame_staticRenderFns }
 /* harmony default export */ var client_DixitGame = (DixitGame_esExports);
 // CONCATENATED MODULE: ./games/dixit/client/DixitGame.vue
 function injectStyle (ssrContext) {
-  __webpack_require__("/iBR")
+  __webpack_require__("s8sC")
 }
 var DixitGame_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -404,6 +555,13 @@ var DixitGame_Component = DixitGame_normalizeComponent(
 
 /***/ }),
 
+/***/ "s8sC":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "u0wq":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -421,7 +579,7 @@ const STATES = Object.freeze({
     "endgame": 6 //when we start the game
 });
 
-const MAX_SCORE = 50;
+const MAX_SCORE = 30;
 
 
 
@@ -453,6 +611,14 @@ function CreateGame(gameName, proxyCallback) {
             return key;
         },
 
+        GetScores: function () {
+            return this._points;
+        },
+
+        GetVoteCardList: function () { //gets a list of the cards you can pick
+            return this._imagesSelected.filter(x => x != -1);
+        },
+
         GetTimeOutInMs: function () {
             return this._timeOut;
         },
@@ -481,12 +647,13 @@ function CreateGame(gameName, proxyCallback) {
                 case STATES.allcards:
                     var selectedCards = this._imagesSelected.filter(x => x != -1); //get the cards that have been picked
                     //Q: if you don't play a card within the time frame, one will be played for you?
-                    if (selectedCards.length >= 5 || selectedCards.length == this._players.length - 1)
+                    if (selectedCards.length >= 5 || selectedCards.length == this._players.length)
                         newState = STATES.voting;
                     break;
                 case STATES.voting:
                     //Q: if you don't vote within the right timeframe, then you will be booted?
-                    if (this._votes.length == this._players.length) {
+                    var votes = this._votes.filter(x => x != -1); //get the cards that have been picked
+                    if (votes.length == this._players.length - 1) { //we let everyone the chance to vote
                         newState = STATES.firstcard;
                         var maxScore = Math.max(...this._points);
                         if (maxScore >= MAX_SCORE) newState = STATES.endgame;
@@ -516,6 +683,49 @@ function CreateGame(gameName, proxyCallback) {
                     break;
                 case STATES.voting:
                     //tally up the scores
+                    var correctCard = this._imagesSelected[this._storyteller];
+                    var correctGuessers = this._votes.filter(x => x == correctCard).length;
+                    var numGuessers = this._players.length - 1;
+                    //everyone guessed correctly or no one guessed correctly
+                    if (correctGuessers == numGuessers || correctGuessers == 0) {
+                        //everybody but the story teller gets 2 points
+                        for (var i = 0; i < this._players.length; i++) {
+                            if (i == this._storyteller) continue;
+                            this._points.splice(i, 1, this._points[i] + 2);
+                        }
+                    } else {
+                        //everybody who guessed correctly gets 3 points
+                        for (var i = 0; i < this._players.length; i++) {
+                            if (i == this._storyteller || this._votes[i] == correctCard)
+                                this._points.splice(i, 1, this._points[i] + 3);
+                        }
+                    }
+
+                    //distributes points for everyone that guessed your card
+                    for (var i = 0; i < this._votes.length; i++) {
+                        if (i == this._storyteller) continue;
+                        //figure out playerindex of which card you guessed
+                        var cardVotedFor = this._votes[i];
+                        if (cardVotedFor == -1) continue;
+                        var cardPlayedBy = this._imagesSelected.indexOf(cardVotedFor);
+                        if (cardPlayedBy == -1) {
+                            console.error("We didn't find the card: ", cardVotedFor, this._imagesSelected, this._votes);
+                            continue;
+                        }
+                        if (cardPlayedBy >= this._players.length) {
+                            //played by a random player
+                            console.log("You picked a card that was played by the computer");
+                            continue;
+                        }
+                        //give one point to the player that played this card
+                        if (cardPlayedBy != this._storyteller)
+                            this._points.splice(cardPlayedBy, 1, this._points[cardPlayedBy] + 1);
+                    }
+
+                    // increment the story teller piece of the puzzle
+                    this._timesStoryTeller[this._storyteller]++;
+                    this._storyteller = -1;
+
                     break;
             }
             switch (newState) {
@@ -532,6 +742,13 @@ function CreateGame(gameName, proxyCallback) {
                     while (this._imagesSelected.length < this._players.length) this._imagesSelected.push(-1);
                     break;
                 case STATES.allcards:
+                    break;
+                case STATES.voting:
+                    //fill in random cards until we have 6 cards
+                    while (this._imagesSelected.filter(x => x != -1).length < 6) {
+                        //add random cards to the end?
+                        this._imagesSelected.push(this._imagesSelected.length + 15);
+                    }
                     break;
             }
         },
@@ -573,14 +790,26 @@ function CreateGame(gameName, proxyCallback) {
             //choose depending on state
             if (this._state == STATES.firstcard) {
                 if (playerIndex != this._storyteller) return "You are not the story teller";
-            }
-            else if (this._state == STATES.allcards) {
+                this._imagesSelected[playerIndex] = cardId;
+            } else if (this._state == STATES.allcards) {
                 if (playerIndex == this._storyteller) return "The story teller cannot pick another card";
                 if (this._imagesSelected[playerIndex] != -1) return "You cannot pick another card";
                 this._imagesSelected[playerIndex] = cardId;
-            } 
-            else {
+            } else {
                 return "You cannot pick a card in this state";
+            }
+            this._Transition();
+            return 0;
+        },
+        VoteCard(playerIndex, voteCardId) {
+            if (voteCardId < 0) return "Bad Card ID";
+            //choose depending on state
+            if (this._state == STATES.voting) {
+                if (playerIndex == this._storyteller) return "The story teller cannot vote on a card";
+                if (this._votes[playerIndex] != -1) return "You cannot vote on another card";
+                this._votes[playerIndex] = voteCardId;
+            } else {
+                return "You cannot vote on a card in this state";
             }
             this._Transition();
             return 0;
@@ -4121,4 +4350,4 @@ var index = {
 /***/ })
 
 });
-//# sourceMappingURL=3.1665b29641fef5eebd62.js.map
+//# sourceMappingURL=3.2b48e280f89351bf6751.js.map

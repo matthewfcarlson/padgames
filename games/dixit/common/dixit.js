@@ -12,7 +12,7 @@ const STATES = Object.freeze({
     "endgame": 6 //when we start the game
 });
 
-const MAX_SCORE = 50;
+const MAX_SCORE = 30;
 
 
 
@@ -44,6 +44,14 @@ function CreateGame(gameName, proxyCallback) {
             return key;
         },
 
+        GetScores: function () {
+            return this._points;
+        },
+
+        GetVoteCardList: function () { //gets a list of the cards you can pick
+            return this._imagesSelected.filter(x => x != -1);
+        },
+
         GetTimeOutInMs: function () {
             return this._timeOut;
         },
@@ -72,12 +80,13 @@ function CreateGame(gameName, proxyCallback) {
                 case STATES.allcards:
                     var selectedCards = this._imagesSelected.filter(x => x != -1); //get the cards that have been picked
                     //Q: if you don't play a card within the time frame, one will be played for you?
-                    if (selectedCards.length >= 5 || selectedCards.length == this._players.length - 1)
+                    if (selectedCards.length >= 5 || selectedCards.length == this._players.length)
                         newState = STATES.voting;
                     break;
                 case STATES.voting:
                     //Q: if you don't vote within the right timeframe, then you will be booted?
-                    if (this._votes.length == this._players.length) {
+                    var votes = this._votes.filter(x => x != -1); //get the cards that have been picked
+                    if (votes.length == this._players.length - 1) { //we let everyone the chance to vote
                         newState = STATES.firstcard;
                         var maxScore = Math.max(...this._points);
                         if (maxScore >= MAX_SCORE) newState = STATES.endgame;
@@ -107,6 +116,49 @@ function CreateGame(gameName, proxyCallback) {
                     break;
                 case STATES.voting:
                     //tally up the scores
+                    var correctCard = this._imagesSelected[this._storyteller];
+                    var correctGuessers = this._votes.filter(x => x == correctCard).length;
+                    var numGuessers = this._players.length - 1;
+                    //everyone guessed correctly or no one guessed correctly
+                    if (correctGuessers == numGuessers || correctGuessers == 0) {
+                        //everybody but the story teller gets 2 points
+                        for (var i = 0; i < this._players.length; i++) {
+                            if (i == this._storyteller) continue;
+                            this._points.splice(i, 1, this._points[i] + 2);
+                        }
+                    } else {
+                        //everybody who guessed correctly gets 3 points
+                        for (var i = 0; i < this._players.length; i++) {
+                            if (i == this._storyteller || this._votes[i] == correctCard)
+                                this._points.splice(i, 1, this._points[i] + 3);
+                        }
+                    }
+
+                    //distributes points for everyone that guessed your card
+                    for (var i = 0; i < this._votes.length; i++) {
+                        if (i == this._storyteller) continue;
+                        //figure out playerindex of which card you guessed
+                        var cardVotedFor = this._votes[i];
+                        if (cardVotedFor == -1) continue;
+                        var cardPlayedBy = this._imagesSelected.indexOf(cardVotedFor);
+                        if (cardPlayedBy == -1) {
+                            console.error("We didn't find the card: ", cardVotedFor, this._imagesSelected, this._votes);
+                            continue;
+                        }
+                        if (cardPlayedBy >= this._players.length) {
+                            //played by a random player
+                            console.log("You picked a card that was played by the computer");
+                            continue;
+                        }
+                        //give one point to the player that played this card
+                        if (cardPlayedBy != this._storyteller)
+                            this._points.splice(cardPlayedBy, 1, this._points[cardPlayedBy] + 1);
+                    }
+
+                    // increment the story teller piece of the puzzle
+                    this._timesStoryTeller[this._storyteller]++;
+                    this._storyteller = -1;
+
                     break;
             }
             switch (newState) {
@@ -123,6 +175,13 @@ function CreateGame(gameName, proxyCallback) {
                     while (this._imagesSelected.length < this._players.length) this._imagesSelected.push(-1);
                     break;
                 case STATES.allcards:
+                    break;
+                case STATES.voting:
+                    //fill in random cards until we have 6 cards
+                    while (this._imagesSelected.filter(x => x != -1).length < 6) {
+                        //add random cards to the end?
+                        this._imagesSelected.push(this._imagesSelected.length + 15);
+                    }
                     break;
             }
         },
@@ -164,14 +223,26 @@ function CreateGame(gameName, proxyCallback) {
             //choose depending on state
             if (this._state == STATES.firstcard) {
                 if (playerIndex != this._storyteller) return "You are not the story teller";
-            }
-            else if (this._state == STATES.allcards) {
+                this._imagesSelected[playerIndex] = cardId;
+            } else if (this._state == STATES.allcards) {
                 if (playerIndex == this._storyteller) return "The story teller cannot pick another card";
                 if (this._imagesSelected[playerIndex] != -1) return "You cannot pick another card";
                 this._imagesSelected[playerIndex] = cardId;
-            } 
-            else {
+            } else {
                 return "You cannot pick a card in this state";
+            }
+            this._Transition();
+            return 0;
+        },
+        VoteCard(playerIndex, voteCardId) {
+            if (voteCardId < 0) return "Bad Card ID";
+            //choose depending on state
+            if (this._state == STATES.voting) {
+                if (playerIndex == this._storyteller) return "The story teller cannot vote on a card";
+                if (this._votes[playerIndex] != -1) return "You cannot vote on another card";
+                this._votes[playerIndex] = voteCardId;
+            } else {
+                return "You cannot vote on a card in this state";
             }
             this._Transition();
             return 0;

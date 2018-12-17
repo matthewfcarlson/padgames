@@ -1,7 +1,5 @@
 <template>
   <div class="content">Dixit
-    
-
     <div v-if="state == 'lobby'">
       <div is="LobbyPlayerList" v-bind:players="playerList"></div>
       <br>
@@ -10,7 +8,10 @@
         <input type="text" class="form-control" placeholder="Your name" v-model="playerName">
         <br>
         <button class="btn btn-primary btn-block" @click="JoinGame()">Join Game</button>
-        <button class="btn btn-info btn-block" @click="JoinGameAsPad()">Join Game as iPad/Large Screen</button>
+        <button
+          class="btn btn-info btn-block"
+          @click="JoinGameAsPad()"
+        >Join Game as iPad/Large Screen</button>
       </div>
       <button
         v-else-if="isFirstPlayer"
@@ -21,20 +22,39 @@
       <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
     </div>
     <div v-else-if="state == 'firstcard'">
-        <div v-if="isStoryTeller">
-            Pick a card and tell your story
-            <div is="cardPicker" story-teller=true @submit="PickCard"></div> 
-        </div>
-        <div v-else>
-            Waiting for the story teller to pick a card and tell you the story.
-        </div>
+      <div v-if="isStoryTeller">Pick a card and tell your story
+        <div is="cardPicker" story-teller="true" @submit="PickCard"></div>
+      </div>
+      <div v-else>Waiting for the story teller to pick a card and tell you the story.</div>
     </div>
     <div v-else-if="state == 'allcards'">
-        <div v-if="!isPad && !isStoryTeller">
-             <div is="cardPicker" story-teller=false @submit="PickCard"></div> 
-        </div>
+      <div v-if="!isPad && !isStoryTeller">
+        <div is="cardPicker" story-teller="false" @submit="PickCard"></div>
+      </div>
+      <div v-else>
+        Waiting for players to put in their cards
+        TODO: Add list of players who have answered
+      </div>
     </div>
-    <pre>
+    <div v-else-if="state == 'voting'">
+      <div v-if="!isStoryTeller">
+        <div is="CardVoter" :isPad="isPad" :cardList="shuffledCardVoteList" @submit="VoteCard"></div>
+      </div>
+      <div v-else>Waiting for players to vote</div>
+    </div>
+    <div v-else-if="state == 'endgame'">
+      <h2>Game Over!</h2>
+    </div>
+
+    <div v-if="state != 'lobby'" is="Scores" :players="playerList" :isPad="isPad" :scores="scores"></div>
+    <div v-if="state != 'lobby' && isFirstPlayer">
+      <h2>Admin Controls</h2>
+      <hr>
+      <h3>Boot player</h3>
+      <div is="LobbyPlayerList" v-bind:players="playerList"></div>
+      <button class="btn btn-danger btn-block" @click="EndGame">End Game</button>
+    </div>
+    <pre v-if="debug">
         state: {{state}}
         {{currentGame}}
         connected: {{connected}}
@@ -49,6 +69,8 @@ import VueQrcode from "@chenfengyuan/vue-qrcode";
 import DixitGame from "../common/dixit";
 import LobbyPlayerList from "./LobbyPlayerList";
 import CardPicker from "./CardPicker";
+import CardVoter from "./CardVoter";
+import Scores from "./Scores";
 
 Vue.use(VueSocketio, window.location.origin);
 
@@ -78,13 +100,15 @@ export default {
       playerName: debug ? "Default" : "",
       gameRoom: gameRoom,
       debug: debug,
-      isPad: false,
+      isPad: false
     };
   },
   components: {
     VueQrcode,
     LobbyPlayerList,
-    CardPicker
+    CardPicker,
+    CardVoter,
+    Scores
   },
   mounted: function() {
     console.log(this.sockets);
@@ -133,15 +157,29 @@ export default {
       if (this.playerIndex == 0) return true;
       return false;
     },
-    playerList () {
-        if (this.currentGame == null) return [];
-        return this.currentGame.GetPlayers();
+    playerList() {
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetPlayers();
     },
-    isStoryTeller: function(){
+    scores() {
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetScores();
+    },
+    isStoryTeller: function() {
       if (this.playerIndex == -1) return false;
       if (this.currentGame == null) return false;
       if (this.currentGame.GetStoryTeller() == this.playerIndex) return true;
       return false;
+    },
+    hasPad() {
+      //if there is an ipad attached
+      if (this.currentGame == null) return false;
+      return this.currentGame.GetPadAttached();
+    },
+    shuffledCardVoteList() {
+      //the list of cards we can vote on
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetVoteCardList(); //how to shuffle this the same way every time?
     }
   },
   methods: {
@@ -172,9 +210,9 @@ export default {
       }
       //otherwise we check how long it has been since we got the last command
     },
-    JoinGameAsPad () {
-        var gameRoom = this.gameRoom;
-        this.$socket.emit(ROOT + "join game pad", gameRoom);
+    JoinGameAsPad() {
+      var gameRoom = this.gameRoom;
+      this.$socket.emit(ROOT + "join game pad", gameRoom);
     },
     RejoinGame: function(gameRoom, playerName, playerIndex, socketId) {
       console.log("Attempting to rejoin the game!");
@@ -187,16 +225,21 @@ export default {
       );
     },
     LeaveGame: function() {
-      this.$router.push("/dixit");
+      var newPage = location.origin + "/dixit";
+      console.log("Leaving", newPage);
+      window.location.assign(newPage);
     },
-    PickCard: function(cardIndex){
-        console.log("Attempting to pick a card ",cardIndex);
-        this.currentGame.replicated.PickCard(this.playerIndex, cardIndex);
+    PickCard: function(cardIndex) {
+      console.log("Attempting to pick a card ", cardIndex);
+      this.currentGame.replicated.PickCard(this.playerIndex, cardIndex);
+    },
+    VoteCard: function(cardIndex) {
+      console.log("Attempting to vote on the card at ", cardIndex);
+      this.currentGame.replicated.VoteCard(this.playerIndex, cardIndex);
     }
   },
   sockets: {
-
-    disconnect: function(){
+    disconnect: function() {
       //let us know that we are disconnected
     },
     "Dixit:connected": function() {
@@ -234,14 +277,13 @@ export default {
       var message = "N/A";
       var leave = false;
       console.error(response);
-      
+
       if (response["leave"] != undefined) leave = response["leave"];
       if (leave != undefined && leave == true) {
         console.log("Leaving game");
         this.LeaveGame();
-      }
-      else if (response["msg"] != undefined) {
-          message = response["msg"];
+      } else if (response["msg"] != undefined) {
+        message = response["msg"];
         alert(message);
       }
     },
@@ -251,8 +293,8 @@ export default {
       this.playerIndex = playerIndex;
 
       if (this.playerIndex == -1) {
-          this.isPad = true;
-          return;
+        this.isPad = true;
+        return;
       }
       console.log("Storing the game for later");
       localStorage.setItem(
