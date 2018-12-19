@@ -89,6 +89,10 @@ function CreateGame(gameName, proxyCallback) {
             return this._storyteller;
         },
 
+        _GetCardFromDeck(){
+            return this._deck.shift();
+        },
+
         _Transition: function () { //this is the only place that should modify state
             var newState = this._state;
             //Check if we can transition:
@@ -205,6 +209,11 @@ function CreateGame(gameName, proxyCallback) {
                     //shuffle the deck
                     shuffleArray(this._deck, this._mt);
 
+                    //resets the imagesSelected and adds them back to the deck
+                    while (this._imagesSelected.length > 0){
+                        this._cardsPlayed.push(this._imagesSelected.pop());
+                    }
+
                     //deal everyone a card until everyone has 5 cards
                     for (var i = 0; i < this._players.length; i++) {
                         while (this._hands[i].length < this._handLimit) {
@@ -218,7 +227,7 @@ function CreateGame(gameName, proxyCallback) {
                                 shuffleArray(this._deck, this._mt);
                             }
                             
-                            var newCard = this._deck.shift();
+                            var newCard = this._GetCardFromDeck();
                             this._hands[i].push(newCard);
                         }
                     }
@@ -229,8 +238,7 @@ function CreateGame(gameName, proxyCallback) {
                     this._storyteller = storytellerIndex;
                     //resets the votes
                     for (var i = 0; i < this._votes.length; i++) this._votes[i] = -1; //this would be better with a map but eh
-                    //resets the imagesSelected
-                    this._imagesSelected.splice(0, this._imagesSelected.length);
+                    
                     while (this._imagesSelected.length < this._players.length) this._imagesSelected.push(-1);
                     break;
                 case STATES.allcards:
@@ -239,7 +247,7 @@ function CreateGame(gameName, proxyCallback) {
                     //fill in random cards until we have 6 cards
                     while (this._imagesSelected.filter(x => x != -1).length < 6) {
                         //add random cards to the end?
-                        this._imagesSelected.push(this._imagesSelected.length + 15);
+                        this._imagesSelected.push(this._GetCardFromDeck());
                     }
                     break;
             }
@@ -307,7 +315,6 @@ function CreateGame(gameName, proxyCallback) {
 
             //remove the card from the player's hand
             this._hands[playerIndex].splice(cardIndex, 1);
-            this._cardsPlayed.push(cardId); //add it to the list of cardsPlayed
 
             this._Transition();
             return 0;
