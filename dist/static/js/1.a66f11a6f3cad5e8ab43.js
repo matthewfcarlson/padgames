@@ -943,6 +943,13 @@ module.exports = function () {
 
 /***/ }),
 
+/***/ "Lhly":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "LrOu":
 /***/ (function(module, exports) {
 
@@ -1495,13 +1502,6 @@ module.exports = function (value) {
 	return objToString.call(value) === id;
 };
 
-
-/***/ }),
-
-/***/ "aj5w":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 
@@ -2124,18 +2124,18 @@ vue_esm["a" /* default */].use(vue_scroll_esm);
       this.cardPicked = true;
     },
     OnScroll(e, position) {
-      console.log(position);
+      console.log("Scroll", position);
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-1fd026fb","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardPicker.vue
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-7851c6aa","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardPicker.vue
 var CardPicker_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid"},[_c('h2',[_vm._v("Card List")]),_vm._v("\n  "+_vm._s(_vm.storyTeller)+"\n  "),(!_vm.cardPicked)?_c('div',{directives:[{name:"scroll",rawName:"v-scroll",value:(_vm.OnScroll),expression:"OnScroll"}],staticClass:"slider"},_vm._l((_vm.hand),function(card){return _c('section',{key:card,on:{"click":function($event){_vm.PickCard(card)}}},[_c('h1',[_vm._v("Pick "+_vm._s(card))]),_vm._v(" "),_c('img',{staticClass:"img-fluid",attrs:{"src":"https://s-media-cache-ak0.pinimg.com/736x/d6/b3/41/d6b3417cdc74d85b3e16b6eda56bf247--board-games-writing-inspiration.jpg"}})])})):_c('div',[_vm._v("You picked "+_vm._s(_vm.cardIndex))])])}
 var CardPicker_staticRenderFns = []
 var CardPicker_esExports = { render: CardPicker_render, staticRenderFns: CardPicker_staticRenderFns }
 /* harmony default export */ var client_CardPicker = (CardPicker_esExports);
 // CONCATENATED MODULE: ./games/dixit/client/CardPicker.vue
 function injectStyle (ssrContext) {
-  __webpack_require__("aj5w")
+  __webpack_require__("Lhly")
 }
 var CardPicker_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -2148,7 +2148,7 @@ var CardPicker___vue_template_functional__ = false
 /* styles */
 var CardPicker___vue_styles__ = injectStyle
 /* scopeId */
-var CardPicker___vue_scopeId__ = "data-v-1fd026fb"
+var CardPicker___vue_scopeId__ = "data-v-7851c6aa"
 /* moduleIdentifier (server only) */
 var CardPicker___vue_module_identifier__ = null
 var CardPicker_Component = CardPicker_normalizeComponent(
@@ -7535,4 +7535,4 @@ exports.methods = methods;
 /***/ })
 
 });
-//# sourceMappingURL=1.f1cab6e0c0c332417e38.js.map
+//# sourceMappingURL=1.a66f11a6f3cad5e8ab43.js.map
