@@ -1433,7 +1433,7 @@ function CreateGame(gameName, proxyCallback) {
             name = name.trim();
             if (!this._state.is("lobby")) return "The game has already started";
             if (this._players.indexOf(name) != -1) return "You cannot join the same game twice";
-            this._players.push(name)
+            this._players.push(name);
             this._DidExecuteCommand();
             return 0;
         },
@@ -1450,11 +1450,11 @@ function CreateGame(gameName, proxyCallback) {
 
             if (this._players.length < 3) return "You need 3 players before you can start the game"
             if (this._state.cannot("start")) return "You cannot start the game";
-            console.log("Starting the game");
+            //console.log("Starting the game");
             while (this._players.length > this._pressure.length) this._pressure.push(0);
             while (this._players.length > this._votes.length) this._votes.push("");
             while (this._players.length > this._lastModeratedRound.length) this._lastModeratedRound.push(-1);
-            console.log(this._votes);
+            //console.log(this._votes);
             this._state.start();
             this._moderator = this.GetRandomNumber(0, this._players.length - 1);
             this._lastModeratedRound[this._moderator] = 0;
@@ -5712,4 +5712,4 @@ var index = {
 /***/ })
 
 });
-//# sourceMappingURL=2.1e0ab02c720ae0a0a4a2.js.map
+//# sourceMappingURL=2.06c2d9ce0666fc13e88c.js.map
