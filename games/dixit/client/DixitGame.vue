@@ -29,7 +29,7 @@
     </div>
     <div v-else-if="state == 'allcards'">
       <div v-if="!isPad && !isStoryTeller">
-        <div is="cardPicker" story-teller="false" :hand="myHand" @submit="PickCard"></div>
+        <div is="cardPicker" :story-teller=false :hand="myHand" @submit="PickCard"></div>
       </div>
       <div v-else>
         Waiting for players to put in their cards

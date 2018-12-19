@@ -1528,15 +1528,14 @@ body,
 
 
 
-.slider[data-v-7851c6aa] {
+.slider[data-v-70a67d3e] {
   display: flex;
 }
-section[data-v-7851c6aa] {
+section[data-v-70a67d3e] {
   border-right: 1px solid white;
   border-radius: 10pt;
-  padding: 1rem;
+  padding: 0.25rem;
   min-width: 30vw;
-  background: blue;
   text-align: center;
   position: relative;
   cursor: pointer;
@@ -1545,11 +1544,11 @@ section[data-v-7851c6aa] {
 }
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-section[data-v-7851c6aa] {
+section[data-v-70a67d3e] {
     min-width: 60vw;
     scroll-snap-align: center;
 }
-.slider[data-v-7851c6aa] {
+.slider[data-v-70a67d3e] {
     font-family: sans-serif;
     scroll-snap-type: mandatory;
     scroll-snap-points-x: repeat(60vw);
@@ -1558,20 +1557,28 @@ section[data-v-7851c6aa] {
     margin-left: -15px;
     margin-right: -15px;
 }
-.no-padding[data-v-7851c6aa] {
+.no-padding[data-v-70a67d3e] {
     padding: 0;
 }
 }
 @media (min-width: 768px) {
-section[data-v-7851c6aa] {
+section[data-v-70a67d3e] {
     min-width: unset;
     max-width: 20vw;
     /* margin-right: -15px; */
     /* margin-left: -15px; */
 }
-.slider[data-v-7851c6aa] {
+.slider[data-v-70a67d3e] {
     justify-content: center;
 }
 }
 
-/*# sourceMappingURL=app.9c23bc5c6af014a395601fc0dcbab371.css.map*/
+.card[data-v-7a178af1] {
+    border-radius: 10pt;
+}
+
+.card[data-v-5a63d6d1] {
+    border-radius: 10pt;
+}
+
+/*# sourceMappingURL=app.f20e59cd497940ed7aae46499bf01497.css.map*/

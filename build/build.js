@@ -19,7 +19,7 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
   if (err) throw CustomElementRegistry
 
   var dixit_path = path.join("static", "dixit")
-  var dixit_json_path = path.join("static", "dixit.json")
+  var dixit_json_path = path.join("games","dixit","common", "dixit_cards.json")
   generateDirList(dixit_path, dixit_json_path);
 
   webpack(webpackConfig, (err, stats) => {

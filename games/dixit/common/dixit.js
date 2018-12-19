@@ -1,4 +1,5 @@
 var Random = require("random-js");
+var DixitCards = require("./cards");
 //figure out if we are server side?
 function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
@@ -27,7 +28,7 @@ const STATES = Object.freeze({
 
 const MAX_SCORE = 30;
 const HAND_LIMT = 5;
-const NUM_CARDS = 17;
+const NUM_CARDS = DixitCards.NUM_CARDS;
 
 function CreateGame(gameName, proxyCallback) {
 
