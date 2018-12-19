@@ -1,7 +1,5 @@
 <template>
   <div class="container-fluid">
-    <h2>Card List</h2>
-    {{storyTeller}}
     <div v-if="!cardPicked" class="slider" v-scroll="OnScroll">
       <section v-for="card in hand" :key="card" @click="PickCard(card)">
         <card :cardId="card"></card>

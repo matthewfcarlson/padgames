@@ -1528,10 +1528,22 @@ body,
 
 
 
-.slider[data-v-70a67d3e] {
+
+
+
+
+
+
+
+
+
+
+
+
+.slider[data-v-915157e8] {
   display: flex;
 }
-section[data-v-70a67d3e] {
+section[data-v-915157e8] {
   border-right: 1px solid white;
   border-radius: 10pt;
   padding: 0.25rem;
@@ -1544,11 +1556,11 @@ section[data-v-70a67d3e] {
 }
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-section[data-v-70a67d3e] {
+section[data-v-915157e8] {
     min-width: 60vw;
     scroll-snap-align: center;
 }
-.slider[data-v-70a67d3e] {
+.slider[data-v-915157e8] {
     font-family: sans-serif;
     scroll-snap-type: mandatory;
     scroll-snap-points-x: repeat(60vw);
@@ -1557,18 +1569,18 @@ section[data-v-70a67d3e] {
     margin-left: -15px;
     margin-right: -15px;
 }
-.no-padding[data-v-70a67d3e] {
+.no-padding[data-v-915157e8] {
     padding: 0;
 }
 }
 @media (min-width: 768px) {
-section[data-v-70a67d3e] {
+section[data-v-915157e8] {
     min-width: unset;
     max-width: 20vw;
     /* margin-right: -15px; */
     /* margin-left: -15px; */
 }
-.slider[data-v-70a67d3e] {
+.slider[data-v-915157e8] {
     justify-content: center;
 }
 }
@@ -1581,4 +1593,4 @@ section[data-v-70a67d3e] {
     border-radius: 10pt;
 }
 
-/*# sourceMappingURL=app.f20e59cd497940ed7aae46499bf01497.css.map*/
+/*# sourceMappingURL=app.7260c58967ea769778a0dc76185dc6ee.css.map*/

@@ -23,7 +23,8 @@ const STATES = Object.freeze({
     "firstcard": 2, //when the story teller is picking a card
     "allcards": 4, //when everyone else is picking a card
     "voting": 5, //when everyone is voting
-    "endgame": 6 //when we start the game
+    "endgame": 6, //when we start the game,
+    "endearly": 7
 });
 
 const MAX_SCORE = 30;
@@ -336,6 +337,9 @@ function CreateGame(gameName, proxyCallback) {
             return 0;
         },
 
+        EndGame: function() {
+            this._state = STATES.endearly;
+        },
 
         // Replication stuff
 

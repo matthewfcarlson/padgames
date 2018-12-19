@@ -1,5 +1,6 @@
 <template>
-  <div class="content">Dixit
+  <div class="content">
+    Dixit {{state}}
     <div v-if="state == 'lobby'">
       <div is="LobbyPlayerList" v-bind:players="playerList"></div>
       <br>
@@ -16,7 +17,7 @@
       <button
         v-else-if="isFirstPlayer"
         class="btn btn-primary btn-block"
-        @click="StartGame"
+        @click="StartGame()"
       >Start Game</button>
       <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
       <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
@@ -29,7 +30,7 @@
     </div>
     <div v-else-if="state == 'allcards'">
       <div v-if="!isPad && !isStoryTeller">
-        <div is="cardPicker" :story-teller=false :hand="myHand" @submit="PickCard"></div>
+        <div is="cardPicker" :story-teller="false" :hand="myHand" @submit="PickCard"></div>
       </div>
       <div v-else>
         Waiting for players to put in their cards
@@ -48,11 +49,12 @@
 
     <div v-if="state != 'lobby'" is="Scores" :players="playerList" :isPad="isPad" :scores="scores"></div>
     <div v-if="state != 'lobby' && isFirstPlayer">
-      <h2>Admin Controls</h2>
+      <br>
+      <h3>Admin Controls</h3>
       <hr>
       <h3>Boot player</h3>
       <div is="LobbyPlayerList" v-bind:players="playerList"></div>
-      <button class="btn btn-danger btn-block" @click="EndGame">End Game</button>
+      <button class="btn btn-danger btn-block" @click="EndGame()">End Game</button>
     </div>
     <pre v-if="debug">
         state: {{state}}
@@ -153,7 +155,7 @@ export default {
       if (this.currentGame == null) return "";
       return this.currentGame.GetState();
     },
-    myHand: function(){
+    myHand: function() {
       if (this.currentGame == null) return [];
       return this.currentGame.GetPlayerHand(this.playerIndex);
     },
@@ -240,6 +242,9 @@ export default {
     VoteCard: function(cardIndex) {
       console.log("Attempting to vote on the card at ", cardIndex);
       this.currentGame.replicated.VoteCard(this.playerIndex, cardIndex);
+    },
+    EndGame() {
+      this.currentGame.replicated.EndGame();
     }
   },
   sockets: {
@@ -260,7 +265,11 @@ export default {
       //how to figure out if we've connected before
 
       var previousGame = null;
-      if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
+      if (
+        localStorage.getItem(gameRoom) &&
+        this.playerIndex == -1 &&
+        !this.debug
+      ) {
         previousGame = JSON.parse(localStorage.getItem(gameRoom));
         console.log(this);
         this.RejoinGame(
@@ -300,15 +309,18 @@ export default {
         this.isPad = true;
         return;
       }
-      console.log("Storing the game for later");
-      localStorage.setItem(
-        this.gameRoom,
-        JSON.stringify({
-          playerName: this.playerName,
-          index: playerIndex,
-          socketId: this.$socket.id
-        })
-      );
+      if (!this.debug) {
+        console.log("Storing the game for later");
+
+        localStorage.setItem(
+          this.gameRoom,
+          JSON.stringify({
+            playerName: this.playerName,
+            index: playerIndex,
+            socketId: this.$socket.id
+          })
+        );
+      }
     },
     "Dixit:engine call": function(data) {
       console.log(

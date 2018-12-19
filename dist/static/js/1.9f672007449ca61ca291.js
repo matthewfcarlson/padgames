@@ -440,6 +440,13 @@ if (!__webpack_require__("ANlv")()) {
 
 /***/ }),
 
+/***/ "5FYI":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "6kAM":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -688,13 +695,6 @@ module.exports = function () {
 	return true;
 };
 
-
-/***/ }),
-
-/***/ "AXCH":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 
@@ -1512,6 +1512,13 @@ module.exports = function (value) {
 
 /***/ }),
 
+/***/ "Z+2s":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "ddKG":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1528,13 +1535,6 @@ module.exports = {
         return CardList[index];
     }
 }
-
-/***/ }),
-
-/***/ "eWje":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 
@@ -2206,8 +2206,6 @@ var Card_Component = Card_normalizeComponent(
 //
 //
 //
-//
-//
 
 
 
@@ -2242,14 +2240,14 @@ vue_esm["a" /* default */].use(vue_scroll_esm);
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-70a67d3e","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardPicker.vue
-var CardPicker_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid"},[_c('h2',[_vm._v("Card List")]),_vm._v("\n  "+_vm._s(_vm.storyTeller)+"\n  "),(!_vm.cardPicked)?_c('div',{directives:[{name:"scroll",rawName:"v-scroll",value:(_vm.OnScroll),expression:"OnScroll"}],staticClass:"slider"},_vm._l((_vm.hand),function(card){return _c('section',{key:card,on:{"click":function($event){_vm.PickCard(card)}}},[_c('card',{attrs:{"cardId":card}})],1)})):(_vm.storyTeller)?_c('div',[_vm._v("\n    Now take 30 second and think of a clue that really embodies your picture\n    "),_c('card',{attrs:{"cardId":_vm.cardIndex}}),_vm._v("\n    When you're ready press this button:\n    "),_c('button',{staticClass:"btn btn-success btn-block btn-outline",on:{"click":function($event){_vm.PickCard(_vm.cardIndex)}}},[_vm._v("Ready")])],1):_c('div',[_vm._v("You picked "+_vm._s(_vm.cardIndex))])])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-915157e8","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardPicker.vue
+var CardPicker_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid"},[(!_vm.cardPicked)?_c('div',{directives:[{name:"scroll",rawName:"v-scroll",value:(_vm.OnScroll),expression:"OnScroll"}],staticClass:"slider"},_vm._l((_vm.hand),function(card){return _c('section',{key:card,on:{"click":function($event){_vm.PickCard(card)}}},[_c('card',{attrs:{"cardId":card}})],1)})):(_vm.storyTeller)?_c('div',[_vm._v("\n    Now take 30 second and think of a clue that really embodies your picture\n    "),_c('card',{attrs:{"cardId":_vm.cardIndex}}),_vm._v("\n    When you're ready press this button:\n    "),_c('button',{staticClass:"btn btn-success btn-block btn-outline",on:{"click":function($event){_vm.PickCard(_vm.cardIndex)}}},[_vm._v("Ready")])],1):_c('div',[_vm._v("You picked "+_vm._s(_vm.cardIndex))])])}
 var CardPicker_staticRenderFns = []
 var CardPicker_esExports = { render: CardPicker_render, staticRenderFns: CardPicker_staticRenderFns }
 /* harmony default export */ var client_CardPicker = (CardPicker_esExports);
 // CONCATENATED MODULE: ./games/dixit/client/CardPicker.vue
 function CardPicker_injectStyle (ssrContext) {
-  __webpack_require__("eWje")
+  __webpack_require__("Z+2s")
 }
 var CardPicker_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -2262,7 +2260,7 @@ var CardPicker___vue_template_functional__ = false
 /* styles */
 var CardPicker___vue_styles__ = CardPicker_injectStyle
 /* scopeId */
-var CardPicker___vue_scopeId__ = "data-v-70a67d3e"
+var CardPicker___vue_scopeId__ = "data-v-915157e8"
 /* moduleIdentifier (server only) */
 var CardPicker___vue_module_identifier__ = null
 var CardPicker_Component = CardPicker_normalizeComponent(
@@ -2351,7 +2349,6 @@ var card_Component = card_normalizeComponent(
 //
 //
 //
-//
 
 
 
@@ -2375,8 +2372,8 @@ var card_Component = card_normalizeComponent(
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-7d742410","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardVoter.vue
-var CardVoter_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('h2',[_vm._v("Card List")]),_vm._v("\n  "+_vm._s(_vm.isPad)+"\n  "+_vm._s(_vm.cardList)+"\n  "),(!_vm.isPad && !_vm.voted)?_c('div',[_vm._v("\n    TODO if we have a pad view, just let us pick the numbers instead of showing the pictures\n    "),_c('div',{staticClass:"row"},_vm._l((_vm.cardList),function(card){return _c('div',{key:card,staticClass:"col-sm-3 col-lg-2",on:{"click":function($event){_vm.PickCard(card)}}},[_c('card',{attrs:{"cardId":card}})],1)})),_vm._v(" "),_vm._l((_vm.cardList),function(card){return _c('button',{key:card,on:{"click":function($event){_vm.PickCard(card)}}},[_vm._v("Vote on "+_vm._s(card))])})],2):_vm._e()])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-289d9750","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardVoter.vue
+var CardVoter_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_vm._v("\n  "+_vm._s(_vm.isPad)+"\n  "+_vm._s(_vm.cardList)+"\n  "),(!_vm.isPad && !_vm.voted)?_c('div',[_vm._v("\n    TODO if we have a pad view, just let us pick the numbers instead of showing the pictures\n    "),_c('div',{staticClass:"row"},_vm._l((_vm.cardList),function(card){return _c('div',{key:card,staticClass:"col-sm-3 col-lg-2",on:{"click":function($event){_vm.PickCard(card)}}},[_c('card',{attrs:{"cardId":card}})],1)})),_vm._v(" "),_vm._l((_vm.cardList),function(card){return _c('button',{key:card,on:{"click":function($event){_vm.PickCard(card)}}},[_vm._v("Vote on "+_vm._s(card))])})],2):_vm._e()])}
 var CardVoter_staticRenderFns = []
 var CardVoter_esExports = { render: CardVoter_render, staticRenderFns: CardVoter_staticRenderFns }
 /* harmony default export */ var client_CardVoter = (CardVoter_esExports);
@@ -2457,6 +2454,8 @@ var Scores_Component = Scores_normalizeComponent(
 /* harmony default export */ var dixit_client_Scores = (Scores_Component.exports);
 
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./games/dixit/client/DixitGame.vue
+//
+//
 //
 //
 //
@@ -2662,6 +2661,9 @@ const ROOT = "Dixit:";
     VoteCard: function (cardIndex) {
       console.log("Attempting to vote on the card at ", cardIndex);
       this.currentGame.replicated.VoteCard(this.playerIndex, cardIndex);
+    },
+    EndGame() {
+      this.currentGame.replicated.EndGame();
     }
   },
   sockets: {
@@ -2682,7 +2684,7 @@ const ROOT = "Dixit:";
       //how to figure out if we've connected before
 
       var previousGame = null;
-      if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
+      if (localStorage.getItem(gameRoom) && this.playerIndex == -1 && !this.debug) {
         previousGame = JSON.parse(localStorage.getItem(gameRoom));
         console.log(this);
         this.RejoinGame(gameRoom, previousGame.playerName, previousGame.index, previousGame.socketId);
@@ -2717,12 +2719,15 @@ const ROOT = "Dixit:";
         this.isPad = true;
         return;
       }
-      console.log("Storing the game for later");
-      localStorage.setItem(this.gameRoom, JSON.stringify({
-        playerName: this.playerName,
-        index: playerIndex,
-        socketId: this.$socket.id
-      }));
+      if (!this.debug) {
+        console.log("Storing the game for later");
+
+        localStorage.setItem(this.gameRoom, JSON.stringify({
+          playerName: this.playerName,
+          index: playerIndex,
+          socketId: this.$socket.id
+        }));
+      }
     },
     "Dixit:engine call": function (data) {
       console.log("We got a response from the server to call our engine with func " + data.funcName + " from " + data.source, data);
@@ -2735,14 +2740,14 @@ const ROOT = "Dixit:";
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-749c1f86","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/DixitGame.vue
-var DixitGame_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content"},[_vm._v("Dixit\n  "),(_vm.state == 'lobby')?_c('div',[_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('br'),_vm._v(" "),(_vm.playerIndex == -1 && !_vm.isPad)?_c('div',[_c('h3',[_vm._v("Join game")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.playerName),expression:"playerName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"Your name"},domProps:{"value":(_vm.playerName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.playerName=$event.target.value}}}),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":function($event){_vm.JoinGame()}}},[_vm._v("Join Game")]),_vm._v(" "),_c('button',{staticClass:"btn btn-info btn-block",on:{"click":function($event){_vm.JoinGameAsPad()}}},[_vm._v("Join Game as iPad/Large Screen")])]):(_vm.isFirstPlayer)?_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":_vm.StartGame}},[_vm._v("Start Game")]):_c('div',{staticClass:"btn btn-info btn-block",attrs:{"disabled":""}},[_vm._v("Waiting for the game to start")]),_vm._v(" "),_c('vue-qrcode',{staticClass:"text-center",attrs:{"value":_vm.windowLocation,"options":{ width: _vm.qrWidth }}})],1):(_vm.state == 'firstcard')?_c('div',[(_vm.isStoryTeller)?_c('div',[_vm._v("Pick a card and tell your story\n      "),_c("cardPicker",{tag:"div",attrs:{"story-teller":"true","hand":_vm.myHand},on:{"submit":_vm.PickCard}})]):_c('div',[_vm._v("Waiting for the story teller to pick a card and tell you the story.")])]):(_vm.state == 'allcards')?_c('div',[(!_vm.isPad && !_vm.isStoryTeller)?_c('div',[_c("cardPicker",{tag:"div",attrs:{"story-teller":false,"hand":_vm.myHand},on:{"submit":_vm.PickCard}})]):_c('div',[_vm._v("\n      Waiting for players to put in their cards\n      TODO: Add list of players who have answered\n    ")])]):(_vm.state == 'voting')?_c('div',[(!_vm.isStoryTeller)?_c('div',[_c("CardVoter",{tag:"div",attrs:{"isPad":_vm.isPad,"cardList":_vm.shuffledCardVoteList},on:{"submit":_vm.VoteCard}})]):_c('div',[_vm._v("Waiting for players to vote")])]):(_vm.state == 'endgame')?_c('div',[_c('h2',[_vm._v("Game Over!")])]):_vm._e(),_vm._v(" "),(_vm.state != 'lobby')?_c("Scores",{tag:"div",attrs:{"players":_vm.playerList,"isPad":_vm.isPad,"scores":_vm.scores}}):_vm._e(),_vm._v(" "),(_vm.state != 'lobby' && _vm.isFirstPlayer)?_c('div',[_c('h2',[_vm._v("Admin Controls")]),_vm._v(" "),_c('hr'),_vm._v(" "),_c('h3',[_vm._v("Boot player")]),_vm._v(" "),_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('button',{staticClass:"btn btn-danger btn-block",on:{"click":_vm.EndGame}},[_vm._v("End Game")])]):_vm._e(),_vm._v(" "),(_vm.debug)?_c('pre',[_vm._v("      state: "+_vm._s(_vm.state)+"\n      "+_vm._s(_vm.currentGame)+"\n      connected: "+_vm._s(_vm.connected)+"\n  ")]):_vm._e()])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-2a83b922","hasScoped":false,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/DixitGame.vue
+var DixitGame_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content"},[_vm._v("\n  Dixit "+_vm._s(_vm.state)+"\n  "),(_vm.state == 'lobby')?_c('div',[_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('br'),_vm._v(" "),(_vm.playerIndex == -1 && !_vm.isPad)?_c('div',[_c('h3',[_vm._v("Join game")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.playerName),expression:"playerName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"Your name"},domProps:{"value":(_vm.playerName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.playerName=$event.target.value}}}),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":function($event){_vm.JoinGame()}}},[_vm._v("Join Game")]),_vm._v(" "),_c('button',{staticClass:"btn btn-info btn-block",on:{"click":function($event){_vm.JoinGameAsPad()}}},[_vm._v("Join Game as iPad/Large Screen")])]):(_vm.isFirstPlayer)?_c('button',{staticClass:"btn btn-primary btn-block",on:{"click":function($event){_vm.StartGame()}}},[_vm._v("Start Game")]):_c('div',{staticClass:"btn btn-info btn-block",attrs:{"disabled":""}},[_vm._v("Waiting for the game to start")]),_vm._v(" "),_c('vue-qrcode',{staticClass:"text-center",attrs:{"value":_vm.windowLocation,"options":{ width: _vm.qrWidth }}})],1):(_vm.state == 'firstcard')?_c('div',[(_vm.isStoryTeller)?_c('div',[_vm._v("Pick a card and tell your story\n      "),_c("cardPicker",{tag:"div",attrs:{"story-teller":"true","hand":_vm.myHand},on:{"submit":_vm.PickCard}})]):_c('div',[_vm._v("Waiting for the story teller to pick a card and tell you the story.")])]):(_vm.state == 'allcards')?_c('div',[(!_vm.isPad && !_vm.isStoryTeller)?_c('div',[_c("cardPicker",{tag:"div",attrs:{"story-teller":false,"hand":_vm.myHand},on:{"submit":_vm.PickCard}})]):_c('div',[_vm._v("\n      Waiting for players to put in their cards\n      TODO: Add list of players who have answered\n    ")])]):(_vm.state == 'voting')?_c('div',[(!_vm.isStoryTeller)?_c('div',[_c("CardVoter",{tag:"div",attrs:{"isPad":_vm.isPad,"cardList":_vm.shuffledCardVoteList},on:{"submit":_vm.VoteCard}})]):_c('div',[_vm._v("Waiting for players to vote")])]):(_vm.state == 'endgame')?_c('div',[_c('h2',[_vm._v("Game Over!")])]):_vm._e(),_vm._v(" "),(_vm.state != 'lobby')?_c("Scores",{tag:"div",attrs:{"players":_vm.playerList,"isPad":_vm.isPad,"scores":_vm.scores}}):_vm._e(),_vm._v(" "),(_vm.state != 'lobby' && _vm.isFirstPlayer)?_c('div',[_c('br'),_vm._v(" "),_c('h3',[_vm._v("Admin Controls")]),_vm._v(" "),_c('hr'),_vm._v(" "),_c('h3',[_vm._v("Boot player")]),_vm._v(" "),_c("LobbyPlayerList",{tag:"div",attrs:{"players":_vm.playerList}}),_vm._v(" "),_c('button',{staticClass:"btn btn-danger btn-block",on:{"click":function($event){_vm.EndGame()}}},[_vm._v("End Game")])]):_vm._e(),_vm._v(" "),(_vm.debug)?_c('pre',[_vm._v("      state: "+_vm._s(_vm.state)+"\n      "+_vm._s(_vm.currentGame)+"\n      connected: "+_vm._s(_vm.connected)+"\n  ")]):_vm._e()])}
 var DixitGame_staticRenderFns = []
 var DixitGame_esExports = { render: DixitGame_render, staticRenderFns: DixitGame_staticRenderFns }
 /* harmony default export */ var client_DixitGame = (DixitGame_esExports);
 // CONCATENATED MODULE: ./games/dixit/client/DixitGame.vue
 function DixitGame_injectStyle (ssrContext) {
-  __webpack_require__("AXCH")
+  __webpack_require__("5FYI")
 }
 var DixitGame_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -3369,7 +3374,8 @@ const STATES = Object.freeze({
     "firstcard": 2, //when the story teller is picking a card
     "allcards": 4, //when everyone else is picking a card
     "voting": 5, //when everyone is voting
-    "endgame": 6 //when we start the game
+    "endgame": 6, //when we start the game,
+    "endearly": 7
 });
 
 const MAX_SCORE = 30;
@@ -3682,6 +3688,9 @@ function CreateGame(gameName, proxyCallback) {
             return 0;
         },
 
+        EndGame: function() {
+            this._state = STATES.endearly;
+        },
 
         // Replication stuff
 
@@ -7717,4 +7726,4 @@ exports.methods = methods;
 /***/ })
 
 });
-//# sourceMappingURL=1.0e32ed9520c98429048f.js.map
+//# sourceMappingURL=1.9f672007449ca61ca291.js.map

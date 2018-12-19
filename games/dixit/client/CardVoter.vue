@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <h2>Card List</h2>
     {{isPad}}
     {{cardList}}
     <div v-if="!isPad && !voted">

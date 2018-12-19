@@ -109,7 +109,7 @@ function Init(socket, io) {
             return false;
         }
         socket.join(gameRoomRoot + gameId);
-        
+
     });
     socket.on(gameRoomRoot + "list games", function () {
         //lists all the games that are available
@@ -171,7 +171,7 @@ function Init(socket, io) {
             console.error("SOCKET JOIN GAME: this game does not exist");
             return;
         }
-        
+
         socket.emit(gameRoomRoot + "set player", -1);
 
         ReplicateCall(io, gameId, "server", "AddPad", []);
@@ -207,8 +207,43 @@ function Init(socket, io) {
         }
     });
 
+    socket.on(gameRoomRoot + "rejoin game", function (gameId, playerName, playerIndex, previousSocket) {
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            socket.emit(
+                gameRoomRoot + "error", {
+                    msg: "This game does not exist: " + gameId,
+                    leave: true
+                }
+            );
+            console.error("SOCKET REJOIN GAME: this game does not exist");
+            return;
+        }
+
+        var oldIndex = GetPlayerIndex(gameID, playerName);
+        if (oldIndex == -1) {
+            //player was not found
+            console.log("Player " + playerName + " was not found ", gameID);
+            return;
+        }
+        var oldSocket = game.sockets[oldIndex];
+
+        console.log("Attempting to rejoin " + playerName + " to game " + gameID);
+
+        if (playerIndex == oldIndex && oldSocket == previousSocket) {
+            game.sockets[playerIndex] = socket.id;
+            socket.emit(
+                gameRoomRoot + "set player", playerIndex
+            );
+            console.log("Player rejoined as " + playerName);
+            console.log("Redefined from ", oldSocket, socket.id)
+        } else {
+            console.error("Invalid rejoin", playerIndex, oldIndex, oldSocket, previousSocket);
+        }
+    });
+
     //relay any sort of thing we get from other clients to all the clients
-    socket.on(gameRoomRoot+"engine call", function(gameId, callName, args){
+    socket.on(gameRoomRoot + "engine call", function (gameId, callName, args) {
         var source = socket.id;
         var game = GetGameByID(gameId);
         if (game == null) {
@@ -216,8 +251,8 @@ function Init(socket, io) {
             return false;
         }
 
-        var result = ReplicateCall(io,gameId,source,callName,args);
-        
+        var result = ReplicateCall(io, gameId, source, callName, args);
+
     });
 }
 
