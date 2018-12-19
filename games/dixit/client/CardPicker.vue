@@ -17,7 +17,7 @@ export default {
     };
   },
   //players is the list of all the players and available is a list of the index of all avaiable players
-  props: ["storyTeller"],
+  props: ["storyTeller", "hand"],
   methods: {
       PickCard() {
           this.$emit("submit", this.cardIndex);

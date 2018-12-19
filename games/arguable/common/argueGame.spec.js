@@ -66,13 +66,12 @@ describe("create game", () => {
   });
   it("should not let me start a game twice", () => {
     const game = CreateGame();
-    game.replicated.AddPlayer("Matthew1");
-    game.replicated.AddPlayer("Matthew2")
-    game.replicated.AddPlayer("Matthew3");
-    game.CallFunc("AddPlayer","Matthew4");
+    game.AddPlayer("Matthew1");
+    game.AddPlayer("Matthew2")
+    game.AddPlayer("Matthew3");
     
-    var ret = game.replicated.StartGame();
-    var ret2 = game.replicated.StartGame();
+    var ret = game.StartGame();
+    var ret2 = game.StartGame();
 
     expect(ret).toBe(0);
     expect(ret2).not.toBe(ret); //some none zero error code

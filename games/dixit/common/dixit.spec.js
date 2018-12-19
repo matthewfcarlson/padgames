@@ -27,7 +27,8 @@ describe("create game", () => {
     game.AddPlayer("Matthew2")
     game.AddPlayer("Matthew3");
     game.StartGame();
-    game.AddPlayer("Matthew4")
+    result = game.AddPlayer("Matthew4")
+    expect(result).not.toEqual(0);
     expect(game.GetPlayers()).toHaveLength(3);
   });
   it("should start the game", () => {
@@ -36,46 +37,57 @@ describe("create game", () => {
     game.AddPlayer("Matthew2")
     game.AddPlayer("Matthew3");
     var state = game.GetState();
-    game.StartGame();    
+    game.StartGame();
     expect(game.GetState()).not.toEqual(state)
   });
 
-  it("should pick a moderator", () => {
-    const game = CreateGame();
-    game.AddPlayer("Matthew1");
-    game.AddPlayer("Matthew2")
-    game.AddPlayer("Matthew3");
-    var state = game.GetState();
-    expect(game.Moderator()).toEqual(-1)
-    game.StartGame();
-    var moderator = game.Moderator();
-    expect(game.Moderator()).toBeGreaterThan(-1);
-    expect(game.Moderator()).toBeLessThan(game.GetPlayers().length);
-  });
 
-  it("it should let me vote", () => {
-    const game = CreateGame();
-    game.AddPlayer("Matthew1");
-    game.AddPlayer("Matthew2")
-    game.AddPlayer("Matthew3");
-    var state = game.GetState();
-    game.StartGame();
-    var moderator = game.Moderator();
-    console.log(moderator);
-    
-  });
   it("should not let me start a game twice", () => {
     const game = CreateGame();
-    game.replicated.AddPlayer("Matthew1");
-    game.replicated.AddPlayer("Matthew2")
-    game.replicated.AddPlayer("Matthew3");
-    game.CallFunc("AddPlayer","Matthew4");
-    
-    var ret = game.replicated.StartGame();
-    var ret2 = game.replicated.StartGame();
+    game.AddPlayer("Matthew1");
+    game.AddPlayer("Matthew2")
+    game.AddPlayer("Matthew3");
+
+    var ret = game.StartGame();
+    var ret2 = game.StartGame();
 
     expect(ret).toBe(0);
     expect(ret2).not.toBe(ret); //some none zero error code
-    
+
+  });
+  it("each player should have 5 cards in their deck", () => {
+    const game = CreateGame();
+    game.AddPlayer("Matthew1");
+    game.AddPlayer("Matthew2")
+    game.AddPlayer("Matthew3");
+
+    var ret = game.StartGame();
+    expect(ret).toBe(0);
+    var players = game.GetPlayers();
+    for (var i = 0; i < players.length; i++) {
+      var hand = game.GetPlayerHand(i);
+      expect(hand.length).toBe(5);
+    }
+  });
+
+  it("each player should have unique cards in their deck", () => {
+    const game = CreateGame();
+    game.AddPlayer("Matthew1");
+    game.AddPlayer("Matthew2")
+    game.AddPlayer("Matthew3");
+
+    var ret = game.StartGame();
+    expect(ret).toBe(0);
+    var players = game.GetPlayers();
+    var cards = [];
+    for (var i = 0; i < players.length; i++) {
+      var hand = game.GetPlayerHand(i);      
+      hand.forEach( x=> {
+        var index = cards.indexOf(x);
+        expect(index).toBe(-1);
+        cards.push(x);
+      });
+      
+    }
   });
 });

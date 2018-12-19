@@ -23,13 +23,13 @@
     </div>
     <div v-else-if="state == 'firstcard'">
       <div v-if="isStoryTeller">Pick a card and tell your story
-        <div is="cardPicker" story-teller="true" @submit="PickCard"></div>
+        <div is="cardPicker" story-teller="true" :hand="myHand" @submit="PickCard"></div>
       </div>
       <div v-else>Waiting for the story teller to pick a card and tell you the story.</div>
     </div>
     <div v-else-if="state == 'allcards'">
       <div v-if="!isPad && !isStoryTeller">
-        <div is="cardPicker" story-teller="false" @submit="PickCard"></div>
+        <div is="cardPicker" story-teller="false" :hand="myHand" @submit="PickCard"></div>
       </div>
       <div v-else>
         Waiting for players to put in their cards
@@ -152,6 +152,10 @@ export default {
     state: function() {
       if (this.currentGame == null) return "";
       return this.currentGame.GetState();
+    },
+    myHand: function(){
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetPlayerHand(this.playerIndex);
     },
     isFirstPlayer: function() {
       if (this.playerIndex == 0) return true;

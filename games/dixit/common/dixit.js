@@ -3,6 +3,19 @@ var Random = require("random-js");
 function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
+var hashCode = function (s) {
+    return s.split("").reduce(function (a, b) {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a
+    }, 0);
+}
+
+function shuffleArray(array, mt) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Random.integer(0, i)(mt);
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
 const STATES = Object.freeze({
     "lobby": 1, //before we start a game
@@ -13,8 +26,8 @@ const STATES = Object.freeze({
 });
 
 const MAX_SCORE = 30;
-
-
+const HAND_LIMT = 5;
+const NUM_CARDS = 17;
 
 function CreateGame(gameName, proxyCallback) {
 
@@ -27,14 +40,23 @@ function CreateGame(gameName, proxyCallback) {
         _points: [],
         _imagesSelected: [],
         _timesStoryTeller: [], //an array of how many times each player has storytellered
+        _hands: [],
+        _deck: [],
+        _cardsPlayed: [],
         _votes: [],
         _round: 0,
         _mt: null,
         _lastCommandTime: 0,
         _timeOut: -1,
+        _handLimit: 0,
 
         GetPadAttached: function () {
             return this._padViewers > 0;
+        },
+
+        GetPlayerHand: function (index) {
+            if (index < 0 || index >= this._players.length) return [];
+            return this._hands[index];
         },
 
         GetState: function () {
@@ -75,7 +97,7 @@ function CreateGame(gameName, proxyCallback) {
                     if (this._players.length >= 3) newState = STATES.firstcard;
                     break;
                 case STATES.firstcard:
-                    if (this._imagesSelected[this.storytellerIndex] != -1) newState = STATES.allcards;
+                    if (this._imagesSelected[this._storyteller] != -1) newState = STATES.allcards;
                     break;
                 case STATES.allcards:
                     var selectedCards = this._imagesSelected.filter(x => x != -1); //get the cards that have been picked
@@ -98,12 +120,17 @@ function CreateGame(gameName, proxyCallback) {
                 default:
             }
             //call our transition handler
-            if (this._state != newState) this._OnTransition(this._state, newState);
+            var changed = false;
+            if (this._state != newState) {
+                this._OnTransition(this._state, newState);
+                changed = true;
+            }
             this._state = newState;
+            return changed;
         },
 
         _OnTransition: function (oldState, newState) {
-            console.log("Transition from " + oldState + " to " + newState);
+            //console.log("Transition from " + oldState + " to " + newState);
             switch (oldState) {
                 case STATES.lobby:
                     //set the timesJudged array
@@ -112,7 +139,19 @@ function CreateGame(gameName, proxyCallback) {
                     while (this._points.length < this._players.length) this._points.push(0);
                     //sets up the votes
                     while (this._votes.length < this._players.length) this._votes.push(-1);
-                    //set up mt random seed
+                    //set up hands
+                    while (this._hands.length < this._players.length) this._hands.push([]);
+                    //set up the hand limit
+                    this._handLimit = Math.floor(NUM_CARDS / this._players.length);
+                    if (this._handLimit > HAND_LIMT) this._handLimit = HAND_LIMT;
+                    //set up mt random seed                    
+                    var mt = Random.engines.mt19937();
+                    var seed = hashCode(this._gameName)
+                    mt.seed(seed); //TODO FIGURE OUT HOW TO 
+                    this._mt = mt;
+                    //console.log("Seeding with ", seed);
+                    //set up the deck
+                    for (var i = 0; i < NUM_CARDS; i++) this._deck.push(i);
                     break;
                 case STATES.voting:
                     //tally up the scores
@@ -163,10 +202,30 @@ function CreateGame(gameName, proxyCallback) {
             }
             switch (newState) {
                 case STATES.firstcard:
+                    //shuffle the deck
+                    shuffleArray(this._deck, this._mt);
+
+                    //deal everyone a card until everyone has 5 cards
+                    for (var i = 0; i < this._players.length; i++) {
+                        while (this._hands[i].length < this._handLimit) {
+                            if (this._deck.length == 0) { //if we are out of cards
+                                if (this._cardsPlayed.length == 0) {
+                                    console.error("WE DON'T HAVE ENOUGH CARDS FOR ALL THE PLAYERS");
+                                    continue;
+                                }
+                                //transfer them from the cardsPlayed pile
+                                while (this._cardsPlayed.length > 0) this._deck.push(this._cardsPlayed.pop());
+                                shuffleArray(this._deck, this._mt);
+                            }
+                            
+                            var newCard = this._deck.shift();
+                            this._hands[i].push(newCard);
+                        }
+                    }
                     //pick a new storyteller
                     var leastJudged = Math.min(...this._timesStoryTeller); //get the number that we are least storytellerd
                     var storytellerIndex = this._timesStoryTeller.indexOf(leastJudged);
-                    console.log("New storyteller is " + storytellerIndex)
+                    //console.log("New storyteller is " + storytellerIndex)
                     this._storyteller = storytellerIndex;
                     //resets the votes
                     for (var i = 0; i < this._votes.length; i++) this._votes[i] = -1; //this would be better with a map but eh
@@ -188,8 +247,13 @@ function CreateGame(gameName, proxyCallback) {
 
         //Methods you can use to manipulate game state
         AddPlayer: function (playerName) {
+            playerName = playerName.trim();
+            if (playerName.length == 0) return "Invalid player name";
+            if (playerName.length >= 20) return "Invalid player name";
             index = this._players.indexOf(playerName);
+            
             if (index != -1) return "This player has already joined";
+            if (this._state != STATES.voting && this._state != STATES.lobby) return "You cannot join the game";
             this._players.push(playerName);
             return 0;
         },
@@ -213,12 +277,14 @@ function CreateGame(gameName, proxyCallback) {
         },
 
         StartGame() {
-            console.log("Starting game");
-            this._Transition();
-            return 0;
+            if (this._Transition())
+                return 0;
+            else
+                return "Unable to start";
         },
 
         PickCard(playerIndex, cardId) {
+            if (playerIndex < 0 || playerIndex >= this._players.length) return "Invalid player ID";
             if (cardId < 0) return "Bad Card ID";
             //choose depending on state
             if (this._state == STATES.firstcard) {
@@ -231,10 +297,24 @@ function CreateGame(gameName, proxyCallback) {
             } else {
                 return "You cannot pick a card in this state";
             }
+
+            var cardIndex = this._hands[playerIndex].indexOf(cardId);
+            //if we don't actually hold this card
+            if (cardIndex == -1) {
+                this._imagesSelected[playerIndex] = -1;
+                return "You can't play this card";
+            }
+
+            //remove the card from the player's hand
+            this._hands[playerIndex].splice(cardIndex, 1);
+            this._cardsPlayed.push(cardId); //add it to the list of cardsPlayed
+
             this._Transition();
             return 0;
+            
         },
         VoteCard(playerIndex, voteCardId) {
+            if (playerIndex < 0 || playerIndex >= this._players.length) return "Invalid player ID";
             if (voteCardId < 0) return "Bad Card ID";
             //choose depending on state
             if (this._state == STATES.voting) {
