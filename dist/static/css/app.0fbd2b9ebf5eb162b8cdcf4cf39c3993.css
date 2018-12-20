@@ -1589,8 +1589,24 @@ section[data-v-915157e8] {
     border-radius: 10pt;
 }
 
+.card-list-move[data-v-24ee0cfb] {
+  transition: transform 1s;
+}
+.dixit-card[data-v-24ee0cfb] {
+  transition: all 1s;
+  display: inline-block;
+}
+.card-list-enter[data-v-24ee0cfb], .card-list-leave-to[data-v-24ee0cfb]
+/* .list-complete-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.card-list-leave-active[data-v-24ee0cfb] {
+  position: absolute;
+}
+
 .card[data-v-5a63d6d1] {
     border-radius: 10pt;
 }
 
-/*# sourceMappingURL=app.7260c58967ea769778a0dc76185dc6ee.css.map*/
+/*# sourceMappingURL=app.0fbd2b9ebf5eb162b8cdcf4cf39c3993.css.map*/
