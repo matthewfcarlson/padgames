@@ -23,8 +23,9 @@ const STATES = Object.freeze({
     "firstcard": 2, //when the story teller is picking a card
     "allcards": 4, //when everyone else is picking a card
     "voting": 5, //when everyone is voting
-    "endgame": 6, //when we start the game,
-    "endearly": 7
+    "reveal": 6, // when we reveal who the proper card was
+    "endgame": 7, //when we start the game,
+    "endearly": 8
 });
 
 const MAX_SCORE = 30;
@@ -51,6 +52,7 @@ function CreateGame(gameName, proxyCallback) {
         _lastCommandTime: 0,
         _timeOut: -1,
         _handLimit: 0,
+        _server: false,
 
         GetPadAttached: function () {
             return this._padViewers > 0;
@@ -61,15 +63,80 @@ function CreateGame(gameName, proxyCallback) {
             return this._hands[index];
         },
 
+        GetVotes: function () {
+            if (this._state != STATES.reveal) return [];
+            return this._votes;
+        },
+
         GetState: function () {
             var state = this._state;
             var key = Object.keys(STATES).find(k => STATES[k] === state);
             if (key == undefined) return this._state;
             return key;
         },
+        GetSelectedCard: function(playerIndex){
+            if (this._imagesSelected.length <= playerIndex) return -1;
+            return this._imagesSelected[playerIndex];
+        },
+        GetNumCorrectGuessers: function () {
+            var correctCard = this.GetSelectedCard(this._storyteller);
+            return this._votes.filter(x => x == correctCard).length;
+        },
+        GetPointsEarned: function () {
+            var points = [];
 
+            for (var i = 0; i < this._players.length; i++) {
+                points.push(0);
+            }
+            var correctCard = this._imagesSelected[this._storyteller];
+            var correctGuessers = this.GetNumCorrectGuessers();
+            var numGuessers = this._players.length - 1;
+
+            //everyone guessed correctly or no one guessed correctly
+            if (correctGuessers == numGuessers || correctGuessers == 0) {
+                //everybody but the story teller gets 2 points
+                for (var i = 0; i < this._players.length; i++) {
+                    if (i == this._storyteller) continue;
+                    points.splice(i, 1, points[i] + 2);
+                }
+            } else {
+                //everybody who guessed correctly gets 3 points
+                for (var i = 0; i < this._players.length; i++) {
+                    if (i == this._storyteller || this._votes[i] == correctCard)
+                        points.splice(i, 1, points[i] + 3);
+                }
+            }
+
+            for (var i = 0; i < this._votes.length; i++) {
+                if (i == this._storyteller) continue;
+                //figure out playerindex of which card you guessed
+                var cardVotedFor = this._votes[i];
+                if (cardVotedFor == -1) continue;
+                var cardPlayedBy = this._imagesSelected.indexOf(cardVotedFor);
+                if (cardPlayedBy == -1) {
+                    console.error("We didn't find the card: ", cardVotedFor, this._imagesSelected, this._votes);
+                    continue;
+                }
+                if (cardPlayedBy >= this._players.length) {
+                    //played by a random player
+                    //console.log("You picked a card that was played by the computer");
+                    continue;
+                }
+                //give one point to the player that played this card
+                if (cardPlayedBy != this._storyteller)
+                    points.splice(cardPlayedBy, 1, points[cardPlayedBy] + 1);
+            }
+            return points;
+        },
         GetScores: function () {
             return this._points;
+        },
+        GetPlayersVoted: function () {
+            var votes = this._votes;
+            return this._players.map((x, i) => {
+                if (i >= votes.length) return false;
+                return votes[i] != -1;
+            });
         },
 
         GetVoteCardList: function () { //gets a list of the cards you can pick
@@ -91,7 +158,7 @@ function CreateGame(gameName, proxyCallback) {
             return this._storyteller;
         },
 
-        _GetCardFromDeck(){
+        _GetCardFromDeck() {
             return this._deck.shift();
         },
 
@@ -115,10 +182,22 @@ function CreateGame(gameName, proxyCallback) {
                     //Q: if you don't vote within the right timeframe, then you will be booted?
                     var votes = this._votes.filter(x => x != -1); //get the cards that have been picked
                     if (votes.length == this._players.length - 1) { //we let everyone the chance to vote
-                        newState = STATES.firstcard;
+                        //figure out if we are the server or not
+                        if (!this._server) {
+                            newState = STATES.reveal;
+                        } else {
+                            newState = STATES.firstcard;
+                            //we need to add a finish reveal into our list of actions so if someone syncs later they don't get stuck
+                            //TODO: code smell
+                            var storedCall = this.GenCallObj("server", "FinishReveal", []);
+                            this.StoreCall(storedCall);
+                        }
                         var maxScore = Math.max(...this._points);
                         if (maxScore >= MAX_SCORE) newState = STATES.endgame;
                     }
+                    break;
+                case STATES.reveal:
+                    newState = STATES.firstcard;
                     break;
                 case STATES.endgame:
                     //we can't leave the end game state
@@ -161,43 +240,11 @@ function CreateGame(gameName, proxyCallback) {
                     break;
                 case STATES.voting:
                     //tally up the scores
-                    var correctCard = this._imagesSelected[this._storyteller];
-                    var correctGuessers = this._votes.filter(x => x == correctCard).length;
-                    var numGuessers = this._players.length - 1;
-                    //everyone guessed correctly or no one guessed correctly
-                    if (correctGuessers == numGuessers || correctGuessers == 0) {
-                        //everybody but the story teller gets 2 points
-                        for (var i = 0; i < this._players.length; i++) {
-                            if (i == this._storyteller) continue;
-                            this._points.splice(i, 1, this._points[i] + 2);
-                        }
-                    } else {
-                        //everybody who guessed correctly gets 3 points
-                        for (var i = 0; i < this._players.length; i++) {
-                            if (i == this._storyteller || this._votes[i] == correctCard)
-                                this._points.splice(i, 1, this._points[i] + 3);
-                        }
-                    }
+                    var pointsEarned = this.GetPointsEarned();
+                    //distributes points to everyone
 
-                    //distributes points for everyone that guessed your card
-                    for (var i = 0; i < this._votes.length; i++) {
-                        if (i == this._storyteller) continue;
-                        //figure out playerindex of which card you guessed
-                        var cardVotedFor = this._votes[i];
-                        if (cardVotedFor == -1) continue;
-                        var cardPlayedBy = this._imagesSelected.indexOf(cardVotedFor);
-                        if (cardPlayedBy == -1) {
-                            console.error("We didn't find the card: ", cardVotedFor, this._imagesSelected, this._votes);
-                            continue;
-                        }
-                        if (cardPlayedBy >= this._players.length) {
-                            //played by a random player
-                            console.log("You picked a card that was played by the computer");
-                            continue;
-                        }
-                        //give one point to the player that played this card
-                        if (cardPlayedBy != this._storyteller)
-                            this._points.splice(cardPlayedBy, 1, this._points[cardPlayedBy] + 1);
+                    for (var i = 0; i < pointsEarned.length; i++) {
+                        this._points.splice(i, 1, this._points[i] + pointsEarned[i]);
                     }
 
                     // increment the story teller piece of the puzzle
@@ -212,7 +259,7 @@ function CreateGame(gameName, proxyCallback) {
                     shuffleArray(this._deck, this._mt);
 
                     //resets the imagesSelected and adds them back to the deck
-                    while (this._imagesSelected.length > 0){
+                    while (this._imagesSelected.length > 0) {
                         this._cardsPlayed.push(this._imagesSelected.pop());
                     }
 
@@ -228,7 +275,7 @@ function CreateGame(gameName, proxyCallback) {
                                 while (this._cardsPlayed.length > 0) this._deck.push(this._cardsPlayed.pop());
                                 shuffleArray(this._deck, this._mt);
                             }
-                            
+
                             var newCard = this._GetCardFromDeck();
                             this._hands[i].push(newCard);
                         }
@@ -240,7 +287,7 @@ function CreateGame(gameName, proxyCallback) {
                     this._storyteller = storytellerIndex;
                     //resets the votes
                     for (var i = 0; i < this._votes.length; i++) this._votes[i] = -1; //this would be better with a map but eh
-                    
+
                     while (this._imagesSelected.length < this._players.length) this._imagesSelected.push(-1);
                     break;
                 case STATES.allcards:
@@ -261,10 +308,14 @@ function CreateGame(gameName, proxyCallback) {
             if (playerName.length == 0) return "Invalid player name";
             if (playerName.length >= 20) return "Invalid player name";
             index = this._players.indexOf(playerName);
-            
+
             if (index != -1) return "This player has already joined";
             if (this._state != STATES.voting && this._state != STATES.lobby) return "You cannot join the game";
             this._players.push(playerName);
+            return 0;
+        },
+        FinishReveal: function () {
+            if (!this._Transition()) return "We can't finish reveal";
             return 0;
         },
         RemovePlayer: function (playerName) {
@@ -320,7 +371,7 @@ function CreateGame(gameName, proxyCallback) {
 
             this._Transition();
             return 0;
-            
+
         },
         VoteCard(playerIndex, voteCardId) {
             if (playerIndex < 0 || playerIndex >= this._players.length) return "Invalid player ID";
@@ -337,7 +388,7 @@ function CreateGame(gameName, proxyCallback) {
             return 0;
         },
 
-        EndGame: function() {
+        EndGame: function () {
             this._state = STATES.endearly;
         },
 

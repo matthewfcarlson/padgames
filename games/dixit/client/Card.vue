@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img :src="imgSrc" class="img-fluid card">
+    <img :src="imgSrc" class="img-fluid dixit-card">
   </div>
 </template>
 <script>
@@ -24,7 +24,7 @@ export default {
 };
 </script>
 <style scoped>
-.card {
+.dixit-card {
     border-radius: 10pt;
 }
 </style>

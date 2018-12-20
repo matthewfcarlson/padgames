@@ -1197,353 +1197,31 @@ body,
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.slider[data-v-915157e8] {
+.content[data-v-6f900bc4] {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f19b4d+0,ea8b31+100 */
+  background: #f19b4d; /* Old browsers */
+  background: -moz-linear-gradient(
+    top,
+    #f19b4d 0%,
+    #ea8b31 100%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    #f19b4d 0%,
+    #ea8b31 100%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #f19b4d 0%,
+    #ea8b31 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f19b4d', endColorstr='#ea8b31',GradientType=0 ); /* IE6-9 */
+}
+
+.slider[data-v-91b1f43c] {
   display: flex;
 }
-section[data-v-915157e8] {
+section[data-v-91b1f43c] {
   border-right: 1px solid white;
   border-radius: 10pt;
   padding: 0.25rem;
@@ -1556,11 +1234,11 @@ section[data-v-915157e8] {
 }
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-section[data-v-915157e8] {
+section[data-v-91b1f43c] {
     min-width: 60vw;
     scroll-snap-align: center;
 }
-.slider[data-v-915157e8] {
+.slider[data-v-91b1f43c] {
     font-family: sans-serif;
     scroll-snap-type: mandatory;
     scroll-snap-points-x: repeat(60vw);
@@ -1569,44 +1247,31 @@ section[data-v-915157e8] {
     margin-left: -15px;
     margin-right: -15px;
 }
-.no-padding[data-v-915157e8] {
+.no-padding[data-v-91b1f43c] {
     padding: 0;
 }
 }
 @media (min-width: 768px) {
-section[data-v-915157e8] {
+section[data-v-91b1f43c] {
     min-width: unset;
     max-width: 20vw;
     /* margin-right: -15px; */
     /* margin-left: -15px; */
 }
-.slider[data-v-915157e8] {
+.slider[data-v-91b1f43c] {
     justify-content: center;
 }
 }
-
-.card[data-v-7a178af1] {
-    border-radius: 10pt;
-}
-
-.card-list-move[data-v-24ee0cfb] {
+.card-list-move[data-v-91b1f43c] {
   transition: transform 1s;
 }
-.dixit-card[data-v-24ee0cfb] {
+.dixit-card[data-v-91b1f43c] {
   transition: all 1s;
   display: inline-block;
 }
-.card-list-enter[data-v-24ee0cfb], .card-list-leave-to[data-v-24ee0cfb]
-/* .list-complete-leave-active below version 2.1.8 */ {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.card-list-leave-active[data-v-24ee0cfb] {
-  position: absolute;
-}
 
-.card[data-v-5a63d6d1] {
+.dixit-card[data-v-9433bfde] {
     border-radius: 10pt;
 }
 
-/*# sourceMappingURL=app.0fbd2b9ebf5eb162b8cdcf4cf39c3993.css.map*/
+/*# sourceMappingURL=app.d780e88228b75e1b757166d6b5b0db77.css.map*/

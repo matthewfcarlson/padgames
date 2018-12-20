@@ -76,7 +76,7 @@ function ReplicateCall(io,gameId, source, callName, args){
     io.to(gameRoomRoot).emit(gameRoomRoot + "engine call",storedCall);
     return true;
 }
-
+/*
 var gameID = HashGameName("test");
 console.log("Creating a new game", gameID);
 currentGames[gameID] = ArgueGame.CreateGame(gameID,function(callName,args){
@@ -85,6 +85,7 @@ currentGames[gameID] = ArgueGame.CreateGame(gameID,function(callName,args){
 currentGames[gameID].name="test";
 currentGames[gameID].sockets = [];
 currentGames[gameID].commands = [];
+*/
 
 function Init(socket, io) {
 

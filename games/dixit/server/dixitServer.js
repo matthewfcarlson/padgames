@@ -89,6 +89,19 @@ function GetGameByID(gameId) {
     return currentGames[gameId];
 }
 
+var gameId = HashGameName("test");
+console.log("Creating a new game", gameId);
+currentGames[gameId] = DixitGame.CreateGame(gameId,function(callName,args){
+    console.log("Called on test: ",callname,args);
+});
+currentGames[gameId].name="test";
+currentGames[gameId].sockets = [];
+currentGames[gameId].players = [];
+currentGames[gameId].commands = [];
+currentGames[gameId]._server = true;
+currentGames[gameId].creationDate = new Date().getTime();
+
+
 function Init(socket, io) {
     socket.on(gameRoomRoot + "connect", function () {
         //lists all the games that are available
@@ -99,9 +112,8 @@ function Init(socket, io) {
     });
     socket.on(gameRoomRoot + "listen", function (gameId) {
         var game = GetGameByID(gameId);
-        //console.log("Sync request for game " + gameId);
         if (game == null) {
-            console.error("SYNC GAME: this game does not exist");
+            console.error("Listen: this game does not exist");
             socket.emit(gameRoomRoot + "error", {
                 msg: "This game does not exist: " + gameId,
                 leave: true
@@ -125,6 +137,13 @@ function Init(socket, io) {
                 leave: true
             });
             return false;
+        }
+        if (lastTimeSeen > 0 && game.commands.length == 0){
+            socket.emit(gameRoomRoot + "error", {
+                msg: "This game has changed fundamentally: " + gameId,
+                leave: true
+            });
+            return;
         }
         game.commands.forEach(function (storedCall) {
             if (storedCall.time > lastTimeSeen) {
@@ -154,6 +173,7 @@ function Init(socket, io) {
         currentGames[gameId].sockets = [];
         currentGames[gameId].players = [];
         currentGames[gameId].commands = [];
+        currentGames[gameId]._server = true;
         currentGames[gameId].creationDate = new Date().getTime();
 
         socket.emit(gameRoomRoot + "list games", GetGameList());
@@ -220,15 +240,15 @@ function Init(socket, io) {
             return;
         }
 
-        var oldIndex = GetPlayerIndex(gameID, playerName);
+        var oldIndex = GetPlayerIndex(gameId, playerName);
         if (oldIndex == -1) {
             //player was not found
-            console.log("Player " + playerName + " was not found ", gameID);
+            console.log("Player " + playerName + " was not found ", gameId);
             return;
         }
         var oldSocket = game.sockets[oldIndex];
 
-        console.log("Attempting to rejoin " + playerName + " to game " + gameID);
+        console.log("Attempting to rejoin " + playerName + " to game " + gameId);
 
         if (playerIndex == oldIndex && oldSocket == previousSocket) {
             game.sockets[playerIndex] = socket.id;

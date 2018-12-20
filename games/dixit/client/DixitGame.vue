@@ -24,13 +24,27 @@
     </div>
     <div v-else-if="state == 'firstcard'">
       <div v-if="isStoryTeller">Pick a card and tell your story
-        <div is="cardPicker" story-teller="true" :hand="myHand" @submit="PickCard"></div>
+        <div
+          is="cardPicker"
+          :isPad="isPad"
+          :story-teller=true
+          :hand="myHand"
+          :havePad="hasPad"
+          @submit="PickCard"
+        ></div>
       </div>
-      <div v-else>Waiting for the story teller to pick a card and tell you the story.</div>
+      <div v-else>Waiting for the story teller ({{storyTellerName}}) to pick a card and tell you the story.</div>
     </div>
     <div v-else-if="state == 'allcards'">
-      <div v-if="!isPad && !isStoryTeller">
-        <div is="cardPicker" :story-teller="false" :hand="myHand" @submit="PickCard"></div>
+      <div v-if="!isStoryTeller">
+        <div
+          is="cardPicker"
+          :isPad="isPad"
+          :hand="myHand"
+          :key="state"
+          :havePad="hasPad"
+          @submit="PickCard"
+        ></div>
       </div>
       <div v-else>
         Waiting for players to put in their cards
@@ -39,9 +53,24 @@
     </div>
     <div v-else-if="state == 'voting'">
       <div v-if="!isStoryTeller">
-        <div is="CardVoter" :isPad="isPad" :cardList="shuffledCardVoteList" @submit="VoteCard"></div>
+        <div
+          is="cardPicker"
+          :isPad="isPad"
+          :hand="shuffledCardVoteList"
+          :havePad="hasPad"
+          :key="state"
+          :voting=true
+          @submit="VoteCard"
+        ></div>
       </div>
-      <div v-else>Waiting for players to vote</div>
+      <div v-else-if="!isPad">Waiting for players to vote</div>
+      <div v-else>
+        List of players that haven't voted yet:
+        <div v-for="(player,index) in playerList" :key="player" v-if="playersVoted[index]">{{player}}</div>
+      </div>
+    </div>
+    <div v-else-if="state == 'reveal'">
+      <reveal :game="currentGame" :playerIndex="playerIndex" @submit="FinishReveal()"></reveal>
     </div>
     <div v-else-if="state == 'endgame'">
       <h2>Game Over!</h2>
@@ -71,8 +100,8 @@ import VueQrcode from "@chenfengyuan/vue-qrcode";
 import DixitGame from "../common/dixit";
 import LobbyPlayerList from "./LobbyPlayerList";
 import CardPicker from "./CardPicker";
-import CardVoter from "./CardVoter";
 import Scores from "./Scores";
+import Reveal from "./Reveal";
 
 Vue.use(VueSocketio, window.location.origin);
 
@@ -109,8 +138,8 @@ export default {
     VueQrcode,
     LobbyPlayerList,
     CardPicker,
-    CardVoter,
-    Scores
+    Scores,
+    Reveal
   },
   mounted: function() {
     console.log(this.sockets);
@@ -159,6 +188,11 @@ export default {
       if (this.currentGame == null) return [];
       return this.currentGame.GetPlayerHand(this.playerIndex);
     },
+    playersVoted: function()
+    { 
+      if (this.currentGame == null) return [];
+      return this.currentGame.GetPlayersVoted();
+    },
     isFirstPlayer: function() {
       if (this.playerIndex == 0) return true;
       return false;
@@ -186,6 +220,12 @@ export default {
       //the list of cards we can vote on
       if (this.currentGame == null) return [];
       return this.currentGame.GetVoteCardList(); //how to shuffle this the same way every time?
+    },
+    storyTellerName(){
+      if (this.currentGame == null) return "No one";
+      var storyTellerIndex = this.currentGame.GetStoryTeller();
+      if (storyTellerIndex == -1) return "No one";
+      return this.currentGame.GetPlayers()[storyTellerIndex];
     }
   },
   methods: {
@@ -245,6 +285,9 @@ export default {
     },
     EndGame() {
       this.currentGame.replicated.EndGame();
+    },
+    FinishReveal() {
+      this.currentGame.FinishReveal();
     }
   },
   sockets: {
@@ -340,6 +383,26 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
+.content {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f19b4d+0,ea8b31+100 */
+  background: #f19b4d; /* Old browsers */
+  background: -moz-linear-gradient(
+    top,
+    #f19b4d 0%,
+    #ea8b31 100%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    #f19b4d 0%,
+    #ea8b31 100%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #f19b4d 0%,
+    #ea8b31 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f19b4d', endColorstr='#ea8b31',GradientType=0 ); /* IE6-9 */
+}
 </style>
 

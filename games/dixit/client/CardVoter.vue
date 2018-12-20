@@ -1,10 +1,6 @@
 <template>
-  <div class="container">
-    {{isPad}}
-    {{cardList}}
-    <div
-      v-if="!voted"
-    >TODO if we have a pad view, just let us pick the numbers instead of showing the pictures
+  <div class="container-fluid">
+    <div v-if="!cardPicked">
       <transition-group
         name="card-list"
         appear
@@ -13,6 +9,8 @@
         v-on:enter="enter"
         v-on:before-enter="beforeEnter"
         v-on:leave="leave"
+        v-scroll="OnScroll"
+        class="slider"
       >
         <div
           v-for="(card, index) in cardList"
@@ -27,11 +25,13 @@
       </transition-group>
       <button v-for="card in cardList" :key="card" @click="PickCard(card)">Vote on {{card}}</button>
     </div>
+    
   </div>
 </template>
 <script>
 import Vue from "vue";
 import Card from "./card";
+import VueScroll from "vue-scroll";
 import Velocity from "velocity-animate";
 
 export default {
@@ -52,29 +52,21 @@ export default {
       this.$emit("submit", cardValue);
       this.voted = true;
     },
-     beforeEnter: function (el) {
+    beforeEnter: function(el) {
       el.style.opacity = 0;
       el.style.transform = "translateY(-30px)";
     },
-    enter: function (el, done) {
-      var delay = el.dataset.index * 200
-      setTimeout(function () {
-        Velocity(
-          el,
-          { opacity: 1, translateY: 0 },
-          { complete: done}
-        )
-      }, delay)
+    enter: function(el, done) {
+      var delay = el.dataset.index * 200;
+      setTimeout(function() {
+        Velocity(el, { opacity: 1, translateY: 0 }, { complete: done });
+      }, delay);
     },
-    leave: function (el, done) {
-      var delay = el.dataset.index * 100
-      setTimeout(function () {
-        Velocity(
-          el,
-          { opacity: 0, height: 0 },
-          { complete: done }
-        )
-      }, delay)
+    leave: function(el, done) {
+      var delay = el.dataset.index * 100;
+      setTimeout(function() {
+        Velocity(el, { opacity: 0, height: 0 }, { complete: done });
+      }, delay);
     }
   }
 };
