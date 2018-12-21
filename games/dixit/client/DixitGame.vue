@@ -20,6 +20,7 @@
         @click="StartGame()"
       >Start Game</button>
       <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
+      <br/>
       <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
     </div>
     <div v-else-if="state == 'firstcard'">
@@ -385,6 +386,7 @@ export default {
 </script>
 <style scoped>
 .content {
+  min-height:100vh;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f19b4d+0,ea8b31+100 */
   background: #f19b4d; /* Old browsers */
   background: -moz-linear-gradient(

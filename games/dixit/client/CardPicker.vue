@@ -125,9 +125,10 @@ export default {
 <style scoped>
 .slider {
   display: flex;
+  border-radius: 10pt;
+  background: #F16838;
 }
 section {
-  border-right: 1px solid white;
   border-radius: 10pt;
   padding: 0.25rem;
   min-width: 30vw;

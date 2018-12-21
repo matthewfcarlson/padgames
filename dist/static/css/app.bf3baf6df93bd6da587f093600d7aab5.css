@@ -1197,7 +1197,8 @@ body,
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-.content[data-v-6f900bc4] {
+.content[data-v-c74f892e] {
+  min-height:100vh;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f19b4d+0,ea8b31+100 */
   background: #f19b4d; /* Old browsers */
   background: -moz-linear-gradient(
@@ -1218,11 +1219,12 @@ body,
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f19b4d', endColorstr='#ea8b31',GradientType=0 ); /* IE6-9 */
 }
 
-.slider[data-v-91b1f43c] {
+.slider[data-v-58ac4929] {
   display: flex;
+  border-radius: 10pt;
+  background: #F16838;
 }
-section[data-v-91b1f43c] {
-  border-right: 1px solid white;
+section[data-v-58ac4929] {
   border-radius: 10pt;
   padding: 0.25rem;
   min-width: 30vw;
@@ -1234,11 +1236,11 @@ section[data-v-91b1f43c] {
 }
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-section[data-v-91b1f43c] {
+section[data-v-58ac4929] {
     min-width: 60vw;
     scroll-snap-align: center;
 }
-.slider[data-v-91b1f43c] {
+.slider[data-v-58ac4929] {
     font-family: sans-serif;
     scroll-snap-type: mandatory;
     scroll-snap-points-x: repeat(60vw);
@@ -1247,25 +1249,25 @@ section[data-v-91b1f43c] {
     margin-left: -15px;
     margin-right: -15px;
 }
-.no-padding[data-v-91b1f43c] {
+.no-padding[data-v-58ac4929] {
     padding: 0;
 }
 }
 @media (min-width: 768px) {
-section[data-v-91b1f43c] {
+section[data-v-58ac4929] {
     min-width: unset;
     max-width: 20vw;
     /* margin-right: -15px; */
     /* margin-left: -15px; */
 }
-.slider[data-v-91b1f43c] {
+.slider[data-v-58ac4929] {
     justify-content: center;
 }
 }
-.card-list-move[data-v-91b1f43c] {
+.card-list-move[data-v-58ac4929] {
   transition: transform 1s;
 }
-.dixit-card[data-v-91b1f43c] {
+.dixit-card[data-v-58ac4929] {
   transition: all 1s;
   display: inline-block;
 }
@@ -1274,4 +1276,4 @@ section[data-v-91b1f43c] {
     border-radius: 10pt;
 }
 
-/*# sourceMappingURL=app.d780e88228b75e1b757166d6b5b0db77.css.map*/
+/*# sourceMappingURL=app.bf3baf6df93bd6da587f093600d7aab5.css.map*/
