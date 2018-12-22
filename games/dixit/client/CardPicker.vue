@@ -37,7 +37,7 @@
       <button @click="PickCard(cardIndex)" class="btn btn-success btn-block btn-outline">Ready</button>
     </div>
     {{storyTeller}}
-    <div v-else>You picked {{ cardIndex }}</div>
+    <div v-else>You picked {{ cardIndex }} <card :cardId="cardIndex"></card></div>
     <script src="https://bundle.run/css-scroll-snap-polyfill@0.1.2"></script>
   </div>
 </template>

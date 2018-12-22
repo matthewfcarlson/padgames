@@ -190,13 +190,6 @@ module.exports = function (value) {
 
 /***/ }),
 
-/***/ "/Loi":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ "/OzH":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -444,6 +437,13 @@ if (!__webpack_require__("ANlv")()) {
 			writable: true });
 }
 
+
+/***/ }),
+
+/***/ "2ch8":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 
@@ -7092,14 +7092,14 @@ vue_esm["a" /* default */].use(vue_scroll_esm);
     }
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-58ac4929","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardPicker.vue
-var CardPicker_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid"},[(_vm.voting)?_c('h2',[_vm._v("Please Vote For a Card that best matches the clue")]):(_vm.storyTeller)?_c('h2',[_vm._v("Please pick a card and think of a clue")]):_c('h2',[_vm._v("Please pick a card that you think matches the clue")]),_vm._v(" "),(!_vm.cardPicked)?_c('div',[_c('transition-group',{directives:[{name:"scroll",rawName:"v-scroll",value:(_vm.OnScroll),expression:"OnScroll"}],staticClass:"slider",attrs:{"name":"card-list","appear":"","tag":"div","css":false},on:{"enter":_vm.enter,"before-enter":_vm.beforeEnter,"leave":_vm.leave}},_vm._l((_vm.cardList),function(card,index){return _c('section',{key:card,staticClass:"dixit-card",attrs:{"data-index":index},on:{"click":function($event){_vm.PickCard(card)}}},[_c('card',{attrs:{"cardId":card}}),_vm._v(" "),(_vm.isPad)?_c('b',{staticClass:"text-center lead"},[_vm._v(_vm._s(index +1))]):_vm._e()],1)}))],1):(_vm.storyTeller)?_c('div',[_vm._v("Now take 30 second and think of a clue that really embodies your picture\n    "),_c('card',{staticStyle:{"max-width":"400px"},attrs:{"cardId":_vm.cardIndex}}),_vm._v(" "),_c('p',[_vm._v("When you're ready press this button:")]),_vm._v(" "),_c('button',{staticClass:"btn btn-success btn-block btn-outline",on:{"click":function($event){_vm.PickCard(_vm.cardIndex)}}},[_vm._v("Ready")])],1):_c('div',[_vm._v("You picked "+_vm._s(_vm.cardIndex))])])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-352d7dd4","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/dixit/client/CardPicker.vue
+var CardPicker_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid"},[(_vm.voting)?_c('h2',[_vm._v("Please Vote For a Card that best matches the clue")]):(_vm.storyTeller)?_c('h2',[_vm._v("Please pick a card and think of a clue")]):_c('h2',[_vm._v("Please pick a card that you think matches the clue")]),_vm._v(" "),(!_vm.cardPicked)?_c('div',[_c('transition-group',{directives:[{name:"scroll",rawName:"v-scroll",value:(_vm.OnScroll),expression:"OnScroll"}],staticClass:"slider",attrs:{"name":"card-list","appear":"","tag":"div","css":false},on:{"enter":_vm.enter,"before-enter":_vm.beforeEnter,"leave":_vm.leave}},_vm._l((_vm.cardList),function(card,index){return _c('section',{key:card,staticClass:"dixit-card",attrs:{"data-index":index},on:{"click":function($event){_vm.PickCard(card)}}},[_c('card',{attrs:{"cardId":card}}),_vm._v(" "),(_vm.isPad)?_c('b',{staticClass:"text-center lead"},[_vm._v(_vm._s(index +1))]):_vm._e()],1)}))],1):(_vm.storyTeller)?_c('div',[_vm._v("Now take 30 second and think of a clue that really embodies your picture\n    "),_c('card',{staticStyle:{"max-width":"400px"},attrs:{"cardId":_vm.cardIndex}}),_vm._v(" "),_c('p',[_vm._v("When you're ready press this button:")]),_vm._v(" "),_c('button',{staticClass:"btn btn-success btn-block btn-outline",on:{"click":function($event){_vm.PickCard(_vm.cardIndex)}}},[_vm._v("Ready")])],1):_c('div',[_vm._v("You picked "+_vm._s(_vm.cardIndex)+" "),_c('card',{attrs:{"cardId":_vm.cardIndex}})],1)])}
 var CardPicker_staticRenderFns = []
 var CardPicker_esExports = { render: CardPicker_render, staticRenderFns: CardPicker_staticRenderFns }
 /* harmony default export */ var client_CardPicker = (CardPicker_esExports);
 // CONCATENATED MODULE: ./games/dixit/client/CardPicker.vue
 function CardPicker_injectStyle (ssrContext) {
-  __webpack_require__("/Loi")
+  __webpack_require__("2ch8")
 }
 var CardPicker_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -7112,7 +7112,7 @@ var CardPicker___vue_template_functional__ = false
 /* styles */
 var CardPicker___vue_styles__ = CardPicker_injectStyle
 /* scopeId */
-var CardPicker___vue_scopeId__ = "data-v-58ac4929"
+var CardPicker___vue_scopeId__ = "data-v-352d7dd4"
 /* moduleIdentifier (server only) */
 var CardPicker___vue_module_identifier__ = null
 var CardPicker_Component = CardPicker_normalizeComponent(
@@ -12642,4 +12642,4 @@ exports.methods = methods;
 /***/ })
 
 });
-//# sourceMappingURL=1.9fad63a47767ed50583e.js.map
+//# sourceMappingURL=1.e76b5df96270a02eb773.js.map
