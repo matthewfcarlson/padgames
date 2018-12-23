@@ -86,4 +86,11 @@ export const GameRoutes = [
     isGame: false,
     component: () => import("./dixit/client/DixitGame") //DixitGame
   },
+  {
+    path: "/test-dixit",
+    name: "dixit game test",
+    title: "Dixit",
+    isGame: false,
+    component: () => import("./dixit/client/Test") //DixitGame
+  },
 ];

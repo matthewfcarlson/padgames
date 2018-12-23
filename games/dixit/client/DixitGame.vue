@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    Dixit {{state}}
+    <h1 class="title">Dixit</h1>{{state}}
     <div v-if="state == 'lobby'">
       <div is="LobbyPlayerList" v-bind:players="playerList"></div>
       <br>
@@ -76,10 +76,10 @@
     <div v-else-if="state == 'endgame'">
       <h2>Game Over!</h2>
     </div>
-
-    <div v-if="state != 'lobby'" is="Scores" :players="playerList" :isPad="isPad" :scores="scores"></div>
-    <div v-if="state != 'lobby' && isFirstPlayer">
-      <br>
+    <hr/>
+    <div v-if="state != 'lobby' && (isPad || !hasPad)" is="Scores" :players="playerList" :isPad="isPad" :scores="scores"></div>
+    <div v-if="state != 'lobby' && isFirstPlayer" class="container">
+      <br/><br/>
       <h3>Admin Controls</h3>
       <hr>
       <h3>Boot player</h3>
@@ -289,7 +289,13 @@ export default {
     },
     FinishReveal() {
       this.currentGame.FinishReveal();
-    }
+    },
+    DoFullSync(){
+      if (this.fullSyncRequested) return;
+      console.log("FULL SYNC REQUESTED");
+      this.fullSyncRequested = true;
+      this.$socket.emit(ROOT + "full sync");
+    },
   },
   sockets: {
     disconnect: function() {
@@ -344,6 +350,10 @@ export default {
         alert(message);
       }
     },
+    "Dixit:full sync": function(newGame){
+      this.fullSyncRequested = false;
+      console.log("We got a new game", newGame);
+    },
     "Dixit:set player": function(playerIndex) {
       console.log("Player ID" + playerIndex);
       //TODO do this better
@@ -374,10 +384,15 @@ export default {
           data.source,
         data
       );
-      if (this.$socket.id == data.source) {
+      if (this.$socket.id == data.source || this.fullSyncRequested) {
         console.log("Ignoring");
+        this.currentGame.SetLastCommandTime(data.time);
       } else {
-        this.currentGame.ApplyFunc(data.funcName, data.argList, data.time);
+        var result = this.currentGame.ApplyFunc(data.funcName, data.argList, data.time);
+        if (result != 0) {
+          console.error(result);
+          this.DoFullSync();
+        }
         Vue.set(this, "currentGame", this.currentGame);
       }
     }

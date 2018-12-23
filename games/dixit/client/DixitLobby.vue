@@ -50,7 +50,7 @@
       <div class="container">
         <h1 class>Dixit</h1>
         <h2 v-if="!ready">Connecting</h2>
-        <div class="container-fluid">
+        <div class="container">
           <div class="card border">
             <div class="card-header bg-primary text-white">The List of games</div>
 

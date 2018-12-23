@@ -74,7 +74,7 @@ function CreateGame(gameName, proxyCallback) {
             if (key == undefined) return this._state;
             return key;
         },
-        GetSelectedCard: function(playerIndex){
+        GetSelectedCard: function (playerIndex) {
             if (this._imagesSelected.length <= playerIndex) return -1;
             return this._imagesSelected[playerIndex];
         },
@@ -239,19 +239,23 @@ function CreateGame(gameName, proxyCallback) {
                     for (var i = 0; i < NUM_CARDS; i++) this._deck.push(i);
                     break;
                 case STATES.voting:
-                    //tally up the scores
-                    var pointsEarned = this.GetPointsEarned();
-                    //distributes points to everyone
+                case STATES.reveal:
+                    //if we're the server and we are voting or when we are a player and we are leaving reveal
+                    if ((this._server && this._state == STATES.voting) || (!this._server && this._state == STATES.reveal)) {
+                        //tally up the scores
+                        var pointsEarned = this.GetPointsEarned();
+                        //distributes points to everyone
 
-                    for (var i = 0; i < pointsEarned.length; i++) {
-                        this._points.splice(i, 1, this._points[i] + pointsEarned[i]);
+                        for (var i = 0; i < pointsEarned.length; i++) {
+                            this._points.splice(i, 1, this._points[i] + pointsEarned[i]);
+                        }
+
+                        // increment the story teller piece of the puzzle
+                        this._timesStoryTeller[this._storyteller]++;
+                        this._storyteller = -1;
+
+                        break;
                     }
-
-                    // increment the story teller piece of the puzzle
-                    this._timesStoryTeller[this._storyteller]++;
-                    this._storyteller = -1;
-
-                    break;
             }
             switch (newState) {
                 case STATES.firstcard:
@@ -404,10 +408,14 @@ function CreateGame(gameName, proxyCallback) {
                 time: current_time
             }
         },
+
+        SetLastCommandTime: function (time) {
+            this._lastCommandTime = time;
+        },
         ApplyFunc: function (name, args, time) {
             if (this.hasOwnProperty(name)) {
                 console.log("Calling " + name + " with ", args);
-                this._lastCommandTime = time;
+                this.SetLastCommandTime(time);
                 return this[name].apply(this, args);
             } else {
                 return "This call " + name + " does not exist";

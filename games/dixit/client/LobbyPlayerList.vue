@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container-fluid">
     <h2>Player List</h2>
     <ul class="list-group" >
       <div v-for="index in players" v-bind:key="index" class="list-group-item list-group-item-action">{{index}}</div>

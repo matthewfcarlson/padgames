@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div class="">
     <h2>Scores</h2>
     <div v-if="isPad">
-      <h3 v-for="(player,index) in players" v-bind:key="(player+index)">{{player}}: {{scores[index]}}</h3>
+      <rabbit v-for="(player,index) in players" :score="scores[index]" :key="(player+index)" :name="player" ></rabbit>
     </div>
     <div v-else>
       <div v-for="(player,index) in players" v-bind:key="(player+index)">{{player}}: {{scores[index]}}</div>
@@ -11,9 +11,13 @@
 </template>
 <script>
 import Vue from "vue";
+import Rabbit from "./Rabbit";
 
 export default {
   name: "Scores",
+  components: {
+    Rabbit
+  },
   data() {
     return {};
   },

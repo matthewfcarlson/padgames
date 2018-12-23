@@ -152,6 +152,18 @@ function Init(socket, io) {
             }
         });
     });
+    socket.on(gameRoomRoot+"full sync", function(gameId){
+        var game = GetGameByID(gameId);
+        if (game == null) {
+            console.error("SYNC GAME: this game does not exist");
+            socket.emit(gameRoomRoot + "error", {
+                msg: "This game does not exist: " + gameId,
+                leave: true
+            });
+            return false;
+        };
+        socket.emit(gameRoomRoot+"full sync", game);
+    });
     socket.on(gameRoomRoot + "create game", function (gameName) {
         var gameId = HashGameName(gameName);
         if (currentGames[gameId] != undefined || gameName == "") {
