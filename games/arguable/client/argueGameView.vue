@@ -315,8 +315,7 @@ export default {
     TimedSync: function(){
       if (this.currentGame == null) return;
       var lastCommand = this.currentGame.GetLastCommandTime();
-      var date = new Date();
-      var current_time = date.getTime();
+      var current_time =  new Date().getTime();
       var elapsedTime = current_time - lastCommand;
       var gameRoom = this.gameRoom;
       console.log("There have been "+elapsedTime+" since we last synced or recieved a command");
@@ -357,7 +356,7 @@ export default {
       var self = this;
 
       var previousGame = null;
-      if (localStorage.getItem(gameRoom) && this.playerIndex == -1) {
+      if (localStorage.getItem(gameRoom) && this.playerIndex == -1 && !this.debug) {
         previousGame = JSON.parse(localStorage.getItem(gameRoom));
         console.log(this);
         this.RejoinGame(
@@ -403,11 +402,11 @@ export default {
           data.source,
         data
       );
-      if (this.$socket.id == data.source) {
+      if (this.$socket.id == data.source || data.time < this.currentGame.GetLastCommandTime()) {
         console.log("Ignoring");
       } else {
-        this.currentGame.ApplyFunc(data.funcName, data.argList,data.time);
-        Vue.set(this, "currentGame", this.currentGame);
+        var result = this.currentGame.ApplyFunc(data.funcName, data.argList,data.time);
+        if (result != 0) console.error(result);
       }
     }
   }
@@ -472,7 +471,6 @@ body,
 
   /* Set up proportionate scaling */
   width: 100%;
-  height: auto;
   padding-bottom:1em;
 }
 .content-moderator {

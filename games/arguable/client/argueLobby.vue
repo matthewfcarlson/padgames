@@ -1,5 +1,6 @@
 <template>
 <div class="content">
+    <br/>
     <h1 class="speech-bubble">Arguable</h1>
     <h2 v-if="!ready">Connecting</h2>
     <div class="container-fluid">
@@ -102,12 +103,8 @@ export default {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#273de6', GradientType=0 );
   
   /* Set rules to fill background */
-  min-height: 100%;
-  min-width: 100%;
-	
-  /* Set up proportionate scaling */
-  width: 100%;
-  height: auto;
+  min-height: 100vw;
+  min-width: 100vh;
 	
   /* Set up positioning */
   top: 0;

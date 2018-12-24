@@ -113,6 +113,7 @@ function CreateGame(gameName, proxyCallback) {
         },
 
         GetLastCommandTime: function(){
+            console.log("LAST COMMAND TIME", this._lastCommandTime);
             return this._lastCommandTime;
         },
 
@@ -128,7 +129,6 @@ function CreateGame(gameName, proxyCallback) {
             this._readyDebators.splice(0, this._readyDebators.length);
             this._debatePairs.push(this._debaters);
             this._state.firstModerateDone();
-            this._DidExecuteCommand();
             return 0;
         },
 
@@ -215,7 +215,6 @@ function CreateGame(gameName, proxyCallback) {
                 this._timeOut = timeoutTime;
                 this._state.debateStart();
             }
-            this._DidExecuteCommand();
             return 0;
         },
 
@@ -225,7 +224,6 @@ function CreateGame(gameName, proxyCallback) {
             if (!this._state.is("debating")) return "We are not in the right state for the debate to finish";
             //TODO check if enough time has elapsed?
             this._state.debateEnd();
-            this._DidExecuteCommand();
             return 0;
         },
 
@@ -258,7 +256,6 @@ function CreateGame(gameName, proxyCallback) {
                 this._state.votingEnd();
                 this.SetupNextRound();
             }
-            this._DidExecuteCommand();
             return 0;
         },
 
@@ -377,15 +374,6 @@ function CreateGame(gameName, proxyCallback) {
             if (this.commands != null) this.commands.push(callObj);
         },
 
-        GetLastCommandTime: function () {
-            if (this.commands != null) {
-                var last_index = this.commands.length - 1;
-                var last_command = this.commands[last_index];
-                return last_command.time;
-            }
-            return 0;
-        },
-
         //Sets the topic of the particular session
         SetTopic: function (topic) {
             if (this._state.is("moderate_topic")) {
@@ -420,7 +408,6 @@ function CreateGame(gameName, proxyCallback) {
                         ));
                     }
                 }, timeoutTime);
-                this._DidExecuteCommand();
                 return 0;
             } else {
                 return "Topic cannot be set in this state"
@@ -492,13 +479,11 @@ function CreateGame(gameName, proxyCallback) {
             if (!this._state.is("lobby")) return "The game has already started";
             if (this._players.indexOf(name) != -1) return "You cannot join the same game twice";
             this._players.push(name);
-            this._DidExecuteCommand();
             return 0;
         },
         //Ends the game
         EndGame: function () {
             this._state.endgame();
-            this._DidExecuteCommand();
             return 0;
         },
 
@@ -516,13 +501,7 @@ function CreateGame(gameName, proxyCallback) {
             this._state.start();
             this._moderator = this.GetRandomNumber(0, this._players.length - 1);
             this._lastModeratedRound[this._moderator] = 0;
-            this._DidExecuteCommand();
             return 0;
-        },
-
-        _DidExecuteCommand: function () {
-            var current_time = this._GetCurrentTime();
-            this._lastCommandTime = current_time;
         },
         _GetCurrentTime: function () {
             var date = new Date();
