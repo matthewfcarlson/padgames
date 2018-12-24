@@ -1,75 +1,95 @@
 <template>
-<div class="content">
-   <div class="container-fluid" v-if="playerID == -1">
+  <div class="content">
+    <div class="container-fluid" v-if="playerID == -1">
       <h2>The Game of Stuff!</h2>
-      <hr/>
+      <hr>
       <h3>Current Players</h3>
-      <div v-for="player in players" v-bind:key="player">{{player}} <button class="btn btn-sm pull-right" @click="JoinGame(null,player)"> Rejoin as this player</button></div>
-      <hr/>
+      <div v-for="player in players" v-bind:key="player">
+        {{player}}
+        <button
+          class="btn btn-sm pull-right"
+          @click="JoinGame(null,player)"
+        >Rejoin as this player</button>
+      </div>
+      <hr>
       <h3>Please Input Your Name to Join</h3>
-      <input type="text" class="form-control" placeholder="Your name" v-model="playerName" />
+      <input type="text" class="form-control" placeholder="Your name" v-model="playerName">
       <button @click="JoinGame()" class="btn btn-success btn-block">Join Game</button>
-      
     </div>
-    <div class="container-fluid" v-else-if="state == 'waiting'">        
-        <div class ="well" >
-          <strong>Waiting for more players to join:</strong>
-          <div v-for="player in players"  v-bind:key="player">{{player}}</div>
-        </div>
-        <br/>
-        <div>In this game, you will be asked to answer a question. Don't let anyone see what you answer!</div>
-        <div>After everyone has answered, people will have to guess who said what!</div>
-        <div>When it's your turn, guess someone and see if you're right.
-          If you're right, they will press the "I was guessed by" button with your name on it! So make sure everyone is paying attention.
-          Once you guess incorrectly, your turn is over and it goes to the next person.
-          Once you've been guessed, you can't guess anymore and you're out of this round.
-          Guessing another person's answer gives you one point and being the last one to guess gives you an extra 2 points.
-        </div>
+    <div class="container-fluid" v-else-if="state == 'waiting'">
+      <div class="well">
+        <strong>Waiting for more players to join:</strong>
+        <div v-for="player in players" v-bind:key="player">{{player}}</div>
+      </div>
+      <br>
+      <div>In this game, you will be asked to answer a question. Don't let anyone see what you answer!</div>
+      <div>After everyone has answered, people will have to guess who said what!</div>
+      <div>
+        When it's your turn, guess someone and see if you're right.
+        If you're right, they will press the "I was guessed by" button with your name on it! So make sure everyone is paying attention.
+        Once you guess incorrectly, your turn is over and it goes to the next person.
+        Once you've been guessed, you can't guess anymore and you're out of this round.
+        Guessing another person's answer gives you one point and being the last one to guess gives you an extra 2 points.
+      </div>
     </div>
-    <div class="container-fluid" v-else-if="state == 'question'">      
+    <div class="container-fluid" v-else-if="state == 'question'">
       <h2>Question: Stuff {{question}}</h2>
       <div v-if="!AnswerSubmitted">
-        <input type="text" class="form-control" placeholder="Your answer" v-model="answer" />
+        <input type="text" class="form-control" placeholder="Your answer" v-model="answer">
         <button @click="Answer()" class="btn btn-success btn-block">Answer</button>
       </div>
-      <div v-else>
-        Waiting for everyone else to answer
-      </div>      
-      <div v-for="player,index in players" v-bind:key="player+index">
-        {{player}} : <span v-if="playerAnswers[index] != ''">Ready</span><span v-else>Thinking</span>
+      <div v-else>Waiting for everyone else to answer</div>
+      <div v-for="(player,index) in players" v-bind:key="'think'+player+index">
+        {{player}} :
+        <span v-if="playerAnswers[index] != ''">Ready</span>
+        <span v-else>Thinking</span>
       </div>
       <!--{{playerAnswers}}-->
       <h4>Scores:</h4>
-       <div v-for="player,index in players" v-bind:key="player+index">
-        {{player}} : {{scores[index]}} 
-      </div>
+      <div
+        v-for="(player,index) in players"
+        v-bind:key="'score'+player+index"
+      >{{player}} : {{scores[index]}}</div>
     </div>
     <div class="container-fluid" v-else-if="state == 'guessing'">
-        <h2>Question: Stuff {{question}}</h2>
-        <h3>Your answer: <small style="font-size:7pt;">{{answer}}</small></h3>
-        <div>It is currently {{players[currentPlayerTurn]}}'s turn</div>
-        <div v-if="currentPlayerTurn == PlayerIndex">
-          <b class="text-center">It is YOUR turn</b>
-          <button @click="EndTurn()" class="btn-block btn btn-secondary">I guessed incorrectly</button>
-          <div>Guess people until you get one wrong</div>
-          <h3>Answers:</h3>
-          <ul><li v-for="answer in shuffle(oldPlayerAnswers)">{{answer}}</li> </ul>
+      <h2>Question: Stuff {{question}}</h2>
+      <h3>
+        Your answer:
+        <small style="font-size:7pt;">{{answer}}</small>
+      </h3>
+      <div>It is currently {{players[currentPlayerTurn]}}'s turn</div>
+      <div v-if="currentPlayerTurn == PlayerIndex">
+        <b class="text-center">It is YOUR turn</b>
+        <button @click="EndTurn()" class="btn-block btn btn-warning">I guessed incorrectly</button>
+        <div>Guess people until you get one wrong</div>
+        <h3>Answers:</h3>
+        <ul>
+          <li v-for="answer in shuffle(oldPlayerAnswers)" :key="answer">{{answer}}</li>
+        </ul>
+      </div>
+      <div v-else-if="playerAnswers[PlayerIndex]!=''">
+        Who guessed you?
+        <button
+          class="btn-block btn btn-danger"
+          @click="Guessed(currentPlayerTurn)"
+          v-if="index != currentPlayerTurn >=0 && currentPlayerTurn<players.length && playerAnswers[currentPlayerTurn] != '' && player != 'AI'"
+        >
+          I was guessed by
+          <b>{{players[currentPlayerTurn]}}</b>
+        </button>
+        <div>
+          <small>Do not click one of these buttons unless someone guesses you!</small>
         </div>
-        <div v-else-if="playerAnswers[PlayerIndex]!=''">
-          Who guessed you?
-          <button class="btn-block btn btn-danger" 
-            @click="Guessed(currentPlayerTurn)" 
-            v-if="index != currentPlayerTurn >=0 && currentPlayerTurn<players.length && playerAnswers[currentPlayerTurn] != '' && player != 'AI'">I was guessed by <b>{{players[currentPlayerTurn]}}</b></button>
-          <div><small>Do not click one of these buttons unless someone guesses you!</small></div>
-        </div>
-        <div v-else>You've been guessed!</div>
+      </div>
+      <div v-else>You've been guessed!</div>
     </div>
-    <br/>
-    <hr/>
-      <div v-if="votesToEnd > 0">{{votesToEnd}} people have voted to end the game</div>
-      <button @click="VoteToEnd()" class="btn btn-warning btn-sm">Vote to End the Game</button>    
-      <button @click="LeaveGame()" class="btn btn-danger btn-sm">Leave Game</button>    
-</div>
+    <br>
+    <hr>
+    <div v-if="votesToEnd > 0">{{votesToEnd}} people have voted to end the game</div>
+    <button @click="VoteToEnd()" class="btn btn-warning btn-sm">Vote to End the Game</button>
+    <button @click="LeaveGame()" class="btn btn-danger btn-sm">Leave Game</button>
+    <div v-if="playerID == 0">Click to boot a player</div>
+  </div>
 </template>
 <script>
 //<div v-if="playerAnswers[index] != undefined && playerAnswers[index].length == 0">???</div>
@@ -96,6 +116,8 @@ export default {
       gameName: "",
       state: "waiting",
       currentPlayerTurn: 0,
+      syncTimer: null,
+      lastSyncTime: 0,
       players: [],
       scores: [],
       playerAnswers: [""],
@@ -145,6 +167,9 @@ export default {
         [a[i], a[j]] = [a[j], a[i]];
       }
       return a;
+    },
+    TimedSync () {
+      this.$socket.emit(ROOT+"sync game", this.gameRoom, this.lastSyncTime);
     }
   },
   computed: {
@@ -169,13 +194,19 @@ export default {
   created: function() {
     this.gameRoom = this.$route.params.gameID || "";
   },
+  mounted() {
+    this.$socket.emit(ROOT + "connect");
+  },
   sockets: {
-    connect: function() {
+    "stuff:connect": function() {
+      if (this.connected) return;
       console.log("socket connected for room " + this.gameRoom);
       this.connected = true;
-      this.$socket.emit(ROOT + "connect");
-      this.$socket.emit(ROOT + "sync game", this.gameRoom);
+      this.TimedSync();
+      if (this.syncTimer != null) clearInterval(this.syncTimer);
+      this.syncTimer = setInterval(this.TimedSync, 5000);
     },
+
     "stuff:error": function(message, leave) {
       alert(message + leave);
       if (leave != undefined && leave == true) {

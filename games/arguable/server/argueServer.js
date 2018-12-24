@@ -38,9 +38,9 @@ function JoinGame(io,gameId, playerName, socketID) {
     return false;
 }
 
-function GetGameByID(gameID) {
-    if (currentGames[gameID] == null) return null;
-    return currentGames[gameID];
+function GetGameByID(gameId) {
+    if (currentGames[gameId] == null) return null;
+    return currentGames[gameId];
 }
 
 function GetGameList() {
@@ -77,14 +77,14 @@ function ReplicateCall(io,gameId, source, callName, args){
     return true;
 }
 /*
-var gameID = HashGameName("test");
-console.log("Creating a new game", gameID);
-currentGames[gameID] = ArgueGame.CreateGame(gameID,function(callName,args){
+var gameId = HashGameName("test");
+console.log("Creating a new game", gameId);
+currentGames[gameId] = ArgueGame.CreateGame(gameId,function(callName,args){
     console.log("Called on test: ",callname,args);
 });
-currentGames[gameID].name="test";
-currentGames[gameID].sockets = [];
-currentGames[gameID].commands = [];
+currentGames[gameId].name="test";
+currentGames[gameId].sockets = [];
+currentGames[gameId].commands = [];
 */
 
 function Init(socket, io) {
@@ -101,19 +101,19 @@ function Init(socket, io) {
         socket.emit(gameRoomRoot + "list games", GetGameList());
     });
     socket.on(gameRoomRoot + "create game", function(gameName) {
-        var gameID = HashGameName(gameName);
-        if (currentGames[gameID] != undefined || gameName == "") {
+        var gameId = HashGameName(gameName);
+        if (currentGames[gameId] != undefined || gameName == "") {
             console.error("You can't create the same game twice");
             return false;
         }
 
-        console.log("Creating a new game", gameID);
-        currentGames[gameID] = ArgueGame.CreateGame(gameID,function(callName,args){
-            console.log("Called on "+gameID, callname,args);
+        console.log("Creating a new game", gameId);
+        currentGames[gameId] = ArgueGame.CreateGame(gameId,function(callName,args){
+            console.log("Called on "+gameId, callname,args);
         });
-        currentGames[gameID].name=gameName;
-        currentGames[gameID].sockets = [];
-        currentGames[gameID].commands = [];
+        currentGames[gameId].name=gameName;
+        currentGames[gameId].sockets = [];
+        currentGames[gameId].commands = [];
 
         socket.emit(gameRoomRoot + "list games", GetGameList());
 
@@ -161,15 +161,15 @@ function Init(socket, io) {
             return;
         }
 
-        var oldIndex = GetPlayerIndex(gameID,playerName);
+        var oldIndex = GetPlayerIndex(gameId,playerName);
         if (oldIndex == -1){
             //player was not found
-            console.log("Player "+playerName+" was not found ",gameID);
+            console.log("Player "+playerName+" was not found ",gameId);
             return;
         }
         var oldSocket = game.sockets[oldIndex];
 
-        console.log("Attempting to rejoin "+playerName+" to game "+gameID);
+        console.log("Attempting to rejoin "+playerName+" to game "+gameId);
         
         if (playerIndex == oldIndex && oldSocket == previousSocket){
             game.sockets[playerIndex] = socket.id;

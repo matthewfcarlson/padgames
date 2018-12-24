@@ -373,7 +373,6 @@ export default {
       this.fullSyncRequested = false;
       console.log("We got a new game", newGame);
       this.currentGame.Sync(newGame);
-      Vue.set(this, "currentGame", this.currentGame);
     },
     "Dixit:set player": function(playerIndex) {
       console.log("Player ID" + playerIndex);
