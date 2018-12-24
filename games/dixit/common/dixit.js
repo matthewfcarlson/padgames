@@ -183,21 +183,13 @@ function CreateGame(gameName, proxyCallback) {
                     var votes = this._votes.filter(x => x != -1); //get the cards that have been picked
                     if (votes.length == this._players.length - 1) { //we let everyone the chance to vote
                         //figure out if we are the server or not
-                        if (!this._server) {
-                            newState = STATES.reveal;
-                        } else {
-                            newState = STATES.firstcard;
-                            //we need to add a finish reveal into our list of actions so if someone syncs later they don't get stuck
-                            //TODO: code smell
-                            var storedCall = this.GenCallObj("server", "FinishReveal", []);
-                            this.StoreCall(storedCall);
-                        }
-                        var maxScore = Math.max(...this._points);
-                        if (maxScore >= MAX_SCORE) newState = STATES.endgame;
+                        newState = STATES.reveal;
                     }
                     break;
                 case STATES.reveal:
                     newState = STATES.firstcard;
+                    var maxScore = Math.max(...this._points);
+                    if (maxScore >= MAX_SCORE) newState = STATES.endgame;
                     break;
                 case STATES.endgame:
                     //we can't leave the end game state
@@ -319,6 +311,7 @@ function CreateGame(gameName, proxyCallback) {
             return 0;
         },
         FinishReveal: function () {
+            if (this._state != STATES.reveal) return "We are not in reveal state";
             if (!this._Transition()) return "We can't finish reveal";
             return 0;
         },
@@ -424,6 +417,10 @@ function CreateGame(gameName, proxyCallback) {
         StoreCall: function (callObj) {
             if (this.commands != null) this.commands.push(callObj);
         },
+
+        Sync: function (newgame) {
+            //replace all the variables
+        }
     };
 
     if (proxyCallback == undefined) {

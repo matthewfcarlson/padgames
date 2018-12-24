@@ -1,6 +1,7 @@
 <template>
   <div class="content">
-    <h1 class="title">Dixit</h1>{{state}}
+    <h1 class="title">Dixit</h1>
+    {{state}}
     <div v-if="state == 'lobby'">
       <div is="LobbyPlayerList" v-bind:players="playerList"></div>
       <br>
@@ -20,7 +21,7 @@
         @click="StartGame()"
       >Start Game</button>
       <div v-else class="btn btn-info btn-block" disabled>Waiting for the game to start</div>
-      <br/>
+      <br>
       <vue-qrcode v-bind:value="windowLocation" class="text-center" :options="{ width: qrWidth }"></vue-qrcode>
     </div>
     <div v-else-if="state == 'firstcard'">
@@ -28,13 +29,15 @@
         <div
           is="cardPicker"
           :isPad="isPad"
-          :story-teller=true
+          :story-teller="true"
           :hand="myHand"
           :havePad="hasPad"
           @submit="PickCard"
         ></div>
       </div>
-      <div v-else>Waiting for the story teller ({{storyTellerName}}) to pick a card and tell you the story.</div>
+      <div
+        v-else
+      >Waiting for the story teller ({{storyTellerName}}) to pick a card and tell you the story.</div>
     </div>
     <div v-else-if="state == 'allcards'">
       <div v-if="!isStoryTeller">
@@ -60,14 +63,17 @@
           :hand="shuffledCardVoteList"
           :havePad="hasPad"
           :key="state"
-          :voting=true
+          :voting="true"
           @submit="VoteCard"
         ></div>
       </div>
       <div v-else-if="!isPad">Waiting for players to vote</div>
-      <div v-else>
-        List of players that haven't voted yet:
-        <div v-for="(player,index) in playerList" :key="player" v-if="playersVoted[index]">{{player}}</div>
+      <div v-else>List of players that haven't voted yet:
+        <div
+          v-for="(player,index) in playerList"
+          :key="player"
+          v-if="!playersVoted[index]"
+        >{{player}}</div>
       </div>
     </div>
     <div v-else-if="state == 'reveal'">
@@ -76,10 +82,17 @@
     <div v-else-if="state == 'endgame'">
       <h2>Game Over!</h2>
     </div>
-    <hr/>
-    <div v-if="state != 'lobby' && (isPad || !hasPad)" is="Scores" :players="playerList" :isPad="isPad" :scores="scores"></div>
+    <hr>
+    <div
+      v-if="state != 'lobby' && (isPad || !hasPad)"
+      is="Scores"
+      :players="playerList"
+      :isPad="isPad"
+      :scores="scores"
+    ></div>
     <div v-if="state != 'lobby' && isFirstPlayer" class="container">
-      <br/><br/>
+      <br>
+      <br>
       <h3>Admin Controls</h3>
       <hr>
       <h3>Boot player</h3>
@@ -91,6 +104,8 @@
         {{currentGame}}
         connected: {{connected}}
     </pre>
+    <br>
+    <small class="text-center">Made by Matthew Carlson, with love</small>
   </div>
 </template>
 
@@ -189,8 +204,7 @@ export default {
       if (this.currentGame == null) return [];
       return this.currentGame.GetPlayerHand(this.playerIndex);
     },
-    playersVoted: function()
-    { 
+    playersVoted: function() {
       if (this.currentGame == null) return [];
       return this.currentGame.GetPlayersVoted();
     },
@@ -222,7 +236,7 @@ export default {
       if (this.currentGame == null) return [];
       return this.currentGame.GetVoteCardList(); //how to shuffle this the same way every time?
     },
-    storyTellerName(){
+    storyTellerName() {
       if (this.currentGame == null) return "No one";
       var storyTellerIndex = this.currentGame.GetStoryTeller();
       if (storyTellerIndex == -1) return "No one";
@@ -290,12 +304,12 @@ export default {
     FinishReveal() {
       this.currentGame.FinishReveal();
     },
-    DoFullSync(){
+    DoFullSync() {
       if (this.fullSyncRequested) return;
       console.log("FULL SYNC REQUESTED");
       this.fullSyncRequested = true;
       this.$socket.emit(ROOT + "full sync", this.gameRoom);
-    },
+    }
   },
   sockets: {
     disconnect: function() {
@@ -342,18 +356,21 @@ export default {
       console.error(response);
 
       if (response["leave"] != undefined) leave = response["leave"];
-      if (leave != undefined && leave == true) {
-        console.log("Leaving game");
-        this.LeaveGame();
-      } 
+
       if (response["msg"] != undefined && !this.debug) {
         message = response["msg"];
         alert(message);
       }
+      if (leave != undefined && leave == true) {
+        console.log("Leaving game");
+        this.LeaveGame();
+      }
     },
-    "Dixit:full sync": function(newGame){
+    "Dixit:full sync": function(newGame) {
       this.fullSyncRequested = false;
       console.log("We got a new game", newGame);
+      this.currentGame.Sync(newGame);
+      Vue.set(this, "currentGame", this.currentGame);
     },
     "Dixit:set player": function(playerIndex) {
       console.log("Player ID" + playerIndex);
@@ -377,25 +394,33 @@ export default {
         );
       }
     },
-    "Dixit:engine call": function(data) {
-      console.log(
-        "We got a response from the server to call our engine with func " +
-          data.funcName +
-          " from " +
-          data.source,
-        data
-      );
-      if (this.$socket.id == data.source || this.fullSyncRequested) {
-        console.log("Ignoring");
-        this.currentGame.SetLastCommandTime(data.time);
-      } else {
-        var result = this.currentGame.ApplyFunc(data.funcName, data.argList, data.time);
-        if (result != 0) {
-          console.error(result);
-          alert(result);
-          this.DoFullSync();
+    "Dixit:engine call": function(datas) {
+      for (var i = 0; i < datas.length; i++) {
+        var data = datas[i];
+        console.log(
+          "We got a response from the server to call our engine with func " +
+            data.funcName +
+            " from " +
+            data.source,
+          data
+        );
+
+        if (this.$socket.id == data.source || this.fullSyncRequested) {
+          console.log("Ignoring");
+          this.currentGame.SetLastCommandTime(data.time);
+        } else {
+          var result = this.currentGame.ApplyFunc(
+            data.funcName,
+            data.argList,
+            data.time
+          );
+          if (result != 0) {
+            console.error(result);
+            alert(result);
+            this.DoFullSync();
+          }
+          Vue.set(this, "currentGame", this.currentGame);
         }
-        Vue.set(this, "currentGame", this.currentGame);
       }
     }
   }
@@ -403,7 +428,7 @@ export default {
 </script>
 <style scoped>
 .content {
-  min-height:100vh;
+  min-height: 100vh;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f19b4d+0,ea8b31+100 */
   background: #f19b4d; /* Old browsers */
   background: -moz-linear-gradient(

@@ -54,7 +54,7 @@ function ReplicateCall(io, gameId, source, callName, args) {
     var storedCall = game.GenCallObj(source, callName, args);
     game.StoreCall(storedCall);
 
-    io.to(gameRoomRoot + gameId).emit(gameRoomRoot + "engine call", storedCall);
+    io.to(gameRoomRoot + gameId).emit(gameRoomRoot + "engine call", [storedCall]);
     return true;
 }
 
@@ -89,7 +89,7 @@ function GetGameByID(gameId) {
     return currentGames[gameId];
 }
 
-var gameId = HashGameName("test");
+/*var gameId = HashGameName("test");
 console.log("Creating a new game", gameId);
 currentGames[gameId] = DixitGame.CreateGame(gameId,function(callName,args){
     console.log("Called on test: ",callname,args);
@@ -101,7 +101,7 @@ currentGames[gameId].commands = [];
 currentGames[gameId]._server = true;
 currentGames[gameId].creationDate = new Date().getTime();
 
-
+*/
 function Init(socket, io) {
     socket.on(gameRoomRoot + "connect", function () {
         //lists all the games that are available
@@ -145,11 +145,14 @@ function Init(socket, io) {
             });
             return;
         }
+
         game.commands.forEach(function (storedCall) {
+            var calls = [];
             if (storedCall.time > lastTimeSeen) {
                 //console.log("Playing back call",storedCall);
-                socket.emit(gameRoomRoot + "engine call", storedCall);
+                calls.push(storedCall);
             }
+            socket.emit(gameRoomRoot + "engine call", calls);
         });
     });
     socket.on(gameRoomRoot+"full sync", function(gameId){
@@ -210,7 +213,6 @@ function Init(socket, io) {
         // add the pad player to the list of sockets
         if (game._padsockets == undefined) game._padsockets = [];
         game._padsockets.push(socket.id);
-
     });
 
     socket.on(gameRoomRoot + "join game", function (gameId, playerName) {
@@ -284,7 +286,11 @@ function Init(socket, io) {
         }
 
         var result = ReplicateCall(io, gameId, source, callName, args);
-
+        //just make sure we finish the reveal if someone called it
+        if (game.FinishReveal() == 0) {
+            var storedCall = game.GenCallObj("server", "FinishReveal", []);
+            game.StoreCall(storedCall);
+        }
     });
 }
 

@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <h2 v-if="!isStoryTeller">The correct card was: <card style="max-width:30vw" :cardId="correctCard"></card>{{correctCard}}</h2>
+    <h2 v-if="!isStoryTeller">The correct card was: <card style="max-width:15vw" :cardId="correctCard"></card>{{correctCard}}</h2>
     <div v-if="playerIndex < 0">Players who scored: {{scores}}</div>
     <div v-else>
-      <h2 v-if="!isStoryTeller">You Picked:<card style="max-width:20vw" :cardId="myPickedCard"></card></h2>      
+      <h2 v-if="!isStoryTeller">You Picked:<card style="max-width:15vw" :cardId="myPickedCard"></card></h2>      
       <h2 v-if="!isStoryTeller">People who picked your card: {{peopleWhoPickedYourCard}}</h2>
       <h2>Number of people who picked the correct card: {{numCorrectPeople}}/{{players.length}}</h2>
       <h2>You earned {{pointsEarned}} points</h2>
@@ -25,7 +25,7 @@ export default {
     Card
   },
   mounted: function() {
-    setTimeout(this.FinishReveal, 80000);
+    setTimeout(this.FinishReveal, 8000);
   },
   methods: {
     FinishReveal() {
