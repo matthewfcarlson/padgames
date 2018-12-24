@@ -168,8 +168,9 @@ export default {
       }
       return a;
     },
-    TimedSync () {
-      this.$socket.emit(ROOT+"sync game", this.gameRoom, this.lastSyncTime);
+    TimedSync() {
+      console.log("Asking to sync",  this.lastSyncTime);
+      this.$socket.emit(ROOT + "sync game", this.gameRoom, this.lastSyncTime);
     }
   },
   computed: {
@@ -216,17 +217,26 @@ export default {
     },
     //the main syncing method
     "stuff:sync game": function(newgame) {
-      console.log("New Game:", newgame);
+      console.log("Sync Game:", newgame);
       if (newgame == undefined) {
         console.error("Bad new game");
         return;
       }
       //TODO do this better
-      this.players = newgame.players;
-      this.scores = newgame.scores;
+      var self = this;
+      this.players.splice(0, this.players.length);
+      newgame.players.forEach(x => self.players.push(x));
+
+      this.scores.splice(0, this.scores.length);
+      newgame.scores.forEach(x => self.scores.push(x));
+
       this.question = Questions.questions[newgame.questions[0]];
-      if (newgame.playerAnswers != undefined)
-        this.playerAnswers = newgame.playerAnswers;
+
+      if (newgame.playerAnswers != undefined) {
+        this.playerAnswers.splice(0, this.playerAnswers.length);
+        newgame.playerAnswers.forEach(x => self.playerAnswers.push(x));
+      }
+
       this.state = newgame.state;
 
       if (this.numQuestions != newgame.questions.length) {
@@ -241,13 +251,16 @@ export default {
         0
       );
 
+      this.lastSyncTime = newgame.lastCommandTime;
+
       //if it doesn't contain the
       if (
         newgame.state == "guessing" &&
         (!newgame.playerAnswers.some(x => x == "") ||
           this.oldPlayerAnswers.length == 0)
       ) {
-        this.oldPlayerAnswers = newgame.playerAnswers;
+        this.oldPlayerAnswers.splice(0, this.oldPlayerAnswers.length);
+        newgame.playerAnswers.forEach(x => self.oldPlayerAnswers.push(x));
         //TODO store old answers server side so this syncs properly
       }
 

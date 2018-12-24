@@ -161,10 +161,6 @@ export default {
     Reveal
   },
   mounted: function() {
-    console.log(this.sockets);
-    console.log(this.$options.sockets);
-    console.log(this);
-    console.log(this.$socket);
     this.$socket.emit(ROOT + "connect");
   },
   created: function() {

@@ -120,6 +120,7 @@ function Init(socket, io) {
     socket.on(gameRoomRoot + "connect", function() {
         //lists all the games that are available
         socket.join(gameRoomRoot);
+        socket.emit(gameRoomRoot + "connect");
     });
     socket.on(gameRoomRoot + "list games", function() {
         //lists all the games that are available
@@ -145,6 +146,7 @@ function Init(socket, io) {
         currentGames[gameID].votesToEnd = [];
         currentGames[gameID].currentPlayerTurn = 0;
         currentGames[gameID].scores = [];
+        currentGames[gameID].lastCommandTime = new Date().getTime();
         currentGames[gameID].questions.unshift(GetNewQuestion());
 
         socket.emit(gameRoomRoot + "list games", GetGameList());
@@ -171,21 +173,25 @@ function Init(socket, io) {
             );
             return;
         }
+        game.lastCommandTime = new Date().getTime();
         game.currentPlayerTurn++;
         while (game.playerAnswers[game.currentPlayerTurn % game.players.length] == "") game.currentPlayerTurn++;
         SyncGame(gameId, io);
     });
-    socket.on(gameRoomRoot + "sync game", function(gameId) {
+    socket.on(gameRoomRoot + "sync game", function(gameId, time) {
         var game = GetGameByID(gameId);
         if (game == null) {
             socket.emit(
                 gameRoomRoot + "error",
-                "This game does not exist: " + gameId,
-                "go_back"
+                "This game does not exist: " + gameId
             );
             return;
-        } else {
+        } 
+        if (time <= game.lastCommandTime) {
             socket.emit(gameRoomRoot + "sync game", game);
+        }
+        else {
+            console.log("Ignoring sync time ", time, game.lastCommandTime);
         }
         console.log("Syncing to this server " + game.name + " " + game.state);
     });
@@ -205,6 +211,7 @@ function Init(socket, io) {
             game.votesToEnd.push(false);
         game.votesToEnd[playerIndex] = true;
         console.log(playerIndex + " voted to end the game");
+        game.lastCommandTime = new Date().getTime();
 
         var votesToEndGame = game.votesToEnd.reduce((prev, curr) => curr ? prev + 1 : prev, 0);
         if (votesToEndGame > game.players.length / 2) {
@@ -225,6 +232,7 @@ function Init(socket, io) {
             );
             return;
         }
+        game.lastCommandTime = new Date().getTime();
         var playerIndex = GetPlayerIndex(gameId, socket.id);
         if (game.playerAnswers[playerIndex] == "") {
             game.playerAnswers[playerIndex] = answer;
@@ -289,7 +297,7 @@ function Init(socket, io) {
             );
             return;
         }
-
+        game.lastCommandTime = new Date().getTime();
         var guesserIndex = guessedBy;
         if (guesserIndex < 0 || guessedBy >= game.players.length) {
             socket.emit(
@@ -382,6 +390,7 @@ function Init(socket, io) {
             game.state = "question";
         socket.join(gameRoomRoot + gameId);
         socket.emit(gameRoomRoot + "set player", result);
+        game.lastCommandTime = new Date().getTime();
         SyncGame(gameId, io);
     });
 }
