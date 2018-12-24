@@ -85,7 +85,7 @@ var questions = [
     "that would make a good punchline",
     "that confirms you are guilty",
     "that tires you out",
-    "tell you that your house is haunted",
+    "that tell you that your house is haunted",
     "that you can't mix",
     "that shouldn't be mixed",
     "that would be interesting to mix",
