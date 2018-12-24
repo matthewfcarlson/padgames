@@ -90,6 +90,9 @@
       :isPad="isPad"
       :scores="scores"
     ></div>
+    <div v-if="playerIndex == -1 && !isPad">
+      <button class="btn btn-info btn-block" @click="JoinGameAsPad()">Join Game as iPad/Large Screen</button>
+    </div>
     <div v-if="state != 'lobby' && isFirstPlayer" class="container">
       <br>
       <br>

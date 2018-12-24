@@ -263,6 +263,7 @@ function CreateGame(gameName, proxyCallback) {
                     for (var i = 0; i < this._players.length; i++) {
                         while (this._hands[i].length < this._handLimit) {
                             if (this._deck.length == 0) { //if we are out of cards
+                                console.log("Shuffling the played cards back in");
                                 if (this._cardsPlayed.length == 0) {
                                     console.error("WE DON'T HAVE ENOUGH CARDS FOR ALL THE PLAYERS");
                                     continue;
@@ -387,6 +388,7 @@ function CreateGame(gameName, proxyCallback) {
 
         EndGame: function () {
             this._state = STATES.endearly;
+            return 0;
         },
 
         // Replication stuff

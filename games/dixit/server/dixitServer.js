@@ -289,6 +289,7 @@ function Init(socket, io) {
         //just make sure we finish the reveal if someone called it
         if (game.FinishReveal() == 0) {
             var storedCall = game.GenCallObj("server", "FinishReveal", []);
+            storedCall.time = game.GetLastCommandTime();
             game.StoreCall(storedCall);
         }
     });

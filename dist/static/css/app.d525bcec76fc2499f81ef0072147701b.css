@@ -1197,7 +1197,7 @@ body,
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-.content[data-v-7c008513] {
+.content[data-v-4560f6bf] {
   min-height: 100vh;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f19b4d+0,ea8b31+100 */
   background: #f19b4d; /* Old browsers */
@@ -1219,12 +1219,12 @@ body,
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f19b4d', endColorstr='#ea8b31',GradientType=0 ); /* IE6-9 */
 }
 
-.slider[data-v-352d7dd4] {
+.slider[data-v-ba4d1e86] {
   display: flex;
   border-radius: 10pt;
   background: #F16838;
 }
-section[data-v-352d7dd4] {
+section[data-v-ba4d1e86] {
   border-radius: 10pt;
   padding: 0.25rem;
   min-width: 30vw;
@@ -1236,11 +1236,11 @@ section[data-v-352d7dd4] {
 }
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-section[data-v-352d7dd4] {
+section[data-v-ba4d1e86] {
     min-width: 60vw;
     scroll-snap-align: center;
 }
-.slider[data-v-352d7dd4] {
+.slider[data-v-ba4d1e86] {
     font-family: sans-serif;
     scroll-snap-type: mandatory;
     scroll-snap-points-x: repeat(60vw);
@@ -1249,25 +1249,25 @@ section[data-v-352d7dd4] {
     margin-left: -15px;
     margin-right: -15px;
 }
-.no-padding[data-v-352d7dd4] {
+.no-padding[data-v-ba4d1e86] {
     padding: 0;
 }
 }
 @media (min-width: 768px) {
-section[data-v-352d7dd4] {
+section[data-v-ba4d1e86] {
     min-width: unset;
     max-width: 20vw;
     /* margin-right: -15px; */
     /* margin-left: -15px; */
 }
-.slider[data-v-352d7dd4] {
+.slider[data-v-ba4d1e86] {
     justify-content: center;
 }
 }
-.card-list-move[data-v-352d7dd4] {
+.card-list-move[data-v-ba4d1e86] {
   transition: transform 1s;
 }
-.dixit-card[data-v-352d7dd4] {
+.dixit-card[data-v-ba4d1e86] {
   transition: all 1s;
   display: inline-block;
 }
@@ -1397,4 +1397,4 @@ section[data-v-352d7dd4] {
 }
 
 
-/*# sourceMappingURL=app.8a87f815f69fabf9fc655792e7a6a312.css.map*/
+/*# sourceMappingURL=app.d525bcec76fc2499f81ef0072147701b.css.map*/
