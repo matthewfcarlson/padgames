@@ -294,7 +294,7 @@ export default {
       if (this.fullSyncRequested) return;
       console.log("FULL SYNC REQUESTED");
       this.fullSyncRequested = true;
-      this.$socket.emit(ROOT + "full sync");
+      this.$socket.emit(ROOT + "full sync", this.gameRoom);
     },
   },
   sockets: {
@@ -345,7 +345,8 @@ export default {
       if (leave != undefined && leave == true) {
         console.log("Leaving game");
         this.LeaveGame();
-      } else if (response["msg"] != undefined) {
+      } 
+      if (response["msg"] != undefined && !this.debug) {
         message = response["msg"];
         alert(message);
       }
@@ -391,6 +392,7 @@ export default {
         var result = this.currentGame.ApplyFunc(data.funcName, data.argList, data.time);
         if (result != 0) {
           console.error(result);
+          alert(result);
           this.DoFullSync();
         }
         Vue.set(this, "currentGame", this.currentGame);
