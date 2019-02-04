@@ -241,7 +241,7 @@ function CreateGame(gameName, proxyCallback) {
         },
 
         SetVote: function (playerIndex, vote) {
-            console.log(this._votes);
+            //console.log(this._votes);
             if (!this._state.is("voting")) return "We are not in the right state for the debate to finish";
             if (this._votes[playerIndex] != "") return "You have already voted";
             if (vote != "yes" && vote != "no") return "Invalid vote value";
@@ -392,8 +392,8 @@ function CreateGame(gameName, proxyCallback) {
                 if (timeoutTime <= 0) timeoutTime = 1;
                 this._timeOut = timeoutTime;
 
-                console.log("We got this ", this._lastCommandTime, currentTime, elapsedTime);
-                console.log("Time left", timeoutTime);
+                //console.log("We got this ", this._lastCommandTime, currentTime, elapsedTime);
+                //console.log("Time left", timeoutTime);
                 
                 setTimeout(function () {
                     console.log("TIMES UP - DEBATORS Prep time is up!"); //, self);

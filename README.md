@@ -21,4 +21,7 @@ It can be found at www.padgames.app
 # Ideas for Next Game
 + game of life (capitalism/cash flow)
 + secret hitler?
-+ 
++ Cashflow
++ Pandemic
++ Some sort of Real time game?
+
