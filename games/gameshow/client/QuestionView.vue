@@ -1,8 +1,11 @@
 <template>
 <div>
-    <div v-if="question.id >= 0">
-        <h1>When asked, "{{GameData.questions[question.id]}}?"<h1>
-        <h1>They said "{{GameData.answers[question.person][question.id]}}"</h1>
+    <div v-if="!started" class="text-center">
+        <button class="btn btn-primary btn-lg" @click="start">Click to Start</button>
+    </div>
+    <div v-else-if="question.id >= 0">
+        <h1>When asked, <b>"{{GameData.questions[question.id]}}?"</b><h1>
+        <h1>They said <b>"{{GameData.answers[question.person][question.id]}}"</b></h1>
     </div>
     <h2 v-if="currentTeamsTurn != ''"><b>{{currentTeamsTurn}}</b> is answering and they have <b>{{timeClock}} left</b></h2>
     <hr/>
@@ -19,6 +22,7 @@ export default {
       GameData:GameData,
       timeLeft:-1,
       startTime: 15,
+      started:false,
       interval:null,
     };
   },
@@ -42,7 +46,11 @@ export default {
       }
   },
   methods: {
+      start: function(){
+          this.started = true;
+      },
       tick: function(){
+          if (!this.started) return;
           if (this.timeLeft > 0) {
               this.timeLeft --;
           

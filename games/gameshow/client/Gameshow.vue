@@ -25,28 +25,38 @@
       <button class="btn btn-block btn-warning btn-sm">Reset Game</button>
     </div>
     <div v-else-if="gameOver">
-        <h2>Game Over!</h2>
-        <h3>The winner is: </h3>
+      <h1>Game Over!</h1>
+      <h1>The winner is: {{winningTeam}}</h1>
     </div>
-    <div v-else-if="isPad" class='text-center'>
-        <div is="QuestionView" v-bind:question="question" @click="gameTimesUp" :currentTeamsTurn="currentTeamsTurn"></div>
-        <div is="Scores" v-bind:teams="teams"></div>
+    <div v-else-if="isPad" class="text-center">
+      <div
+        is="QuestionView"
+        v-bind:question="question"
+        @click="gameTimesUp"
+        :currentTeamsTurn="currentTeamsTurn"
+      ></div>
+      <div is="Scores" v-bind:teams="teams"></div>
     </div>
     <div v-else-if="playerTeam == ''">
       <div is="TeamList" v-bind:teams="teams" @click="gamePickTeam"></div>
     </div>
-    <div v-else><h3>Team {{ playerTeam }}</h3>
-        <button v-if="currentTeamsTurn == ''" class="btn btn-block btn-huuge btn-success" @click="gameBuzz">Buzz in!</button>
-        <h3 v-else-if="currentTeamsTurn==playerTeam" class="text-center"> It is your turn!</h3>
-        <h3 v-else class="text-center">Not your turn :(</h3>
-        <div is="Scores" v-bind:teams="teams"></div>
+    <div v-else>
+      <h3>Team {{ playerTeam }}</h3>
+      <button
+        v-if="currentTeamsTurn == ''"
+        class="btn btn-block btn-huuge btn-success"
+        @click="gameBuzz"
+      >Buzz in!</button>
+      <h3 v-else-if="currentTeamsTurn==playerTeam" class="text-center">It is your turn!</h3>
+      <h3 v-else class="text-center">Not your turn :(</h3>
+      <div is="Scores" v-bind:teams="teams"></div>
     </div>
-    <br/>
+    <br>
     <hr>
-    <div class="text-center"><small>Made by Matthew Carlson</small></div>
-
+    <div class="text-center">
+      <small>Made by Matthew Carlson</small>
+    </div>
   </div>
-  
 </template>
 
 <script>
@@ -82,7 +92,7 @@ export default {
       teams: [],
       question: {
         id: -1,
-        person: "",
+        person: ""
       },
       adminMode: false,
       currentTeamsTurn: "",
@@ -92,10 +102,24 @@ export default {
     };
   },
   computed: {
-      gameOver: function(){
-          if (this.question.id == -2) return true;
-          return false;
-      }
+    gameOver: function() {
+      if (this.question.id == -2) return true;
+      return false;
+    },
+    winningTeam: function() {
+      var maxScore = 0;
+      var maxTeamName = "";
+      this.teams.forEach(x => {
+        if (x.score == maxScore) {
+          maxTeamName += " and " + x.name;
+        }
+        if (x.score > maxScore) {
+          maxScore = x.score;
+          maxTeamName = x.name;
+        }
+      });
+      return maxTeamName;
+    }
   },
   methods: {
     konamiActivated: function() {
@@ -106,13 +130,13 @@ export default {
       this.$socket.emit(ROOT + "reset");
     },
     gameTimesUp: function() {
-        this.$socket.emit(ROOT+"buzz","");
+      this.$socket.emit(ROOT + "buzz", "");
     },
-    gameBuzz: function(){
-        this.$socket.emit(ROOT+"buzz",this.playerTeam);
+    gameBuzz: function() {
+      this.$socket.emit(ROOT + "buzz", this.playerTeam);
     },
-    gameSuperBuzz: function(teamName){
-        this.$socket.emit(ROOT+"super buzz",teamName);
+    gameSuperBuzz: function(teamName) {
+      this.$socket.emit(ROOT + "super buzz", teamName);
     },
     gameAddTeam: function() {
       var teamName = this.newTeamName;
@@ -153,8 +177,8 @@ export default {
       this.question.id = question.id;
       this.question.person = question.person;
     },
-    "Gameshow:team turn": function(teamTurn){
-        this.currentTeamsTurn = teamTurn;
+    "Gameshow:team turn": function(teamTurn) {
+      this.currentTeamsTurn = teamTurn;
     }
   },
   mounted: function() {
@@ -175,9 +199,9 @@ export default {
 .text-black {
   color: #333;
 }
-.btn-huuge{
-    padding: 2.5rem 2rem;
-    font-size: 2.25rem;
-    line-height:3rem;
+.btn-huuge {
+  padding: 2.5rem 2rem;
+  font-size: 2.25rem;
+  line-height: 3rem;
 }
 </style>

@@ -1,10 +1,16 @@
 <template>
   <div class="container">
     <h3>Scores</h3>
-    <div class="row">
+    <div class="row" style="color:#333">
       <div v-for="team in teams" class="col" v-bind:key="team.name">
-        {{team.name}}
-        <h3>{{team.score}}</h3>
+          <div class="card">
+            <h5 class="card-header">
+                {{team.name}}
+            </h5>
+            <div class="card-body">
+                <h3>{{team.score}}</h3>
+            </div>
+        </div>
       </div>
     </div>
   </div>
