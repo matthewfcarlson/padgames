@@ -118,7 +118,7 @@ function Init(socket, io) {
     });
     socket.on(ROOT + "super buzz", function (team) {
         //console.log("SUPER BUZZ IN", team);
-        if (teams[team] == undefined) return;
+        if (teams[team] == undefined && team != "") return;
         currentTeamTurn = team;
         SyncTeamTurn(io.to(ROOT));
     });

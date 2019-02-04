@@ -14,6 +14,7 @@
       <button class="btn btn-block btn-danger" @click="gameIncorrect">Incorrect!</button>
       <br>
       <div is="TeamList" v-bind:teams="teams" @click="gameSuperBuzz"></div>
+      <button class="btn btn-block btn-info" @click="gameSuperBuzz('')">Reset Buzzer</button>
       <br>
       <div class="input-group mb-3">
         <input type="text" class="form-control" v-model="newTeamName" placeholder="New Team Name">

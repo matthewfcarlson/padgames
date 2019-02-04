@@ -2,7 +2,7 @@
   <div class="container">
     <h3>Scores</h3>
     <div class="row" style="color:#333">
-      <div v-for="team in teams" class="col" v-bind:key="team.name">
+      <div v-for="team in teams" class="col text-center" v-bind:key="team.name">
           <div class="card">
             <h5 class="card-header">
                 {{team.name}}
