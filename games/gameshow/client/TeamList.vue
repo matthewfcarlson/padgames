@@ -38,4 +38,7 @@ export default {
 .list-group-item.text-black {
   color: #333;
 }
+.list-group-item.text-black:hover {
+  color: #533;
+}
 </style>
