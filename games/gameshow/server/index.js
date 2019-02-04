@@ -6,8 +6,18 @@ var teamsThatHaveGuessed = [];
 var currentTeamTurn = "";
 const skipPoint = Object.keys(data.answers).length - 1;
 
+//https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
 function SetupQuestions() {
     console.log("Setting up questions");
+    questions = [];
     for (var person in data.answers) {
         for (var i = 0; i < data.questions.length; i++) {
             questions.push({
@@ -16,6 +26,7 @@ function SetupQuestions() {
             });
         }
     }
+    shuffle(questions);
 }
 
 function SyncTeams(io) {
@@ -60,12 +71,12 @@ function Init(socket, io) {
                 sockets: []
             };
         }
-        SyncTeamTurn(io.to(ROOT));
         SyncTeams(io.to(ROOT));
     });
     socket.on(ROOT + "correct", function (id) {
         //next question
         if (currentTeamTurn == "") return;
+        if (questions.length == 0) return;
         if (questions[0].id != id) {
             console.log("Invalid ID");
             return;
@@ -76,13 +87,11 @@ function Init(socket, io) {
 
         //get rid of the first question
         NextQuestion();
-
-        SyncQuestion(io.to(ROOT));
-        SyncTeams(io.to(ROOT));
-
+        SyncAll(io.to(ROOT));
     });
     socket.on(ROOT + "incorrect", function (id) {
         if (currentTeamTurn == "") return;
+        if (questions.length == 0) return;
         //Check if we are on the right question
         if (questions[0].id != id) return;
         currentTeamTurn = "";
@@ -100,15 +109,15 @@ function Init(socket, io) {
         SyncAll(socket);
     });
     socket.on(ROOT + "buzz", function (team) {
-        console.log("BUZZ IN", team);
-        if (teams[team] == undefined) return;
+        //console.log("BUZZ IN", team);
+        if (teams[team] == undefined && team != "") return;
         if (teamsThatHaveGuessed.indexOf(team) != -1) return;
         if (currentTeamTurn == "" || team == "") currentTeamTurn = team;
         if (currentTeamTurn != "") teamsThatHaveGuessed.push(team);
         SyncTeamTurn(io.to(ROOT));
     });
     socket.on(ROOT + "super buzz", function (team) {
-        console.log("SUPER BUZZ IN", team);
+        //console.log("SUPER BUZZ IN", team);
         if (teams[team] == undefined) return;
         currentTeamTurn = team;
         SyncTeamTurn(io.to(ROOT));

@@ -26,7 +26,7 @@ export default {
     DebateDone: function(){
       if (this.ready) return;
       this.ready = true;
-      this.$emit("submit");
+      this.$emit("click");
       clearInterval(this.interval);
     },
     startTimer() {

@@ -3,7 +3,7 @@
     <br>
     <div class="container">
       <div class="jumbotron">
-        <h1 class="display-4 text-black">Do you know your bishop?</h1>
+        <h1 class="display-4 text-black">Do you know your bishopric?</h1>
       </div>
     </div>
     <div v-if="adminMode">
@@ -29,26 +29,17 @@
         <h3>The winner is: </h3>
     </div>
     <div v-else-if="isPad" class='text-center'>
-        <div v-if="question.id >= 0">
-            <h1>When asked, "{{GameData.questions[question.id]}}?"<h1>
-            <h1>They said "{{GameData.answers[question.person][question.id]}}"</h1>
-        </div>
-        Questions will appear here.
-        <h2 v-if="currentTeamsTurn != ''">It is {{currentTeamsTurn}}s team and they have 0:05</h2>
-        <hr/>
-        <h3>Scores</h3>
-        <div class="row">
-            <div v-for="team in teams" class="col" v-bind:key="team.name">
-                {{team.name}}
-                <h3>{{team.score}}</h3>
-            </div>
-        </div>
+        <div is="QuestionView" v-bind:question="question" @click="gameTimesUp" :currentTeamsTurn="currentTeamsTurn"></div>
+        <div is="Scores" v-bind:teams="teams"></div>
     </div>
     <div v-else-if="playerTeam == ''">
       <div is="TeamList" v-bind:teams="teams" @click="gamePickTeam"></div>
     </div>
-    <div v-else><h3>Team {{ playerTeam }}</h3><p>Press to buzz in!</p>
-        <button class="btn btn-block btn-huuge btn-success" @click="gameBuzz">Buzz in!</button>
+    <div v-else><h3>Team {{ playerTeam }}</h3>
+        <button v-if="currentTeamsTurn == ''" class="btn btn-block btn-huuge btn-success" @click="gameBuzz">Buzz in!</button>
+        <h3 v-else-if="currentTeamsTurn==playerTeam" class="text-center"> It is your turn!</h3>
+        <h3 v-else class="text-center">Not your turn :(</h3>
+        <div is="Scores" v-bind:teams="teams"></div>
     </div>
     <br/>
     <hr>
@@ -63,8 +54,8 @@ import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import Konami from "./konami";
 import TeamList from "./TeamList";
-import GameData from "../common/data";
-console.log(GameData);
+import QuestionView from "./QuestionView";
+import Scores from "./Scores";
 
 Vue.use(VueSocketio, window.location.origin);
 
@@ -73,7 +64,9 @@ const ROOT = "Gameshow:";
 export default {
   name: "Gameshow",
   components: {
-    TeamList
+    TeamList,
+    QuestionView,
+    Scores
   },
   data() {
     var self = this;
@@ -87,7 +80,6 @@ export default {
       playerTeam: "",
       debug: debug,
       teams: [],
-      GameData:GameData,
       question: {
         id: -1,
         person: "",
@@ -112,6 +104,9 @@ export default {
     },
     gameReset: function() {
       this.$socket.emit(ROOT + "reset");
+    },
+    gameTimesUp: function() {
+        this.$socket.emit(ROOT+"buzz","");
     },
     gameBuzz: function(){
         this.$socket.emit(ROOT+"buzz",this.playerTeam);
