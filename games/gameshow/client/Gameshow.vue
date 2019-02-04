@@ -9,6 +9,7 @@
     <div v-if="adminMode">
       <h2>Admin Mode</h2>
       <p>Correct Answer: {{question.person}}</p>
+      <p>Current Team: {{currentTeamsTurn}}</p>
       <button class="btn btn-block btn-success" @click="gameCorrect">Correct!</button>
       <button class="btn btn-block btn-danger" @click="gameIncorrect">Incorrect!</button>
       <br>
@@ -27,23 +28,34 @@
         <h2>Game Over!</h2>
         <h3>The winner is: </h3>
     </div>
-    <div v-else-if="isPad">
+    <div v-else-if="isPad" class='text-center'>
         <div v-if="question.id >= 0">
-            <h3>When asked, "{{GameData.questions[question.id]}}?"<h3>
-            <h3>They said "{{GameData.answers[question.person][question.id]}}"</h3>
+            <h1>When asked, "{{GameData.questions[question.id]}}?"<h1>
+            <h1>They said "{{GameData.answers[question.person][question.id]}}"</h1>
         </div>
         Questions will appear here.
-        <div v-if="currentTeamsTurn != ''">Currently it is {{currentTeamsTurn}}s team and they have 0:05</div>
+        <h2 v-if="currentTeamsTurn != ''">It is {{currentTeamsTurn}}s team and they have 0:05</h2>
+        <hr/>
+        <h3>Scores</h3>
+        <div class="row">
+            <div v-for="team in teams" class="col" v-bind:key="team.name">
+                {{team.name}}
+                <h3>{{team.score}}</h3>
+            </div>
         </div>
+    </div>
     <div v-else-if="playerTeam == ''">
       <div is="TeamList" v-bind:teams="teams" @click="gamePickTeam"></div>
     </div>
     <div v-else><h3>Team {{ playerTeam }}</h3><p>Press to buzz in!</p>
-    <button class="btn btn-block btn-huuge btn-success" @click="gameBuzz">Buzz in!</div>
+        <button class="btn btn-block btn-huuge btn-success" @click="gameBuzz">Buzz in!</button>
+    </div>
+    <br/>
+    <hr>
+    <div class="text-center"><small>Made by Matthew Carlson</small></div>
+
   </div>
-  <br/>
-  <hr>
-  <small class="text-center">Made by Matthew Carlson</small>
+  
 </template>
 
 <script>
@@ -52,13 +64,14 @@ import VueSocketio from "vue-socket.io";
 import Konami from "./konami";
 import TeamList from "./TeamList";
 import GameData from "../common/data";
+console.log(GameData);
 
 Vue.use(VueSocketio, window.location.origin);
 
 const ROOT = "Gameshow:";
 
 export default {
-  name: "Gameshow game",
+  name: "Gameshow",
   components: {
     TeamList
   },
@@ -74,9 +87,9 @@ export default {
       playerTeam: "",
       debug: debug,
       teams: [],
+      GameData:GameData,
       question: {
         id: -1,
-        answer: -1,
         person: "",
       },
       adminMode: false,
@@ -111,11 +124,11 @@ export default {
       this.$socket.emit(ROOT + "add team", teamName);
     },
     gameCorrect: function() {
-      var questionId = this.question["id"];
+      var questionId = this.question.id;
       this.$socket.emit(ROOT + "correct", questionId);
     },
     gameIncorrect: function() {
-      var questionId = this.question["id"];
+      var questionId = this.question.id;
       this.$socket.emit(ROOT + "incorrect", questionId);
     },
     gameRemoveTeam: function(teamName) {
@@ -144,7 +157,6 @@ export default {
       console.log("Recieved new question", question);
       this.question.id = question.id;
       this.question.person = question.person;
-      this.question.answer = question.answer;
     },
     "Gameshow:team turn": function(teamTurn){
         this.currentTeamsTurn = teamTurn;

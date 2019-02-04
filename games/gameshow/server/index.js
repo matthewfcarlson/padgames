@@ -4,15 +4,17 @@ var teams = {};
 var questions = [];
 var teamsThatHaveGuessed = [];
 var currentTeamTurn = "";
+const skipPoint = Object.keys(data.answers).length - 1;
 
 function SetupQuestions() {
     console.log("Setting up questions");
-    for (var i = 0; i < data.questions.length; i++) {
-        questions.push({
-            id: i,
-            answer: 5,
-            person: "Murray",
-        });
+    for (var person in data.answers) {
+        for (var i = 0; i < data.questions.length; i++) {
+            questions.push({
+                id: i,
+                person: person,
+            });
+        }
     }
 }
 
@@ -24,7 +26,6 @@ function SyncQuestion(io) {
     if (questions.length == 0) {
         io.emit(ROOT + "question", {
             id: -2, //game over
-            answer: -1,
             person: "",
         });
     } else {
@@ -40,6 +41,12 @@ function SyncAll(io) {
     SyncQuestion(io);
     SyncTeamTurn(io);
     SyncTeams(io);
+}
+
+function NextQuestion() {
+    teamsThatHaveGuessed = [];
+    questions.shift();
+    currentTeamTurn = "";
 }
 //setup questions
 SetupQuestions();
@@ -58,15 +65,32 @@ function Init(socket, io) {
     });
     socket.on(ROOT + "correct", function (id) {
         //next question
+        if (currentTeamTurn == "") return;
+        if (questions[0].id != id) {
+            console.log("Invalid ID");
+            return;
+        }
+        console.log("Correct " + id);
         //give the correct answer to the right team
-        currentTeamTurn = "";
+        teams[currentTeamTurn].score++;
+
         //get rid of the first question
-        questions.shift();
+        NextQuestion();
+
         SyncQuestion(io.to(ROOT));
         SyncTeams(io.to(ROOT));
+
     });
     socket.on(ROOT + "incorrect", function (id) {
+        if (currentTeamTurn == "") return;
+        //Check if we are on the right question
+        if (questions[0].id != id) return;
         currentTeamTurn = "";
+        //skip to the next question
+        if (teamsThatHaveGuessed.length >= skipPoint) {
+            NextQuestion();
+            SyncQuestion(io.to(ROOT));
+        }
         SyncTeamTurn(io.to(ROOT));
     });
     socket.on(ROOT + "connect", function () {
