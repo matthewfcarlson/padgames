@@ -23,7 +23,7 @@
         </div>
       </div>
       <br>
-      <button class="btn btn-block btn-warning btn-sm">Reset Game</button>
+      <button class="btn btn-block btn-warning btn-sm" @click="gameReset">Reset Game</button>
     </div>
     <div v-else-if="gameOver">
       <h1>Game Over!</h1>
