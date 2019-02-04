@@ -91,7 +91,7 @@ export default {
           if (this.question.id == -2) return true;
           return false;
       }
-  }
+  },
   methods: {
     konamiActivated: function() {
       console.log("Konami activated!");
