@@ -31,50 +31,50 @@ function CreateGame(gameName, proxyCallback) {
     var fsm = new StateMachine({
         init: 'lobby',
         transitions: [{
-            name: 'start',
-            from: 'lobby',
-            to: 'first_mod'
-        },
-        {
-            name: 'firstModerateDone',
-            from: 'first_mod',
-            to: 'moderate_topic'
-        },
-        {
-            name: 'topicPick',
-            from: 'moderate_topic',
-            to: 'debate_waiting'
-        },
-        {
-            name: 'debateStart',
-            from: 'debate_waiting',
-            to: 'debating'
-        },
-        {
-            name: 'debateEnd',
-            from: 'debating',
-            to: 'voting'
-        },
-        {
-            name: 'votingEnd',
-            from: 'voting',
-            to: 'vote_end'
-        },
-        {
-            name: 'newDebate',
-            from: 'vote_end',
-            to: 'moderate_topic'
-        },
-        {
-            name: 'finishGame',
-            from: 'vote_end',
-            to: 'end_game'
-        },
-        {
-            name: 'endGame',
-            from: 'moderate_topic',
-            to: 'end_game'
-        }
+                name: 'start',
+                from: 'lobby',
+                to: 'first_mod'
+            },
+            {
+                name: 'firstModerateDone',
+                from: 'first_mod',
+                to: 'moderate_topic'
+            },
+            {
+                name: 'topicPick',
+                from: 'moderate_topic',
+                to: 'debate_waiting'
+            },
+            {
+                name: 'debateStart',
+                from: 'debate_waiting',
+                to: 'debating'
+            },
+            {
+                name: 'debateEnd',
+                from: 'debating',
+                to: 'voting'
+            },
+            {
+                name: 'votingEnd',
+                from: 'voting',
+                to: 'vote_end'
+            },
+            {
+                name: 'newDebate',
+                from: 'vote_end',
+                to: 'moderate_topic'
+            },
+            {
+                name: 'finishGame',
+                from: 'vote_end',
+                to: 'end_game'
+            },
+            {
+                name: 'endGame',
+                from: 'moderate_topic',
+                to: 'end_game'
+            }
         ],
         methods: {
             onTransition: function (lifecycle) {
@@ -108,11 +108,11 @@ function CreateGame(gameName, proxyCallback) {
             transitionFunction = trans;
         },
 
-        GetTimeOutInMs: function(){
+        GetTimeOutInMs: function () {
             return this._timeOut;
         },
 
-        GetLastCommandTime: function(){
+        GetLastCommandTime: function () {
             console.log("LAST COMMAND TIME", this._lastCommandTime);
             return this._lastCommandTime;
         },
@@ -139,7 +139,7 @@ function CreateGame(gameName, proxyCallback) {
             }
             //figure out who all is still in the game
             var arrayList = this.GetAvailablePlayerIndexs();
-            console.log("Setting next debators ", arrayList);
+            //console.log("Setting next debators ", arrayList);
             //go through all the eligible players
             var self = this;
             var timesDebated = arrayList.map(x => {
@@ -149,7 +149,7 @@ function CreateGame(gameName, proxyCallback) {
                     return prev;
                 }, 0);
             });
-            console.log("Number of times they've debated", timesDebated);
+            //console.log("Number of times they've debated", timesDebated);
             var debator1 = -1;
             var debator2 = -1;
             var minTimesDebated = 999;
@@ -173,13 +173,13 @@ function CreateGame(gameName, proxyCallback) {
                 return "winner";
             }
 
-            console.log("Possible debators indexs: ", debator1, debator2);
+            //console.log("Possible debators indexs: ", debator1, debator2);
 
             //convert back to the origional debator index format
             debator1 = arrayList[debator1];
             debator2 = arrayList[debator2];
 
-            console.log("Possible debators: ", debator1, debator2);
+            //console.log("Possible debators: ", debator1, debator2);
             var debators = [debator1, debator2];
             //Check to make sure this configuration doesn't exist
             if (this._debatePairs.indexOf(debators) != -1) {
@@ -208,8 +208,8 @@ function CreateGame(gameName, proxyCallback) {
                 var currentTime = this._GetCurrentTime();
                 var elapsedTime = currentTime - this._lastCommandTime;
                 var timeoutTime = 120 * 1000;
-                if (elapsedTime > 0){
-                    timeoutTime =  timeoutTime - elapsedTime;
+                if (elapsedTime > 0) {
+                    timeoutTime = timeoutTime - elapsedTime;
                 }
                 if (timeoutTime <= 0) timeoutTime = 1;
                 this._timeOut = timeoutTime;
@@ -252,9 +252,9 @@ function CreateGame(gameName, proxyCallback) {
 
             if (this.GetWinner() >= 0) {
                 //end the debate
-                console.log("Ending the debate");
+                //console.log("Ending the debate");
                 this._state.votingEnd();
-                this.SetupNextRound();
+                this._SetupNextRound();
             }
             return 0;
         },
@@ -266,7 +266,7 @@ function CreateGame(gameName, proxyCallback) {
             var leastIndex = -1;
             var leastValue = 99999;
             var moderatorIndex = -1;
-            console.log("Eliminated players ", moderatorIndexs)
+            //console.log("Eliminated players ", moderatorIndexs)
             //preference is given to those that are out
             moderatorIndexs.forEach((x) => {
                 if (self._lastModeratedRound[x] < leastValue) {
@@ -274,7 +274,7 @@ function CreateGame(gameName, proxyCallback) {
                     leastIndex = x;
                 }
             });
-            console.log("leastIndex", leastIndex);
+            //console.log("leastIndex", leastIndex);
             if (leastIndex != -1) moderatorIndex = leastIndex;
             else {
                 moderatorIndexs = this._players.map((x, i) => i);
@@ -290,21 +290,20 @@ function CreateGame(gameName, proxyCallback) {
                 moderatorIndex = leastIndex;
             }
 
-            console.log("New moderator: ", moderatorIndex);
             //update the last moderated round to this round
-            console.log("Setting round to: ", this._round);
             this._lastModeratedRound[moderatorIndex] = this._round;
 
             return moderatorIndex;
         },
 
-        SetupNextRound: function () {
-            console.log("Setting up next round");
+        _SetupNextRound: function () {
+            //console.log("Setting up next round");
             //add points
             var winner = this.GetWinner();
-            var loserIndex = this.GetNoDebator();
-            if (winner == loserIndex) loserIndex = this.GetYesDebator();
-            //console.log("loser is ", loserIndex);
+            var yesDebator = this.GetYesDebator();
+            var noDebator = this.GetNoDebator();
+            var loserIndex = (winner != noDebator) ? noDebator : yesDebator;
+            // console.log("loser is ", loserIndex);
             this._pressure[loserIndex]++;
             this._pressure.push(-1); //try to mess with the reactive system
             this._pressure.pop();
@@ -315,14 +314,14 @@ function CreateGame(gameName, proxyCallback) {
             this._round++;
 
             if (this.GetGameWinner() != -1) {
-                console.log("Game is over");
+                //console.log("Game is over");
                 this._moderator = -1;
                 this._debaters = [];
                 this._state.finishGame();
             } else {
                 //pick a new moderator
                 this._moderator = this._GetNextModerator();
-                console.log("New Moderator: ", this._moderator);
+                //console.log("New Moderator: ", this._moderator);
                 //pick new debators
                 this._SetNextDebaters();
                 //start the new debate
@@ -343,20 +342,18 @@ function CreateGame(gameName, proxyCallback) {
                 unanswered--;
                 if (value == "yes") yes++;
                 if (value == "no") no++;
-
             }
             if (unanswered != 0) return -1;
+            if (yes == no) {
+                //there's a tie
+                var moderatorVote = this._votes[this._moderator];
+                console.log("The moderator voted tie-breaker", moderatorVote);
+                if (moderatorVote == "yes") yes++;
+                if (moderatorVote == "no") no++;
+            }
             if (yes > no) return this.GetYesDebator();
             if (no > yes) return this.GetNoDebator();
-
-
-            //there's a tie
-            var moderatorVote = this._votes[this._moderator];
-            console.log("The moderator voted tie-breaker", moderatorVote);
-            if (moderatorVote == "yes") yes++;
-            if (moderatorVote == "no") no++;
-            if (yes > no) return this.GetYesDebator();
-            if (no > yes) return this.GetNoDebator();
+            return "We can't tell who the real winner is";
         },
 
         GenCallObj: function (source, callName, args) {
@@ -385,16 +382,16 @@ function CreateGame(gameName, proxyCallback) {
                 var currentTime = this._GetCurrentTime();
                 var elapsedTime = currentTime - this._lastCommandTime;
                 var timeoutTime = 45 * 1000;
-                if (elapsedTime > 0){
-                    timeoutTime =  timeoutTime - elapsedTime;
+                if (elapsedTime > 0) {
+                    timeoutTime = timeoutTime - elapsedTime;
                 }
-                
+
                 if (timeoutTime <= 0) timeoutTime = 1;
                 this._timeOut = timeoutTime;
 
                 //console.log("We got this ", this._lastCommandTime, currentTime, elapsedTime);
                 //console.log("Time left", timeoutTime);
-                
+
                 setTimeout(function () {
                     console.log("TIMES UP - DEBATORS Prep time is up!"); //, self);
                     if (self._state.is("moderate_topic")) {
@@ -450,7 +447,7 @@ function CreateGame(gameName, proxyCallback) {
                 if (self._pressure[index] >= 2) return false;
                 return true;
             });
-            console.log("Players you can pick: ", availablePlayers)
+            //console.log("Players you can pick: ", availablePlayers)
             return availablePlayers;
         },
 
@@ -509,6 +506,12 @@ function CreateGame(gameName, proxyCallback) {
             return current_time;
         },
 
+        _GetVote: function (index) {
+            return this._votes[index];
+        },
+        _GetRound: function () {
+            return this._round;
+        },
         ApplyFunc: function (name, args, time) {
             if (this.hasOwnProperty(name)) {
                 console.log("Calling " + name + " with ", args);

@@ -334,7 +334,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 
 /***/ }),
 
-/***/ "kNAz":
+/***/ "khH7":
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -445,6 +445,7 @@ var data_default = /*#__PURE__*/__webpack_require__.n(data);
 //
 //
 //
+//
 
 
 
@@ -495,14 +496,14 @@ console.log(data_default.a);
     //players is the list of all the players and available is a list of the index of all avaiable players
     props: ["question", "currentTeamsTurn"]
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-2ea5c0e6","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/gameshow/client/QuestionView.vue
-var QuestionView_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.started)?_c('div',{staticClass:"text-center"},[_c('button',{staticClass:"btn btn-primary btn-lg",on:{"click":_vm.start}},[_vm._v("Click to Start")])]):(_vm.question.id >= 0)?_c('div',[_c('h1',[_vm._v("When asked, "),_c('b',[_vm._v("\""+_vm._s(_vm.GameData.questions[_vm.question.id])+"?\"")]),_c('h1',[_c('h1',[_vm._v("They said "),_c('b',[_vm._v("\""+_vm._s(_vm.GameData.answers[_vm.question.person][_vm.question.id])+"\"")])])])])]):_vm._e(),_vm._v(" "),(_vm.currentTeamsTurn != '')?_c('h2',[_c('b',[_vm._v(_vm._s(_vm.currentTeamsTurn))]),_vm._v(" is answering and they have "),_c('b',[_vm._v(_vm._s(_vm.timeClock)+" left")])]):_vm._e(),_vm._v(" "),_c('hr')])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-bccbd5ca","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/gameshow/client/QuestionView.vue
+var QuestionView_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.started)?_c('div',{staticClass:"text-center"},[_c('button',{staticClass:"btn btn-primary btn-lg",on:{"click":_vm.start}},[_vm._v("Click to Start")])]):(_vm.question.id >= 0)?_c('div',[_c('h1',[_vm._v("When asked, "),_c('b',[_vm._v("\""+_vm._s(_vm.GameData.questions[_vm.question.id])+"?\"")]),_c('h1',[_c('h1',[_vm._v("They said "),_c('b',[_vm._v("\""+_vm._s(_vm.GameData.answers[_vm.question.person][_vm.question.id])+"\"")])]),_vm._v(" "),_c('h3',[_vm._v("Choices: "),_vm._l((_vm.GameData.answers),function(data,answer){return _c('b',{key:answer},[_vm._v(_vm._s(answer)+" "),_c('b')])})],2)])])]):_vm._e(),_vm._v(" "),(_vm.currentTeamsTurn != '')?_c('h2',[_c('b',[_vm._v(_vm._s(_vm.currentTeamsTurn))]),_vm._v(" is answering and they have "),_c('b',[_vm._v(_vm._s(_vm.timeClock)+" left")])]):_vm._e(),_vm._v(" "),_c('hr')])}
 var QuestionView_staticRenderFns = []
 var QuestionView_esExports = { render: QuestionView_render, staticRenderFns: QuestionView_staticRenderFns }
 /* harmony default export */ var client_QuestionView = (QuestionView_esExports);
 // CONCATENATED MODULE: ./games/gameshow/client/QuestionView.vue
 function QuestionView_injectStyle (ssrContext) {
-  __webpack_require__("kNAz")
+  __webpack_require__("khH7")
 }
 var QuestionView_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -515,7 +516,7 @@ var QuestionView___vue_template_functional__ = false
 /* styles */
 var QuestionView___vue_styles__ = QuestionView_injectStyle
 /* scopeId */
-var QuestionView___vue_scopeId__ = "data-v-2ea5c0e6"
+var QuestionView___vue_scopeId__ = "data-v-bccbd5ca"
 /* moduleIdentifier (server only) */
 var QuestionView___vue_module_identifier__ = null
 var QuestionView_Component = QuestionView_normalizeComponent(
@@ -817,4 +818,4 @@ var Gameshow_Component = Gameshow_normalizeComponent(
 /***/ })
 
 });
-//# sourceMappingURL=0.c01d5a654f1ca7ad1df7.js.map
+//# sourceMappingURL=0.849186dabda255b7b41b.js.map

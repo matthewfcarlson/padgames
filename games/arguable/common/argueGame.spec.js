@@ -58,27 +58,29 @@ describe("create game", () => {
     expect(game.Moderator()).toBeLessThan(game.GetPlayers().length);
   });
 
-  it("it should let me vote", () => {
+  it("it should play a game", () => {
 
-    for (var i = 3; i <= 5; i++) {
+    for (var i = 3; i <= 7; i++) {
       const game = CreateGame();
+
       while (game.GetPlayers().length < i) {
         game.AddPlayer("Matthew" + game.GetPlayers().length);
       }
+      const numPlayers = game.GetPlayers().length;
+      expect(numPlayers).toBe(i);
       game.StartGame();
       var moderator = game.Moderator();
-      console.log("Moderator: ", moderator);
+      //console.log("Moderator: ", moderator);
       var allPlayers = range(game.GetPlayers().length);
-      console.log("All players", allPlayers)
+      //console.log("All players", allPlayers)
       var otherPlayers = allPlayers.filter(x => x != moderator);
-      console.log("Other players", otherPlayers)
+      //console.log("Other players", otherPlayers)
       expect(game.SetDebaters(otherPlayers[0], otherPlayers[1])).toBe(0);
       expect(game.SetTopic("Testing")).toBe(0);
       expect(game.SetDebatorReady(otherPlayers[0])).toBe(0);
       expect(game.SetDebatorReady(otherPlayers[1])).toBe(0);
       expect(game.FinishDebate()).toBe(0);
       var votingPlayers = [moderator].concat(otherPlayers.slice(2));
-      console.log("Voting players", votingPlayers)
       var yesPlayer = game.GetYesDebator();
       var noPlayer = game.GetNoDebator();
       expect(yesPlayer).not.toBe(noPlayer);
@@ -86,20 +88,25 @@ describe("create game", () => {
       votingPlayers.forEach(element => {
         expect(game.SetVote(element, "yes")).toBe(0);
       });
-      expect(game.GetPressure(noPlayer)).toBe(1);
+      var startingPressure = game._pressure.reduce((a, b) => a + b, 0);
+      expect(startingPressure).toBe(1);
       expect(game.GetPressure(yesPlayer)).toBe(0);
+      expect(game.GetPressure(noPlayer)).toBe(1);
+      
 
       var moderator2 = game.Moderator();
       expect(moderator2).not.toBe(moderator);
 
-      var rounds = 0;
       while (game.GetState() != "end_game") {
+        var rounds = game._GetRound() - 1;
         var moderator = game.Moderator();
         var yesPlayer = game.GetYesDebator();
         var noPlayer = game.GetNoDebator();
         expect(yesPlayer).not.toBe(noPlayer);
         expect(yesPlayer).not.toBe(moderator);
         expect(noPlayer).not.toBe(moderator);
+
+        var totalPressure = game._pressure.reduce((a, b) => a + b, 0);
         var yesPressure = game.GetPressure(yesPlayer);
         var noPressure = game.GetPressure(noPlayer);
         expect(noPressure).toBeLessThan(2);
@@ -109,14 +116,49 @@ describe("create game", () => {
         expect(game.SetDebatorReady(noPlayer)).toBe(0);
         expect(game.FinishDebate()).toBe(0);
         var votingPlayers = allPlayers.filter(x => x != noPlayer && x != yesPlayer);
-        votingPlayers.forEach(element => {
-          expect(game.SetVote(element, "yes")).toBe(0);
+        var moderatorVote = "";
+
+        //make sure the debators can't vote
+        expect(game.SetVote(noPlayer, "no")).not.toBe(0);
+        expect(game.SetVote(yesPlayer, "no")).not.toBe(0);
+
+        votingPlayers.forEach((element, index) => {
+          if (index < rounds) expect(game.SetVote(element, "yes")).toBe(0);
+          else expect(game.SetVote(element, "no")).toBe(0);
+          expect(game.SetVote(element, "no")).not.toBe(0);
+          if (element == moderator) moderatorVote = game._GetVote(moderator);
         });
-        expect(game.GetPressure(noPlayer)).toBe(noPressure + 1);
+        //make sure moderator and the others can't vote
+        expect(game.SetVote(noPlayer, "no")).not.toBe(0);
+        expect(game.SetVote(yesPlayer, "no")).not.toBe(0);
+        expect(game.SetVote(moderator, "no")).not.toBe(0);
+
+        //sum the pressure before and after
+        var afterPressure = game._pressure.reduce((a, b) => a + b, 0);
+        //rounds is the number of yes votes
+        
+        const numVotes = votingPlayers.length;
+        //console.log(" votes for yes "+ rounds+" out of "+numVotes);
+        if (numVotes % 2 == 0 && rounds == numVotes / 2) { //if we have an even number of voters
+          //console.log("Moderator tie breaker");
+          if (moderatorVote == "yes") noPressure++;
+          else if (moderatorVote == "no") yesPressure++;
+        } else if (rounds > numVotes / 2) {
+          noPressure++;
+          //console.log("no loses");
+        } else {
+          yesPressure++;
+          //console.log("yes loses");
+
+        }
+        expect(game.GetPressure(noPlayer)).toBe(noPressure);
         expect(game.GetPressure(yesPlayer)).toBe(yesPressure);
+        expect(totalPressure + 1).toBe(afterPressure);
+
         expect(rounds).toBeLessThan(100); //we expect that it will be different that the last
-        rounds++;
       }
+
+      //make sure there is only one winner
       var remainingPlayers = game._pressure.filter(x => x < 2).length;
       expect(remainingPlayers).toBe(1);
 
