@@ -11,21 +11,16 @@ webpackJsonp([0],{
 /***/ (function(module, exports) {
 
 const questions = [
-    "Where were you were born",
     "Where did you mostly grow up",
     "What was your first car",
     "What was your favorite subject in school/high school/college",
     "Where did you serve a mission",
     "What was your first job",
-    "What’s your earliest memory",
     "What were some of your hobbies growing up",
     "What is your hobby now",
-    "What's your favorite color",
-    "What is your favorite season",
     "What's your favorite kind of vacation",
     "What is your favorite animal",
     "What's your favorite tv show",
-    "Which is your favorite holiday",
     "What do you do to relax",
     "What's your favorite form of exercise",
     "Are you a night owl or a morning person",
@@ -41,20 +36,15 @@ const questions = [
 ];
 const McGhieAnswers = [
     "Cupertino, CA",
-    "Cupertino, CA",
     "Plymouth Satellite",
     "Music (Band/Choir/Orchestra)",
     "Okayama, Japan",
     "Paper boy",
-    "I don’t remember. Lol.",
     "Sports (all, but especially basketball)",
     "Anime",
-    "Blue",
-    "Spring",
     "Staying at home and relaxing",
     "Ryan’s dog wiggles”",
     "Kaguya wants to be confessed to",
-    "Christmas",
     "Play video games (DOTA)",
     "Going for a walk",
     "Neither. I like my sleep.",
@@ -70,20 +60,15 @@ const McGhieAnswers = [
 ];
 const MurrayAnswers = [
     "Lancaster, California",
-    "Lancaster, California  - The High Desert",
     "Toyota Celica",
     "Math",
     "Buenos Aires South Argentina and Dallas Texas",
     "Fast Food - Weinerschnitzel",
-    "When I was a little kid, I remember having swimming birthday parties in our backyard pool.",
     "Space, Skateboarding and Surfing",
     "Skateboarding, Volleyball and Computers",
-    "White",
-    "Summer",
     "Disney!",
     "Penguins or my Westie Missy",
     "Hallmark Movies",
-    "Christmas",
     "Work in the yard",
     "Gardening or Wii Just Dance",
     "Neither",
@@ -100,20 +85,16 @@ const MurrayAnswers = [
 
 const EllenAnswers = [
     "Dallas, Texas",
-    "Dallas, Texas",
     "Dodge Neon",
     "Social Studies",
     "I didn't serve",
     "Pharmacy Technician",
-    "A bad dream with a green monster",
     "The Sims and band",
     "Reading, Baking, and Home Decor",
-    "Blue",
-    "Fall",
     "Beach Vacations",
     "Dogs",
     "America's Test Kitchen",
-    "Christmas",
+
     "I never relax",
     "Refit",
     "Night Owl",
@@ -130,20 +111,15 @@ const EllenAnswers = [
 ];
 var DaybellAnswers = [
     "Heber City, UT",
-    "Heber City, UT",
     "Ford Pinto",
     "HS (Sports & girls)/College (Math)",
     "Ohio/Pennsylvania",
     "Railroad worker",
-    "Watching grandma make peanut butter cookies",
     "Hunting, Fishing, Tae Kwon Do",
     "Reading, Traveling",
-    "Blue",
-    "Spring",
     "Anything with all my kids and grandkids",
     "Dog",
     "Big Bang Theory",
-    "Labor Day",
     "Read",
     "Tae Kwon Do or Running",
     "Night Owl",
@@ -818,4 +794,4 @@ var Gameshow_Component = Gameshow_normalizeComponent(
 /***/ })
 
 });
-//# sourceMappingURL=0.849186dabda255b7b41b.js.map
+//# sourceMappingURL=0.b2126019a3ddb31d8244.js.map
