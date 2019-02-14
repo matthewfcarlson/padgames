@@ -181,7 +181,7 @@ export default {
     },
     "Gameshow:question": function(question) {
       console.log("Recieved new question", question);
-      if (this.question.id != -1 && typeof window.navigator.vibrate !== "undefined"){
+      if (this.question.id != -1 && this.question.id != question.id && typeof window.navigator.vibrate !== "undefined"){
         window.navigator.vibrate(200);
         console.log("Attempting to vibrate");
       }
