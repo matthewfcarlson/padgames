@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <h3>Teams</h3>
+    <h4>Teams</h4>
     <ul class="list-group list-group-flush">
       <a
         v-for="team in teams"

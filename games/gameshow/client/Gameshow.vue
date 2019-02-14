@@ -11,8 +11,8 @@
       <p>Correct Answer: {{question.person}}</p>
       <p>Current Team: {{currentTeamsTurn}}</p>
       <button class="btn btn-block btn-success btn-lg" @click="gameCorrect">Correct!</button>
-      <button class="btn btn-block btn-danger btn-lg"  @click="gameIncorrect">Incorrect!</button>
-      <button class="btn btn-block btn-info btn-lg"    @click="gameSkipQuestion">Skip</button>
+      <button class="btn btn-block btn-danger btn-lg" @click="gameIncorrect">Incorrect!</button>
+      <button class="btn btn-block btn-info btn-lg" @click="gameSkipQuestion">Skip</button>
       <br>
       <div is="TeamList" v-bind:teams="teams" @click="gameSuperBuzz"></div>
       <button class="btn btn-block btn-info" @click="gameSuperBuzz('')">Reset Buzzer</button>
@@ -40,6 +40,7 @@
       <div is="Scores" v-bind:teams="teams"></div>
     </div>
     <div v-else-if="playerTeam == ''">
+      <h3>Click to join a team<h3>
       <div is="TeamList" v-bind:teams="teams" @click="gamePickTeam"></div>
     </div>
     <div v-else>
@@ -102,11 +103,6 @@ export default {
       newTeamName: "",
       konami: null
     };
-  },
-  watch: {
-    question: function(){ //vibrate when the question changes
-      if (typeof(window.navigator.vibrate) !== 'undefined') window.navigator.vibrate(200);
-    }
   },
   computed: {
     gameOver: function() {
@@ -187,9 +183,27 @@ export default {
       console.log("Recieved new question", question);
       this.question.id = question.id;
       this.question.person = question.person;
+      if (typeof window.navigator.vibrate !== "undefined"){
+        window.navigator.vibrate(200);
+        console.log("Attempting to vibrate");
+      }
     },
     "Gameshow:team turn": function(teamTurn) {
       this.currentTeamsTurn = teamTurn;
+    },
+    "Gameshow:play sound": function(sound) {
+      if (this.isPad) {
+        if (sound == "incorrect") {
+          console.log("Wrong sound effect");
+          var audio = new Audio("/static/gameshow/negative-beeps.wav");
+          audio.play();
+        }
+        if (sound == "correct") {
+          console.log("Correct sound effect");
+          var audio = new Audio("/static/gameshow/positive-beeps.wav");
+          audio.play();
+        }
+      }
     }
   },
   mounted: function() {

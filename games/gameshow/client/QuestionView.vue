@@ -22,7 +22,7 @@ export default {
     return {
       GameData:GameData,
       timeLeft:-1,
-      startTime: 15,
+      startTime: 11,
       started:false,
       interval:null,
     };
@@ -34,11 +34,10 @@ export default {
     this.interval = setInterval(this.tick, 1000);
   },
   watch: {
-      currentTeamsTurn: function(val) {
+      currentTeamsTurn: function(val, oldval) {
           console.log("currentTeamsTurn changed");
           if (val != "") this.timeLeft = this.startTime;
-
-      }
+      },
   },
   computed: {
       timeClock: function(){
@@ -57,6 +56,8 @@ export default {
           
             if (this.timeLeft == 0){
                 this.$emit("click");
+                var audio = new Audio("/static/gameshow/time-up.mp3");
+                audio.play();
             }
           }
       }

@@ -84,6 +84,7 @@ function Init(socket, io) {
         console.log("Correct " + id);
         //give the correct answer to the right team
         teams[currentTeamTurn].score++;
+        io.to(ROOT).emit(ROOT+"play sound", "correct");
 
         //get rid of the first question
         NextQuestion();
@@ -95,12 +96,14 @@ function Init(socket, io) {
         //Check if we are on the right question
         if (questions[0].id != id) return;
         currentTeamTurn = "";
+        io.to(ROOT).emit(ROOT+"play sound", "incorrect");
         //skip to the next question
         if (teamsThatHaveGuessed.length >= skipPoint) {
             NextQuestion();
             SyncQuestion(io.to(ROOT));
         }
         SyncTeamTurn(io.to(ROOT));
+        
     });
     socket.on(ROOT + "skip", function (id) {
         if (questions.length == 0) return;
