@@ -1,12 +1,5 @@
 webpackJsonp([0],{
 
-/***/ "+oRX":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ "01OR":
 /***/ (function(module, exports) {
 
@@ -304,6 +297,13 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 /***/ }),
 
 /***/ "PGjY":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "Vgrw":
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -629,6 +629,7 @@ var Scores_Component = Scores_normalizeComponent(
 //
 //
 //
+//
 
 
 
@@ -669,6 +670,12 @@ const ROOT = "Gameshow:";
       newTeamName: "",
       konami: null
     };
+  },
+  watch: {
+    question: function () {
+      //vibrate when the question changes
+      if (typeof window.navigator.vibrate !== 'undefined') window.navigator.vibrate(200);
+    }
   },
   computed: {
     gameOver: function () {
@@ -719,6 +726,10 @@ const ROOT = "Gameshow:";
       var questionId = this.question.id;
       this.$socket.emit(ROOT + "incorrect", questionId);
     },
+    gameSkipQuestion: function () {
+      var questionId = this.question.id;
+      this.$socket.emit(ROOT + "skip", questionId);
+    },
     gameRemoveTeam: function (teamName) {
       console.log("Removing team", teamName);
       this.$socket.emit(ROOT + "remove team", teamName);
@@ -756,14 +767,14 @@ const ROOT = "Gameshow:";
     this.konami = new konami_default.a(this.konamiActivated);
   }
 });
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-3b952c24","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/gameshow/client/Gameshow.vue
-var Gameshow_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content"},[_c('br'),_vm._v(" "),_vm._m(0),_vm._v(" "),(_vm.adminMode)?_c('div',[_c('h2',[_vm._v("Admin Mode")]),_vm._v(" "),_c('p',[_vm._v("Correct Answer: "+_vm._s(_vm.question.person))]),_vm._v(" "),_c('p',[_vm._v("Current Team: "+_vm._s(_vm.currentTeamsTurn))]),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-success",on:{"click":_vm.gameCorrect}},[_vm._v("Correct!")]),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-danger",on:{"click":_vm.gameIncorrect}},[_vm._v("Incorrect!")]),_vm._v(" "),_c('br'),_vm._v(" "),_c("TeamList",{tag:"div",attrs:{"teams":_vm.teams},on:{"click":_vm.gameSuperBuzz}}),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-info",on:{"click":function($event){_vm.gameSuperBuzz('')}}},[_vm._v("Reset Buzzer")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('div',{staticClass:"input-group mb-3"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.newTeamName),expression:"newTeamName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"New Team Name"},domProps:{"value":(_vm.newTeamName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.newTeamName=$event.target.value}}}),_vm._v(" "),_c('div',{staticClass:"input-group-append"},[_c('button',{staticClass:"btn btn-primary",on:{"click":_vm.gameAddTeam}},[_vm._v("Add Team")])])]),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-warning btn-sm",on:{"click":_vm.gameReset}},[_vm._v("Reset Game")])]):(_vm.gameOver)?_c('div',[_c('h1',[_vm._v("Game Over!")]),_vm._v(" "),_c('h1',[_vm._v("The winner is: "+_vm._s(_vm.winningTeam))])]):(_vm.isPad)?_c('div',{staticClass:"text-center"},[_c("QuestionView",{tag:"div",attrs:{"question":_vm.question,"currentTeamsTurn":_vm.currentTeamsTurn},on:{"click":_vm.gameTimesUp}}),_vm._v(" "),_c("Scores",{tag:"div",attrs:{"teams":_vm.teams}})]):(_vm.playerTeam == '')?_c('div',[_c("TeamList",{tag:"div",attrs:{"teams":_vm.teams},on:{"click":_vm.gamePickTeam}})]):_c('div',[_c('h3',[_vm._v("Team "+_vm._s(_vm.playerTeam))]),_vm._v(" "),(_vm.currentTeamsTurn == '')?_c('button',{staticClass:"btn btn-block btn-huuge btn-success",on:{"click":_vm.gameBuzz}},[_vm._v("Buzz in!")]):(_vm.currentTeamsTurn==_vm.playerTeam)?_c('h3',{staticClass:"text-center"},[_vm._v("It is your turn!")]):_c('h3',{staticClass:"text-center"},[_vm._v("Not your turn :(")]),_vm._v(" "),_c("Scores",{tag:"div",attrs:{"teams":_vm.teams}})]),_vm._v(" "),_c('br'),_vm._v(" "),_c('hr'),_vm._v(" "),_vm._m(1)])}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-3849ed20","hasScoped":true,"transformToRequire":{"video":["src","poster"],"source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./games/gameshow/client/Gameshow.vue
+var Gameshow_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"content"},[_c('br'),_vm._v(" "),_vm._m(0),_vm._v(" "),(_vm.adminMode)?_c('div',[_c('h2',[_vm._v("Admin Mode")]),_vm._v(" "),_c('p',[_vm._v("Correct Answer: "+_vm._s(_vm.question.person))]),_vm._v(" "),_c('p',[_vm._v("Current Team: "+_vm._s(_vm.currentTeamsTurn))]),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-success btn-lg",on:{"click":_vm.gameCorrect}},[_vm._v("Correct!")]),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-danger btn-lg",on:{"click":_vm.gameIncorrect}},[_vm._v("Incorrect!")]),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-info btn-lg",on:{"click":_vm.gameSkipQuestion}},[_vm._v("Skip")]),_vm._v(" "),_c('br'),_vm._v(" "),_c("TeamList",{tag:"div",attrs:{"teams":_vm.teams},on:{"click":_vm.gameSuperBuzz}}),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-info",on:{"click":function($event){_vm.gameSuperBuzz('')}}},[_vm._v("Reset Buzzer")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('div',{staticClass:"input-group mb-3"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.newTeamName),expression:"newTeamName"}],staticClass:"form-control",attrs:{"type":"text","placeholder":"New Team Name"},domProps:{"value":(_vm.newTeamName)},on:{"input":function($event){if($event.target.composing){ return; }_vm.newTeamName=$event.target.value}}}),_vm._v(" "),_c('div',{staticClass:"input-group-append"},[_c('button',{staticClass:"btn btn-primary",on:{"click":_vm.gameAddTeam}},[_vm._v("Add Team")])])]),_vm._v(" "),_c('br'),_vm._v(" "),_c('button',{staticClass:"btn btn-block btn-warning btn-sm",on:{"click":_vm.gameReset}},[_vm._v("Reset Game")])]):(_vm.gameOver)?_c('div',[_c('h1',[_vm._v("Game Over!")]),_vm._v(" "),_c('h1',[_vm._v("The winner is: "+_vm._s(_vm.winningTeam))])]):(_vm.isPad)?_c('div',{staticClass:"text-center"},[_c("QuestionView",{tag:"div",attrs:{"question":_vm.question,"currentTeamsTurn":_vm.currentTeamsTurn},on:{"click":_vm.gameTimesUp}}),_vm._v(" "),_c("Scores",{tag:"div",attrs:{"teams":_vm.teams}})]):(_vm.playerTeam == '')?_c('div',[_c("TeamList",{tag:"div",attrs:{"teams":_vm.teams},on:{"click":_vm.gamePickTeam}})]):_c('div',[_c('h3',[_vm._v("Team "+_vm._s(_vm.playerTeam))]),_vm._v(" "),(_vm.currentTeamsTurn == '')?_c('button',{staticClass:"btn btn-block btn-huuge btn-success",on:{"click":_vm.gameBuzz}},[_vm._v("Buzz in!")]):(_vm.currentTeamsTurn==_vm.playerTeam)?_c('h3',{staticClass:"text-center"},[_vm._v("It is your turn!")]):_c('h3',{staticClass:"text-center"},[_vm._v("Not your turn :(")]),_vm._v(" "),_c("Scores",{tag:"div",attrs:{"teams":_vm.teams}})]),_vm._v(" "),_c('br'),_vm._v(" "),_c('hr'),_vm._v(" "),_vm._m(1)])}
 var Gameshow_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('div',{staticClass:"jumbotron"},[_c('h1',{staticClass:"display-4 text-black"},[_vm._v("Do you know your bishopric?")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"text-center"},[_c('small',[_vm._v("Made by Matthew Carlson")])])}]
 var Gameshow_esExports = { render: Gameshow_render, staticRenderFns: Gameshow_staticRenderFns }
 /* harmony default export */ var client_Gameshow = (Gameshow_esExports);
 // CONCATENATED MODULE: ./games/gameshow/client/Gameshow.vue
 function Gameshow_injectStyle (ssrContext) {
-  __webpack_require__("+oRX")
+  __webpack_require__("Vgrw")
 }
 var Gameshow_normalizeComponent = __webpack_require__("VU/8")
 /* script */
@@ -776,7 +787,7 @@ var Gameshow___vue_template_functional__ = false
 /* styles */
 var Gameshow___vue_styles__ = Gameshow_injectStyle
 /* scopeId */
-var Gameshow___vue_scopeId__ = "data-v-3b952c24"
+var Gameshow___vue_scopeId__ = "data-v-3849ed20"
 /* moduleIdentifier (server only) */
 var Gameshow___vue_module_identifier__ = null
 var Gameshow_Component = Gameshow_normalizeComponent(
@@ -794,4 +805,4 @@ var Gameshow_Component = Gameshow_normalizeComponent(
 /***/ })
 
 });
-//# sourceMappingURL=0.b2126019a3ddb31d8244.js.map
+//# sourceMappingURL=0.973c1c8e08b83affd821.js.map

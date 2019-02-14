@@ -10,8 +10,9 @@
       <h2>Admin Mode</h2>
       <p>Correct Answer: {{question.person}}</p>
       <p>Current Team: {{currentTeamsTurn}}</p>
-      <button class="btn btn-block btn-success" @click="gameCorrect">Correct!</button>
-      <button class="btn btn-block btn-danger" @click="gameIncorrect">Incorrect!</button>
+      <button class="btn btn-block btn-success btn-lg" @click="gameCorrect">Correct!</button>
+      <button class="btn btn-block btn-danger btn-lg"  @click="gameIncorrect">Incorrect!</button>
+      <button class="btn btn-block btn-info btn-lg"    @click="gameSkipQuestion">Skip</button>
       <br>
       <div is="TeamList" v-bind:teams="teams" @click="gameSuperBuzz"></div>
       <button class="btn btn-block btn-info" @click="gameSuperBuzz('')">Reset Buzzer</button>
@@ -102,6 +103,11 @@ export default {
       konami: null
     };
   },
+  watch: {
+    question: function(){ //vibrate when the question changes
+      if (typeof(window.navigator.vibrate) !== 'undefined') window.navigator.vibrate(200);
+    }
+  },
   computed: {
     gameOver: function() {
       if (this.question.id == -2) return true;
@@ -150,6 +156,10 @@ export default {
     gameIncorrect: function() {
       var questionId = this.question.id;
       this.$socket.emit(ROOT + "incorrect", questionId);
+    },
+    gameSkipQuestion: function() {
+      var questionId = this.question.id;
+      this.$socket.emit(ROOT + "skip", questionId);
     },
     gameRemoveTeam: function(teamName) {
       console.log("Removing team", teamName);

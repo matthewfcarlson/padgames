@@ -102,6 +102,15 @@ function Init(socket, io) {
         }
         SyncTeamTurn(io.to(ROOT));
     });
+    socket.on(ROOT + "skip", function (id) {
+        if (questions.length == 0) return;
+        //Check if we are on the right question
+        if (questions[0].id != id) return;
+        currentTeamTurn = "";
+        //skip to the next question
+        NextQuestion();
+        SyncAll(io.to(ROOT));
+    });
     socket.on(ROOT + "connect", function () {
         //lists all the games that are available
         socket.join(ROOT);
