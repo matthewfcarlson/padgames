@@ -10,21 +10,14 @@ import DixitLobby from "./dixit/client/DixitLobby"
 //import DixitGame from "./dixit/client/DixitGame"
 
 export const GameRoutes = [
-  {
-    path: "/gameshow",
-    name: "YM/YW gameshow",
-    title: "Gameshow",
-    isGame: true,
-    component: () => import("./gameshow/client/Gameshow") //Gameshow
-  },
-
+  
   /* This is the format
     {
         path: '/',
         name: 'HelloWorld',
         component: HelloWorld
       }];*/
-  /*
+  
   {
     path: "/sushi",
     name: "Sushi-to-go-lobby",
@@ -101,5 +94,13 @@ export const GameRoutes = [
     title: "Dixit",
     isGame: false,
     component: () => import("./dixit/client/Test") //DixitGame
-  },*/
+  },
+  {
+    path: "/gameshow",
+    name: "YM/YW gameshow",
+    title: "Gameshow",
+    isGame: true,
+    component: () => import("./gameshow/client/Gameshow") //Gameshow
+  }
+
 ];
