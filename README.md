@@ -20,12 +20,14 @@ It can be found at www.padgames.app
 + Fix scoring issue where people were getting pressure even when they were debating
 + make dixit prettier
 
-
 ## Ideas for Next Game
 
 + game of life (capitalism/cash flow)
 + secret hitler?
 + Cashflow
 + Pandemic
++ Music making game
++ Charmelon
++ Snake Oil
 + Some sort of Real time game?
 + some sort of intellectual game
