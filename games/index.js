@@ -15,7 +15,8 @@ export const GameRoutes = [
     {
         path: '/',
         name: 'HelloWorld',
-        component: HelloWorld
+        component: HelloWorld,
+        isGame: false, //this determines if it is listed (games are not)
       }];*/
   
   {
@@ -101,6 +102,13 @@ export const GameRoutes = [
     title: "Gameshow",
     isGame: true,
     component: () => import("./gameshow/client/Gameshow") //Gameshow
+  },
+  {
+    path: "/stocks",
+    name: "Matt Stocks",
+    title: "Matt Stocks",
+    isGame: true,
+    component: () => import("./mattstocks/client/Stocks") //Matt Stocks
   }
 
 ];

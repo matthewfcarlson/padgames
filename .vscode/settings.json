@@ -1,0 +1,7 @@
+{
+    "appService.zipIgnorePattern": [
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/5d6f5481-51ca-4284-9e25-8a2ce1e512be/resourceGroups/padgames/providers/Microsoft.Web/sites/padgames",
+    "appService.deploySubpath": ""
+}
