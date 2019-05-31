@@ -79,6 +79,7 @@ var StuffServer = require("../games/stuff/server/stuff_serv");
 var ArgueServer = require("../games/arguable/server/argueServer");
 var DixitServer = require("../games/dixit/server/dixitServer");
 var GameshowServer = require("../games/gameshow/server");
+var StocksServer = require("../games/mattstocks/server");
 
 io.on("connection", function(socket) {
   SushiGo.Init(socket,io);
@@ -86,6 +87,7 @@ io.on("connection", function(socket) {
   ArgueServer.Init(socket,io);
   DixitServer.Init(socket,io);
   GameshowServer.Init(socket,io);
+  StocksServer.Init(socket,io);
   //console.log("a user connected");
   socket.emit("game list", gameList);
   socket.on("chat message", function(msg) {

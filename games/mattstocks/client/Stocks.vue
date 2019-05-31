@@ -1,6 +1,14 @@
 <template>
   <div class="content">
     <h1>Matt Stocks</h1>
+    <div class="card">
+    <pre>
+      {{_data}}
+    </pre>
+    </div>
+    <button @click="GameStart">Start Game</button>
+    <button @click="GameReset">Reset Game</button>
+    <button @click="AddPlayer">Add Player</button>
     <div class="text-center">
       <small>Made by Matthew Carlson</small>
     </div>
@@ -10,6 +18,7 @@
 <script>
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
+import StockGame from "../common/stock_state";
 
 Vue.use(VueSocketio, window.location.origin);
 
@@ -29,25 +38,86 @@ export default {
     var debug =
       location.hostname === "localhost" || location.hostname === "127.0.0.1";
 
-    return {
-      windowLocation: window.location.href
+    var defaults = {
+      windowLocation: window.location.href,
+      debug: debug,
+      playerId:-1,
+      syncing: false,
+      playerName: "",
     };
+    return Object.assign({}, defaults, StockGame.CreateGame());
   },
   computed: {
 
   },
   methods: {
-    gameReset: function() {
+    GameReset: function() {
       this.$socket.emit(ROOT + "reset");
+    },
+    GameStart: function() {
+      if (!this.g_gameStarted) {
+        this.g_gameStarted = true;
+        //give each player default cash
+      }
+    },
+    AddPlayer: function() {
+      var name = "Bob"; //this.playerName;
+      //TODO read from text box
+      
+      if (this.g_players.indexOf(name) == -1) { //if the player doesn't already exist
+        var player = StockGame.CreatePlayer(name);
+        this.g_players.push(player);
+      }
+    },
+    BuyShare: function(){
+      //get the current price of the share you want to buy
+    },
+    GameChanged: function(prop, val, oldVal) {
+      if (this.syncing) return;
+      console.log("Notify the server that we've updated oursevles", prop, val, oldVal);
+      this.$socket.emit(ROOT + "modify", {name:prop, current:val, old:oldVal});
     }
   },
   sockets: {
     connect: function() {
       this.$socket.emit(ROOT + "connect");
     },
+    "Stocks:sync": function(newGame) {
+      console.log("Server sent us new version: "+newGame);
+      this.syncing = true;
+      for (var prop in newGame){
+        this[prop] = newGame[prop];
+      }
+      var self = this;
+      Vue.nextTick( () => self.syncing = false);
+    },
+    "Stocks:set player": function(playerIndex) {
+      console.log("Player ID" + playerIndex);
+      //TODO do this better
+      this.playerIndex = playerIndex;
+      if (!this.debug) {
+        console.log("Storing the game for later");
+
+        localStorage.setItem(
+          ROOT,
+          JSON.stringify({
+            playerName: this.playerName,
+            index: playerIndex,
+            socketId: this.$socket.id
+          })
+        );
+      }
+    }
   },
   mounted: function() {
     this.$socket.emit(ROOT + "connect");
+    //console.log(this);
+    for (const prop in this._data){
+      if (prop.startsWith("g_")) { //if it's a game property
+        //console.log(prop);
+        this.$watch(prop, (o,n)=> {var c=prop; this.GameChanged(c,o,n)}, {deep:true});
+      }
+    }
   }
 };
 </script>
