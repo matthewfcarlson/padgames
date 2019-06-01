@@ -1,14 +1,25 @@
 <template>
   <div class="content">
     <h1>Matt Stocks</h1>
-    <div class="card">
-    <pre>
-      {{_data}}
-    </pre>
+    <div v-if="!g_gameStarted">
+      <div class="card">
+        Game hasn't started yet
+        <pre>
+          {{_data}}
+        </pre>
+        <input v-model="playerName" type="text" placeholder="Player Name"/>
+      </div>
+      <button @click="GameStart">Start Game</button>
+      <button @click="AddPlayer">Add Player</button>
     </div>
-    <button @click="GameStart">Start Game</button>
-    <button @click="GameReset">Reset Game</button>
-    <button @click="AddPlayer">Add Player</button>
+    <div v-else>
+      <h2>Game has started</h2>
+      <pre>
+        {{_data}}
+      </pre>
+    </div>
+    
+    <button @click="GameReset">Reset Game</button>    
     <div class="text-center">
       <small>Made by Matthew Carlson</small>
     </div>
@@ -48,7 +59,11 @@ export default {
     return Object.assign({}, defaults, StockGame.CreateGame());
   },
   computed: {
-
+     bigScreen: function() {
+      var value = window.screen.width;
+      if (value > 750) return true;
+      return false;
+    },
   },
   methods: {
     GameReset: function() {
@@ -61,7 +76,8 @@ export default {
       }
     },
     AddPlayer: function() {
-      var name = "Bob"; //this.playerName;
+      var name = this.playerName;
+      this.playerName = "";
       //TODO read from text box
       
       if (this.g_players.indexOf(name) == -1) { //if the player doesn't already exist
@@ -74,6 +90,12 @@ export default {
     },
     GameChanged: function(prop, val, oldVal) {
       if (this.syncing) return;
+      if (this.Verify()){
+        console.error("We have a poorly formed game object");
+        //TODO refresh and resync from the server
+        this.$socket.emit(ROOT + "connect");
+        return;
+      }
       console.log("Notify the server that we've updated oursevles", prop, val, oldVal);
       this.$socket.emit(ROOT + "modify", {name:prop, current:val, old:oldVal});
     }
@@ -91,6 +113,7 @@ export default {
       var self = this;
       Vue.nextTick( () => self.syncing = false);
     },
+    /* //This isn't needed because 
     "Stocks:set player": function(playerIndex) {
       console.log("Player ID" + playerIndex);
       //TODO do this better
@@ -107,7 +130,7 @@ export default {
           })
         );
       }
-    }
+    }*/
   },
   mounted: function() {
     this.$socket.emit(ROOT + "connect");

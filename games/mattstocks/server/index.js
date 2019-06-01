@@ -13,11 +13,24 @@ function Init(socket, io) {
         socket.emit(gameRoomRoot+"sync", currentGame);
     });
 
+    socket.on(gameRoomRoot + "reset", function() {
+        //lists all the games that are available
+        currentGame = StockGame.CreateGame();
+        io.to(gameRoomRoot).emit(gameRoomRoot+"sync", currentGame);
+    });
+
     socket.on(gameRoomRoot + "modify", function(value) {
         console.log("We got modification:",value);
+        
         var prop_name = value["name"];
+        var old_value = currentGame[prop_name];
         currentGame[prop_name] = value["current"];
-        io.to(gameRoomRoot).emit(gameRoomRoot+"sync", currentGame);
+        if (!currentGame.Verify()) {
+            //Roll back the change
+            currentGame[prop_name] = old_value;
+            console.log("Invalid Game modification, rolling back");
+        }
+        else io.to(gameRoomRoot).emit(gameRoomRoot+"sync", currentGame);
     });
 
 }
