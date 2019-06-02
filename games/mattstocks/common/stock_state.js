@@ -19,7 +19,7 @@ function CreateGame() {
             console.log(this.g_players);
             var good_players = this.g_players.filter((x)=>x.Verify()).length;
             if (good_players != this.g_players.length) return false;
-            if (good_players == 0 && g_gameStarted) return false;
+            if (good_players == 0 && this.g_gameStarted) return false;
             return true;
         }
     }
