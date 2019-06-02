@@ -23,7 +23,8 @@ function Init(socket, io) {
         console.log("We got modification:",value);
         
         var prop_name = value["name"];
-        var old_value = currentGame[prop_name].slice(); //copy by value
+        var old_value = currentGame[prop_name];
+        if (typeof old_value == "array")  old_value = currentGame[prop_name].slice(); //copy by value
         currentGame[prop_name] = value["current"];
         currentGame.Fix(); //attempt to fix things?
         if (!currentGame.Verify()) {

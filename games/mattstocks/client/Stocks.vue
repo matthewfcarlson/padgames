@@ -110,6 +110,7 @@ export default {
       for (var prop in newGame){
         this[prop] = newGame[prop];
       }
+      this.Fix();
       var self = this;
       Vue.nextTick( () => self.syncing = false);
     },
