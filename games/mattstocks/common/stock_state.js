@@ -8,12 +8,15 @@ function CreateGame() {
         g_gameStarted: false, //if the game has been started
         g_defaultCash: 100, // the starting cash for each player
         g_shares: [], // the list of shares in the game,
-        Verify() { //this verifies that the game is in a good state
-            // make sure all the players are good
-            this.g_players.map( (x)=> {
-                if (x.Verify == undefined) return CreatePlayer(x);
+        Fix() {
+            this.g_players = this.g_players.map( (x)=> {
+                if (!x.hasOwnProperty("Verify")) return CreatePlayer(x);
                 else return x;
             });
+        },
+        Verify() { //this verifies that the game is in a good state
+            // make sure all the players are good
+            console.log(this.g_players);
             var good_players = this.g_players.filter((x)=>x.Verify()).length;
             if (good_players != this.g_players.length) return false;
             if (good_players == 0 && g_gameStarted) return false;
@@ -23,13 +26,20 @@ function CreateGame() {
     return default_game;
 };
 
-function CreatePlayer(name){
+function CreatePlayer(data){
     var cash = 0;
     var shares = [];
-    if (typeof name == Object){
+    var name = "";
+    if (data != undefined && typeof data == "object"){
         cash = -1;
-        if (name.cash == undefined) cash = name.cash;
-        
+        console.log("Creating new player from ", data);
+        if (data.p_cash != undefined) cash = data.p_cash;
+        if (data.p_shares != undefined) shares = data.p_shares;
+        if (data.p_name != undefined) name = data.p_name;
+    }
+    else if (data != undefined && typeof data == "string"){
+        console.log("Naming player", data);
+        name = data;
     }
     var default_player = {
         p_name: name,

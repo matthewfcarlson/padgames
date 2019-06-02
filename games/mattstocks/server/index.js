@@ -23,12 +23,14 @@ function Init(socket, io) {
         console.log("We got modification:",value);
         
         var prop_name = value["name"];
-        var old_value = currentGame[prop_name];
+        var old_value = currentGame[prop_name].slice(); //copy by value
         currentGame[prop_name] = value["current"];
+        currentGame.Fix(); //attempt to fix things?
         if (!currentGame.Verify()) {
             //Roll back the change
             currentGame[prop_name] = old_value;
             console.log("Invalid Game modification, rolling back");
+            socket.emit(gameRoomRoot+"sync", currentGame);
         }
         else io.to(gameRoomRoot).emit(gameRoomRoot+"sync", currentGame);
     });

@@ -90,7 +90,7 @@ export default {
     },
     GameChanged: function(prop, val, oldVal) {
       if (this.syncing) return;
-      if (this.Verify()){
+      if (!this.Verify()){
         console.error("We have a poorly formed game object");
         //TODO refresh and resync from the server
         this.$socket.emit(ROOT + "connect");
