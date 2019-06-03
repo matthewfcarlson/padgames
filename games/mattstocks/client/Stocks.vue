@@ -10,17 +10,36 @@
         <input v-model="playerName" type="text" placeholder="Player Name"/>
       </div>
       <button @click="GameStart">Start Game</button>
-      <button @click="AddPlayer">Add Player</button>
+      <button @click="AddNewPlayer">Add Player</button>
     </div>
-    <div v-else>
+    <div v-else-if="bigScreen">
       <h2>Game has started</h2>
-      <pre>
+      <pre class="card">
         {{_data}}
       </pre>
     </div>
+    <div v-else>
+      <h2>Game is going on</h2>
+      <pre class="card">
+        {{_data}}
+      </pre>
+      <div v-for="(stock, id) in g_shares" v-bind:key="'s'+id">
+        <button @click="currentStock = id">Stock {{ stock.s_name }}</button>
+      </div>
+      <div v-for="(player, id) in g_players" v-bind:key="'p'+id">
+        <button @click="playerId = id">Player {{ player.p_name }}</button>
+      </div>
+      <div>
+      <input v-model="numberShares" placeholder="Numer of shares to buy" type="number"/>
+      
+      <button @click="BuyShare(currentStock,numberShares)">Buy</button>
+      <button @click="SellShare(currentStock,numberShares)">Sell</button>
+      </div>
+      <button @click="Advance">Advance Day</button>
+    </div>
     
-    <button @click="GameReset">Reset Game</button>    
-    <div class="text-center">
+    <button @click="GameReset">Reset Game</button>
+      <div class="text-center">
       <small>Made by Matthew Carlson</small>
     </div>
   </div>
@@ -55,13 +74,16 @@ export default {
       playerId:-1,
       syncing: false,
       playerName: "",
+      currentStock: -1,
+      numberShares: 0,
     };
     return Object.assign({}, defaults, StockGame.CreateGame());
   },
   computed: {
      bigScreen: function() {
       var value = window.screen.width;
-      if (value > 750) return true;
+      console.log("Screen width: "+value);
+      if (value > 1250) return true;
       return false;
     },
   },
@@ -75,15 +97,41 @@ export default {
         //give each player default cash
       }
     },
-    AddPlayer: function() {
+    Advance: function() { //advance the day
+      this.$socket.emit(ROOT + "advance");
+    },
+    BuyShare: function(stock_index, quantity) {
+      console.log("Trying to buy "+quantity+" of "+ stock_index);
+      if (stock_index >= this.g_shares.length) return;
+      if (quantity < 1) return;
+      var cost = this.g_shares[stock_index]["s_price"] * quantity;
+      if (this.g_players[this.playerId].p_cash < cost){
+        console.log("This costs too much");
+        return;
+      }
+      this.g_players[this.playerId].p_cash -= cost;
+      //make sure the player can afford it
+      console.log("Cost" + cost);
+    },
+    SellShare: function(stock_index, quantity){
+      console.log("Trying to sell "+quantity+" of "+ stock_index+ " for "+this.playerId);
+      if (stock_index >= this.g_shares.length) return;
+      if (quantity < 1) return;
+      //check to make sure we have enough
+      var price = this.g_shares[stock_index]["s_price"] * quantity;
+      console.log("Revenue" + price);
+      //calculate the profit (taxes?)
+      //remove the stocks we have
+      //add the cash to the player price
+      this.g_players[this.playerId].p_cash += price;
+
+    },
+    AddNewPlayer: function() {
       var name = this.playerName;
       this.playerName = "";
       //TODO read from text box
-      
-      if (this.g_players.indexOf(name) == -1) { //if the player doesn't already exist
-        var player = StockGame.CreatePlayer(name);
-        this.g_players.push(player);
-      }
+      var player = StockGame.CreatePlayer(name);
+      this.AddPlayer(player);
     },
     BuyShare: function(){
       //get the current price of the share you want to buy
@@ -97,7 +145,7 @@ export default {
         return;
       }
       console.log("Notify the server that we've updated oursevles", prop, val, oldVal);
-      this.$socket.emit(ROOT + "modify", {name:prop, current:val, old:oldVal});
+      this.$socket.emit(ROOT + "modify", {name:prop, current:val});
     }
   },
   sockets: {

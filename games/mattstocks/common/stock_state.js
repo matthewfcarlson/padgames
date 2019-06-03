@@ -20,7 +20,15 @@ function CreateGame() {
             if (good_players != this.g_players.length) return false;
             if (good_players == 0 && this.g_gameStarted) return false;
             return true;
-        }
+        },
+        AddShare(share) {
+            // Add share
+            this.g_shares.push(share);
+        },
+        AddPlayer(player) {
+            // Add share
+            this.g_players.push(player);
+        },
     }
     return default_game;
 };
@@ -53,11 +61,12 @@ function CreatePlayer(data){
     return default_player;
 }
 
-function CreateShare(name, price, ){
+function CreateShare(name, price){
     var default_share = {
         s_name: name, 
         s_price: price, //the current price or the price it was bought at
-        s_day:0
+        s_day:0,
+        s_history: []
     }
     return default_share;
 }
