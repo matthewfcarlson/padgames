@@ -76,10 +76,26 @@ function Init(socket, io) {
         for (var stock_index in currentGame["g_shares"]){
             //update the price
             var stock = currentGame["g_shares"][stock_index];
+            var volume = stock["s_volume"];
+            var value = stock["s_volume_v"];
+            var price = stock["s_price"];
+            currentGame["g_shares"][stock_index]["s_volume"] = 0;
+            currentGame["g_shares"][stock_index]["s_volume_v"] = 0;
+            if (value < 0)
+                currentGame["g_shares"][stock_index]["s_price"] = price-1;
+            else if (value > 0)
+                currentGame["g_shares"][stock_index]["s_price"] = price+1;
+            else 
+                currentGame["g_shares"][stock_index]["s_price"] = price+Math.round(Math.random()*2)-1;
+            //Add to the s_day
+            currentGame["g_shares"][stock_index]["s_day"] += 1;
+            currentGame["g_shares"][stock_index]["s_history"].push(price);
             console.log(stock);
         }
         io.to(gameRoomRoot).emit(gameRoomRoot+"sync", currentGame);
     });
+
+    //Maybe buying and selling should be done server side?
 
     socket.on(gameRoomRoot + "modify", function(value) {
         console.log("We got modification:",value);

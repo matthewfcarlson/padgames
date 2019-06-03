@@ -50,6 +50,12 @@ import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import StockGame from "../common/stock_state";
 
+//TODO
+// Add calculate type component that can take in the number and type of stock
+// Add bar to select different stock types
+// Fix Buy/Sell Bar
+// Add balance/profit sheets
+
 Vue.use(VueSocketio, window.location.origin);
 
 const ROOT = "Stocks:";
