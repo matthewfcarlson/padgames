@@ -36,10 +36,9 @@
       <button @click="SellShare(currentStock,numberShares)">Sell</button>
       </div>
       <button @click="Advance">Advance Day</button>
+      <button @click="GameReset">Reset Game</button>
     </div>
-    
-    <button @click="GameReset">Reset Game</button>
-      <div class="text-center">
+    <div class="text-center">
       <small>Made by Matthew Carlson</small>
     </div>
   </div>
@@ -87,7 +86,7 @@ export default {
   },
   computed: {
      bigScreen: function() {
-      var value = window.screen.width;
+      var value = window.innerWidth;
       console.log("Screen width: "+value);
       if (value > 1250) return true;
       return false;
