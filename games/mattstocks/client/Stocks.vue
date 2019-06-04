@@ -2,41 +2,78 @@
   <div class="content">
     <h1>Matt Stocks</h1>
     <div v-if="!g_gameStarted">
-      <div class="card">
-        Game hasn't started yet
-        <pre>
-          {{_data}}
-        </pre>
+      <div>
+        <h3>Game hasn't started yet</h3>
+        <p>Add the players you want in the game</p>
+        <ul>
+          <li v-for="player in g_players">{{player.p_name}}</li>
+        </ul>
         <input v-model="playerName" type="text" placeholder="Player Name"/>
+        <button class="btn btn-block btn-primary" @click="AddNewPlayer">Add Player</button>
       </div>
-      <button @click="GameStart">Start Game</button>
-      <button @click="AddNewPlayer">Add Player</button>
+      <button class="btn btn-success btn-block"@click="GameStart">Start Game</button>
+      Starting Cash: <input v-model="g_defaultCash" type="number" placeholder="Starting cash"/>
     </div>
     <div v-else-if="bigScreen">
-      <h2>Game has started</h2>
+      <h2>Day: {{g_day}}</h2>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col" v-for="share in g_shares">
+            <div class="card text-white bg-primary">
+              <div class="card-body">
+                <div class="card-title">{{share.s_name}}</div>
+                <p class="card-text text-center">${{share.s_price}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col" v-for="player in g_players">
+            <div class="card text-white bg-primary">
+              <div class="card-header">{{player.p_name}}</div>
+              <ul class="list-group list-group-flush text-black">
+                <li class="list-group-item">Cash: ${{player.p_cash}}</li>
+                <li class="list-group-item" v-for="stock in AggregateShares(player.p_shares)"> {{stock.s_name}} Avg:${{stock.s_price}} #:{{stock.s_count}}</li>
+                <li class="list-group-item"> Unrealized Profit: ${{UnrealizedProfit(player.p_shares)}} </li>
+                <li class="list-group-item">Vestibulum at eros</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr/>
       <pre class="card">
         {{_data}}
       </pre>
     </div>
     <div v-else>
-      <h2>Game is going on</h2>
-      <pre class="card">
-        {{_data}}
-      </pre>
-      <div v-for="(stock, id) in g_shares" v-bind:key="'s'+id">
-        <button @click="currentStock = id">Stock {{ stock.s_name }}</button>
+      <h2>Day: {{g_day}}</h2>
+      <div class="btn-group btn-group-toggle btn-group-justified" role="group" data-toggle="buttons" aria-label="Basic example">
+        <label class="btn btn-secondary" @click="currentStock = id" v-for="(stock, id) in g_shares" v-bind:key="'s'+id">
+          <input type="radio" name="stocks" v-bind:id="'stock'+id">Stock {{ stock.s_name }}</input>
+        </label>
       </div>
-      <div v-for="(player, id) in g_players" v-bind:key="'p'+id">
-        <button @click="playerId = id">Player {{ player.p_name }}</button>
+      <br/>
+      <div class="btn-group btn-group-toggle btn-group-justified" role="group" data-toggle="buttons" aria-label="Basic example">
+        <label class="btn btn-secondary" v-for="(player, id) in g_players" v-bind:key="'p'+id">
+          <input type="radio" name="player" @click="playerId = id" v-bind:id="'player'+id">{{ player.p_name }}: ${{ player.p_cash }}</input>
+        </label>
       </div>
+      <div v-if="maxShares >= 0">Number of shares you can buy: {{ maxShares }}</div>
+      <div v-if="sellableShares >= 0">Number of shares you can sell: {{ sellableShares }}</div>
       <div>
-      <input v-model="numberShares" placeholder="Numer of shares to buy" type="number"/>
-      
-      <button @click="BuyShare(currentStock,numberShares)">Buy</button>
-      <button @click="SellShare(currentStock,numberShares)">Sell</button>
+        <numkeyboard v-model="numberShares" ok-text="OK" text-align="left" v-bind:point="false" placeholder="Number of Shares"></numkeyboard>
+        <div class="btn-group btn-group-justified" role="group">
+          <button class="btn" @click="BuyShare(currentStock,numberShares)">Buy</button>
+          <button class="btn" @click="SellShare(currentStock,numberShares)">Sell</button>
+        </div>
       </div>
-      <button @click="Advance">Advance Day</button>
-      <button @click="GameReset">Reset Game</button>
+      
+      <button class="btn btn-success btn-block" @click="Advance">Advance Day</button>
+      <hr/>
+      <button class="btn btn-danger btn-block" @click="GameReset">Reset Game</button>
+      
     </div>
     <div class="text-center">
       <small>Made by Matthew Carlson</small>
@@ -48,6 +85,9 @@
 import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import StockGame from "../common/stock_state";
+import numkeyboard from './NumPad';
+//import 'vue-numkeyboard/style.css';
+
 
 //TODO
 // Add calculate type component that can take in the number and type of stock
@@ -61,11 +101,9 @@ const ROOT = "Stocks:";
 
 export default {
   name: "Stocks",
-  /*components: {
-    TeamList,
-    QuestionView,
-    Scores
-  },*/
+  components: {
+    numkeyboard
+  },
   data() {
     var self = this;
 
@@ -91,6 +129,22 @@ export default {
       if (value > 1250) return true;
       return false;
     },
+    maxShares: function(){
+      if (this.playerId < 0) return -1;
+      if (this.currentStock < 0) return -1;
+      var price = this.g_shares[this.currentStock].s_price; // get the price
+      var cash = this.g_players[this.playerId].p_cash; // get the cash
+      return Math.floor(cash / price);
+    },
+    sellableShares: function(){
+      if (this.playerId < 0) return -1;
+      if (this.currentStock < 0) return -1;
+      var stock_symbol = this.g_shares[this.currentStock].s_name;
+      var stock_count = this.g_players[this.playerId].p_shares.filter((x)=>{
+          return x.s_name == stock_symbol;
+      }).length;
+      return stock_count;
+    }
   },
   methods: {
     GameReset: function() {
@@ -105,31 +159,59 @@ export default {
     Advance: function() { //advance the day
       this.$socket.emit(ROOT + "advance");
     },
-    BuyShare: function(stock_index, quantity) {
-      console.log("Trying to buy "+quantity+" of "+ stock_index);
-      if (stock_index >= this.g_shares.length) return;
-      if (quantity < 1) return;
-      var cost = this.g_shares[stock_index]["s_price"] * quantity;
-      if (this.g_players[this.playerId].p_cash < cost){
-        console.log("This costs too much");
-        return;
+    AggregateShares: function(shares){
+      var aggregated = {};
+      // shares must have s_price, s_name, and s_count
+      
+      for (var share_index in shares){
+        var share = shares[share_index];
+        var share_id = share.s_id;
+        if (aggregated[share_id] == undefined) aggregated[share_id] = { "s_count":0, "s_price":0, "s_total":0, "s_name": share.s_name};
+        aggregated[share_id].s_count+=1;
+        aggregated[share_id].s_total += share.s_price;
       }
-      this.g_players[this.playerId].p_cash -= cost;
-      //make sure the player can afford it
-      console.log("Cost" + cost);
+      console.log(aggregated);
+      var results = [];
+      for (var share_id in aggregated){
+        console.log(share_id);
+        var share = aggregated[share_id];
+        share.s_price = share.s_total / share.s_count;
+        results.push(share);
+      }
+      //
+      return results;
+    },
+    UnrealizedProfit: function(shares){
+      var profit = 0;
+      for (var share_index in shares){
+        var share = shares[share_index];
+        var share_id = share.s_id;
+        var sell_price = this.g_shares[share_id].s_price;
+        var buy_price = share.s_price;
+        profit += (sell_price - buy_price);
+      }
+      //go through the shares and get the price of the current share - the price we bought it for
+      return profit;
+    },
+    BuyShare: function(stock_index, quantity) {
+      var order = {
+        "type":"BUY",
+        "count": quantity,
+        "stock": stock_index,
+        "player": this.playerId
+      }
+      this.$socket.emit(ROOT + "order", order);
+      this.numberShares = 0;
     },
     SellShare: function(stock_index, quantity){
-      console.log("Trying to sell "+quantity+" of "+ stock_index+ " for "+this.playerId);
-      if (stock_index >= this.g_shares.length) return;
-      if (quantity < 1) return;
-      //check to make sure we have enough
-      var price = this.g_shares[stock_index]["s_price"] * quantity;
-      console.log("Revenue" + price);
-      //calculate the profit (taxes?)
-      //remove the stocks we have
-      //add the cash to the player price
-      this.g_players[this.playerId].p_cash += price;
-
+      var order = {
+        "type":"SELL",
+        "count": quantity,
+        "stock": stock_index,
+        "player": this.playerId
+      }
+      this.$socket.emit(ROOT + "order", order);
+      this.numberShares = 0;
     },
     AddNewPlayer: function() {
       var name = this.playerName;
@@ -137,9 +219,6 @@ export default {
       //TODO read from text box
       var player = StockGame.CreatePlayer(name);
       this.AddPlayer(player);
-    },
-    BuyShare: function(){
-      //get the current price of the share you want to buy
     },
     GameChanged: function(prop, val, oldVal) {
       if (this.syncing) return;
@@ -167,24 +246,6 @@ export default {
       var self = this;
       Vue.nextTick( () => self.syncing = false);
     },
-    /* //This isn't needed because 
-    "Stocks:set player": function(playerIndex) {
-      console.log("Player ID" + playerIndex);
-      //TODO do this better
-      this.playerIndex = playerIndex;
-      if (!this.debug) {
-        console.log("Storing the game for later");
-
-        localStorage.setItem(
-          ROOT,
-          JSON.stringify({
-            playerName: this.playerName,
-            index: playerIndex,
-            socketId: this.$socket.id
-          })
-        );
-      }
-    }*/
   },
   mounted: function() {
     this.$socket.emit(ROOT + "connect");
@@ -197,8 +258,10 @@ export default {
     }
   }
 };
+//@import 'vue-numkeyboard/style.css';
 </script>
 <style scoped>
+@import './keyboard.css';
 .content {
   min-height: 100vh;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f19b4d+0,ea8b31+100 */
@@ -214,4 +277,11 @@ export default {
   font-size: 2.25rem;
   line-height: 3rem;
 }
+.btn-group-justified {
+  display: flex;
+}
+.btn-group-justified .btn {
+  flex-grow: 1;
+}
+
 </style>

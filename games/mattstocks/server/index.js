@@ -5,8 +5,8 @@ const StockGame = require("../common/stock_state");
 const brain = require("brain.js");
 
 var currentGame = StockGame.CreateGame();
-var defaultStock = StockGame.CreateShare("MATT", 50);
-var defaultStock2 = StockGame.CreateShare("MATT2", 20);
+var defaultStock = StockGame.CreateShare("EST", 50);
+var defaultStock2 = StockGame.CreateShare("JACK", 20);
 currentGame.AddShare(defaultStock);
 currentGame.AddShare(defaultStock2);
 
@@ -60,6 +60,7 @@ function Init(socket, io) {
         //lists all the games that are available
         socket.join(gameRoomRoot);
         socket.emit(gameRoomRoot + "connect");
+
         socket.emit(gameRoomRoot+"sync", currentGame);
     });
 
@@ -81,6 +82,7 @@ function Init(socket, io) {
             var price = stock["s_price"];
             currentGame["g_shares"][stock_index]["s_volume"] = 0;
             currentGame["g_shares"][stock_index]["s_volume_v"] = 0;
+            //TODO figure out how to get a new price (percentage based)
             if (value < 0)
                 currentGame["g_shares"][stock_index]["s_price"] = price-1;
             else if (value > 0)
@@ -94,6 +96,82 @@ function Init(socket, io) {
         }
         io.to(gameRoomRoot).emit(gameRoomRoot+"sync", currentGame);
     });
+
+    socket.on(gameRoomRoot+"order", function(order){
+        var type = order["type"];
+        var stock = parseInt(order["stock"]);
+        var quantity = parseInt(order["count"]);
+        var playerId = parseInt(order["player"]);
+        if (type == "BUY"){
+            console.log("Trying to buy "+quantity+" of "+ stock);
+            if (stock >= currentGame.g_shares.length || stock < 0) return;
+            if (playerId < 0) return;
+            if (quantity < 1) return;
+            var cost = currentGame.g_shares[stock]["s_price"] * quantity;
+            console.log("Cost" + cost);
+            //figure out the cost
+            if (currentGame.g_players[playerId].p_cash < cost){
+              console.log("This costs too much");
+              return;
+            }
+            currentGame.g_players[playerId].p_cash -= cost;
+            //give them the shares
+            var share = {
+                s_name: currentGame.g_shares[stock].s_name,
+                s_price: currentGame.g_shares[stock].s_price,
+                s_day: currentGame.g_day,
+                s_id: stock
+            };
+            console.log("Purchased for "+playerId);
+            for (var i=0;i<quantity; i++){
+                currentGame.g_players[playerId].p_shares.push(share);
+            }
+            // Add to volume indicator
+            currentGame.g_shares[stock].s_volume += quantity;
+            currentGame.g_shares[stock].s_owned += quantity;
+            currentGame.g_shares[stock].s_volume_v += quantity;
+
+        }
+        else if (type == "SELL"){
+            console.log("Trying to sell "+quantity+" of "+ stock+ " for "+ playerId);
+            if (stock >= currentGame.g_shares.length || stock < 0) return;
+            if (quantity < 1) return;
+            if (playerId < 0) return;
+            //check to make sure we have enough
+            var stock_symbol = currentGame.g_shares[stock].s_name;
+            var stock_count = currentGame.g_players[playerId].p_shares.filter((x)=>{
+                return x.s_name == stock_symbol;
+            }).length;
+
+            if (stock_count < quantity){
+                console.log("We only have "+stock_count+" stocks");
+                return;
+            }
+            var price = currentGame.g_shares[stock]["s_price"] * quantity;
+            console.log("Revenue" + price);
+            //calculate the profit (taxes?)
+            //remove the stocks we have
+            var stocks_to_remove = quantity;
+            currentGame.g_players[playerId].p_shares = currentGame.g_players[playerId].p_shares.filter((x)=>{
+                if (x.s_name == stock_symbol && stocks_to_remove > 0) {
+                    stocks_to_remove --;
+                    return false;
+                }
+                else return true;
+            });
+            //add the cash to the player price
+            currentGame.g_players[playerId].p_cash += price;
+            // Add to volume indicator
+            currentGame.g_shares[stock].s_volume += quantity;
+            currentGame.g_shares[stock].s_owned -= quantity;
+            currentGame.g_shares[stock].s_volume_v -= quantity;
+        }
+        else {
+            console.log("Unknown type of order", order)
+        }
+        io.to(gameRoomRoot).emit(gameRoomRoot+"sync", currentGame);
+    });
+
 
     //Maybe buying and selling should be done server side?
 
