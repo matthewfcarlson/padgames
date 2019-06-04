@@ -1,6 +1,6 @@
 <template>
 <div class="numKeyboardInput">
-  <div ref="keyboardInput" :class="['keyboard-input', { 'keyboard-focus': showKeyboard }, textAlign]" @click="focus">
+  <div ref="keyboardInput" :class="['keyboard-input form-control', { 'keyboard-focus': showKeyboard }, textAlign]" @click="focus">
     <!-- wrapper value with span, easy to calc elem length -->
     <span v-if="placeholder && value === ''" class="placeholder">{{ placeholder }}</span>
     <span v-else class="input-value">{{ value }}</span>
@@ -79,7 +79,8 @@ export default {
       let mutableValue = this.value
 
       if (code === 'D') { // del
-        if (mutableValue.length == 1) mutableValue = ""
+        mutableValue = mutableValue.toString();
+        if (mutableValue.length == 1) mutableValue = "";
         else mutableValue = mutableValue.substring(0, mutableValue.length -1)
         this.$emit('input', mutableValue)
       } else if (code === 'LD') { // long del
@@ -89,9 +90,9 @@ export default {
         this.blur()
         this.$emit('onOk', mutableValue)
       } else if (/[0-9\.]/.test(code)) { // normal input
-        if (parseInt(mutableValue) == 0) mutableValue = code;
-        else mutableValue += code
-        this.$emit('input', mutableValue)
+        if (parseInt(mutableValue) == 0) mutableValue = code.toString();
+        else mutableValue = mutableValue.toString() + code;
+        this.$emit('input', mutableValue);
       }
     },
 

@@ -1,1 +1,190 @@
-.keyboard{position:fixed;left:0;right:0;bottom:0;z-index:100;font-size:.48rem;line-height:.48rem;background:#f6f6f6;color:#4a4a4a;width:100%;height:4.4rem;-webkit-user-select:none;user-select:none;visibility:visible;-webkit-transform:translateZ(0);transform:translateZ(0);transition-property:-webkit-transform visibility;transition-property:transform visibility;transition-property:transform visibility,-webkit-transform visibility;transition-duration:.2s;font-weight:300;border-top:1px solid #e5e5e5}.keyboard.hidden{visibility:hidden;-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0)}.keyboard table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}.keyboard td{text-align:center;width:25%;border:1px solid #ddd}.keyboard td:nth-of-type(-n+3){font-weight:600}.keyboard td:active{background-color:#ddd}.keyboard td:first-child{border-left:none}.keyboard td:last-child{border-right:none}.keyboard td.active{background:#dff0ff}.keyboard td.transition{transition:background .1s ease}.keyboard .icon{font-size:.34rem}.keyboard .icon svg{width:1.5em;height:1.5em}.keyboard td[data-code=K]{font-size:.34rem;background:#2b91e2;color:#ddd}.keyboard td[data-code=K].active{color:#fff}@-webkit-keyframes cursor{0%{opacity:1}50%{opacity:0}to{opacity:1}}@keyframes cursor{0%{opacity:1}50%{opacity:0}to{opacity:1}}.keyboard-input{display:inline-block;text-align:right;width:100%;height:100%}.keyboard-input.keyboard-focus{position:relative}.keyboard-input.keyboard-focus:after{content:"";position:absolute;right:0;top:10%;height:80%;border-right:.02rem solid #108ee9;-webkit-animation:cursor infinite 1s step-start;animation:cursor infinite 1s step-start}.keyboard-input span{display:inline-block}.keyboard-input .placeholder{color:#ddd}.keyboard-input.left{text-align:left}.keyboard-input.left .icon-clear{position:absolute;right:0;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);padding:.2rem;display:-webkit-box;display:flex}.keyboard-input.left .icon-clear svg{fill:#8e8e93;width:.28rem;height:.28rem}.keyboard-input.left.keyboard-focus:after{display:none}.keyboard-input.left.keyboard-focus .input-value{position:relative}.keyboard-input.left.keyboard-focus .input-value:before{content:" ";display:inline-block}.keyboard-input.left.keyboard-focus .input-value:after{content:"";position:absolute;right:0;top:10%;height:80%;border-right:.02rem solid #108ee9;-webkit-animation:cursor infinite 1s step-start;animation:cursor infinite 1s step-start}
+.keyboard {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    font-size: 1.48rem;
+    line-height: 3.8rem;
+    background: #f6f6f6;
+    color: #4a4a4a;
+    width: 100%;
+    max-height: 40vh;
+    min-height: 30vh;
+    -webkit-user-select: none;
+    user-select: none;
+    visibility: visible;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    transition-property: -webkit-transform visibility;
+    transition-property: transform visibility;
+    transition-property: transform visibility, -webkit-transform visibility;
+    transition-duration: .2s;
+    font-weight: 300;
+    border-top: 1px solid #e5e5e5
+}
+
+.keyboard.hidden {
+    visibility: hidden;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0)
+}
+
+.keyboard table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    table-layout: fixed
+}
+
+.keyboard td {
+    text-align: center;
+    width: 25%;
+    border: 1px solid #ddd
+}
+
+.keyboard td:nth-of-type(-n+3) {
+    font-weight: 600
+}
+
+.keyboard td:active {
+    background-color: #ddd
+}
+
+.keyboard td:first-child {
+    border-left: none
+}
+
+.keyboard td:last-child {
+    border-right: none
+}
+
+.keyboard td.active {
+    background: #dff0ff
+}
+
+.keyboard td.transition {
+    transition: background .1s ease
+}
+
+.keyboard .icon {
+    font-size: .34rem
+}
+
+.keyboard .icon svg {
+    width: 1.5em;
+    height: 1.5em
+}
+
+.keyboard td[data-code=K] {
+    font-size: 1.34rem;
+    background: #2b91e2;
+    color: #ddd
+}
+
+.keyboard td[data-code=K].active {
+    color: #fff
+}
+
+@-webkit-keyframes cursor {
+    0% {
+        opacity: 1
+    }
+
+    50% {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes cursor {
+    0% {
+        opacity: 1
+    }
+
+    50% {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.keyboard-input {
+    display: inline-block;
+    text-align: right;
+    width: 100%;
+    height: 100%
+}
+
+.keyboard-input.keyboard-focus {
+    position: relative
+}
+
+.keyboard-input.keyboard-focus:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    border-right: .02rem solid #108ee9;
+    -webkit-animation: cursor infinite 1s step-start;
+    animation: cursor infinite 1s step-start
+}
+
+.keyboard-input span {
+    display: inline-block
+}
+
+.keyboard-input .placeholder {
+    color: #ddd
+}
+
+.keyboard-input.left {
+    text-align: left
+}
+
+.keyboard-input.left .icon-clear {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    padding: .2rem;
+    display: -webkit-box;
+    display: flex
+}
+
+.keyboard-input.left .icon-clear svg {
+    fill: #8e8e93;
+    width: .28rem;
+    height: .28rem
+}
+
+.keyboard-input.left.keyboard-focus:after {
+    display: none
+}
+
+.keyboard-input.left.keyboard-focus .input-value {
+    position: relative
+}
+
+.keyboard-input.left.keyboard-focus .input-value:before {
+    content: " ";
+    display: inline-block
+}
+
+.keyboard-input.left.keyboard-focus .input-value:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    border-right: .02rem solid #108ee9;
+    -webkit-animation: cursor infinite 1s step-start;
+    animation: cursor infinite 1s step-start
+}
