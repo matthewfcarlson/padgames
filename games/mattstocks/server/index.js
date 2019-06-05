@@ -19,9 +19,7 @@ function GetNextPrice(stock){
     var last_price = stock["s_history"][stock.s_history.length-1];
     if (owned == 0) owned = 1;
     var owned_factor = (volume) / owned;  // up to a double factor
-    if (owned_factor > 2) owned_factor = 2;
-    if (owned_factor < 1) owned_factor = 1;
-    var min = -2.5 * (1+owned_factor); //max of 5% up
+    var min = -2.25 * (1+owned_factor); //max of 5% up
     var max = 2.5 * (1+owned_factor); // max of 5% down
 
     if (last_price > price){
@@ -31,17 +29,19 @@ function GetNextPrice(stock){
         min += 0.5 // if we're going up, go up
     }
     
+    
     if (value < 0){ // if people are selling
         max -= owned_factor; // make max smaller
-        min -= owned_factor; //make the min bigger
+        min += owned_factor; //make the min bigger
     }
     else if (value > 0){ // if people buying
-        max += owned_factor; //make the max smaller
+        max -= owned_factor; //make the max smaller
         min += owned_factor; //make the min bigger
     }
     if (volume == 0){
-        min -= 1; // if no one is selling, make it go down?
+        min -= 0.25; // if no one is selling, make it go down?
     }
+    if (price < 10) min = 0;
     var percentage_change = 0;
     var range = max - min;
     while (percentage_change == 0){
