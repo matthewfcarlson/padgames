@@ -20,18 +20,30 @@
       <hr/>
       Starting Cash: <input v-model.number="g_defaultCash" type="number" placeholder="Starting cash"/>
     </div>
+    <div v-else-if="gameOver">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col" v-for="stock in g_shares">
+            <share :stock="stock"></share>
+          </div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col" v-for="player in g_players">
+            <div class="card text-white bg-primary">
+              <div class="card-header">{{player.p_name}}</div>
+              <div class="display-3 card-text">{{TotalAssets(player)}}</div>
+            </div>
+          </div>
+        </div>
+       </div>
+    </div>
     <div v-else-if="bigScreen">
       <h2>Day: {{g_day}}</h2>
       <div class="container-fluid">
         <div class="row">
-          <div class="col" v-for="share in g_shares">
-            <div class="card text-white bg-primary">
-              <div class="card-body">
-                <div class="card-title">{{share.s_name}}</div>
-                <p class="card-text text-center">${{share.s_price}}</p>
-                <!-- TODO add difference and maybe graph -->
-              </div>
-            </div>
+          <div class="col" v-for="stock in g_shares">
+            <share :stock="stock"></share>
           </div>
         </div>
         <br/>
@@ -92,8 +104,7 @@ import Vue from "vue";
 import VueSocketio from "vue-socket.io";
 import StockGame from "../common/stock_state";
 import numkeyboard from './NumPad';
-//import 'vue-numkeyboard/style.css';
-
+import share from "./Share";
 
 //TODO
 // Add calculate type component that can take in the number and type of stock
@@ -108,7 +119,8 @@ const ROOT = "Stocks:";
 export default {
   name: "Stocks",
   components: {
-    numkeyboard
+    numkeyboard,
+    share
   },
   data() {
     var self = this;
@@ -135,6 +147,10 @@ export default {
       if (value > 1250) return true;
       return false;
     },
+    gameOver: function(){
+      if (this.g_day > 30) return true;
+      return false;
+    },
     maxShares: function(){
       if (this.playerId < 0) return -1;
       if (this.currentStock < 0) return -1;
@@ -143,7 +159,6 @@ export default {
       return Math.floor(cash / price);
     },
     sellableShares: function(){
-      console.log(this.playerId, this.currentStock);
       if (this.playerId < 0) return -1;
       if (this.currentStock < 0) return -1;
       var stock_symbol = this.g_shares[this.currentStock].s_name;
@@ -198,6 +213,19 @@ export default {
       }
       //go through the shares and get the price of the current share - the price we bought it for
       return profit;
+    },
+    TotalAssets: function(player){
+      var assets = player.p_cash;
+      var shares = player.p_shares;
+      for (var share_index in shares){
+        var share = shares[share_index];
+        var share_id = share.s_id;
+        var sell_price = this.g_shares[share_id].s_price;
+        assets += (sell_price);
+      }
+      
+      //go through the shares and get the price of the current share - the price we bought it for
+      return assets;
     },
     BuyShare: function(stock_index, quantity) {
       var order = {

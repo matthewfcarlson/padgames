@@ -5,6 +5,7 @@
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^1.0.0",
     "brain.js": "^1.6.1",
+    "chart.js": "^2.8.0",
     "connect-history-api-fallback": "^1.5.0",
     "express": "^4.16.3",
     "javascript-state-machine": "^3.1.0",
@@ -15,6 +16,7 @@
     "underscore": "^1.9.1",
     "velocity-animate": "^1.5.2",
     "vue": "^2.5.17",
+    "vue-chartjs": "^3.4.2",
     "vue-directive-touch": "^1.0.28",
     "vue-router": "^3.0.1",
     "vue-scroll": "^2.1.9",
