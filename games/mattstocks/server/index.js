@@ -6,9 +6,9 @@ const brain = require("brain.js");
 
 var currentGame = StockGame.CreateGame();
 currentGame.AddShare(StockGame.CreateShare("BANANA", 50)); //BANANA
-currentGame.AddShare(StockGame.CreateShare("NESQUIK", 20)); //NASDAQ
+currentGame.AddShare(StockGame.CreateShare("NESQUIK", 30)); //NASDAQ
 currentGame.AddShare(StockGame.CreateShare("DIDNEY", 60)); //DISNEY
-currentGame.AddShare(StockGame.CreateShare("VAPOR", 10)); // STEAM
+currentGame.AddShare(StockGame.CreateShare("VAPOR", 20)); // STEAM
 
 function GetNextPrice(stock){
     //TODO figure out how to get a new price (percentage based)
