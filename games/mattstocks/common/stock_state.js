@@ -66,6 +66,8 @@ function CreateShare(name, price){
         s_name: name, 
         s_price: price, //the current price or the price it was bought at
         s_day: 0,
+        s_index: false,
+        s_factor: 1,
         s_history: [], // history of price (not on player shares)
         s_volume: 0, // the count of shares bought or sold (causes prices to flucuate)
         s_volume_v: 0, // the value of shares bought - shares sold (lots of bought shares drives the price up)

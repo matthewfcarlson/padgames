@@ -5,10 +5,14 @@ const StockGame = require("../common/stock_state");
 const brain = require("brain.js");
 
 var currentGame = StockGame.CreateGame();
-currentGame.AddShare(StockGame.CreateShare("BANANA", 50)); //BANANA
+currentGame.AddShare(StockGame.CreateShare("BANANA", 40)); //BANANA
 currentGame.AddShare(StockGame.CreateShare("NESQUIK", 30)); //NASDAQ
-currentGame.AddShare(StockGame.CreateShare("DIDNEY", 60)); //DISNEY
+currentGame.AddShare(StockGame.CreateShare("DIDNEY", 50)); //DISNEY
 currentGame.AddShare(StockGame.CreateShare("VAPOR", 20)); // STEAM
+var indexFund = StockGame.CreateShare("INDEX", 10);
+indexFund.s_factor = 14; //should be 10 to start with 
+indexFund.s_index = true;
+currentGame.AddShare(indexFund); // STEAM
 
 function GetNextPrice(stock){
     //TODO figure out how to get a new price (percentage based)
@@ -17,10 +21,11 @@ function GetNextPrice(stock){
     var price = stock["s_price"];
     var owned = stock["s_owned"];
     var last_price = stock["s_history"][stock.s_history.length-1];
-    if (owned == 0) owned = 1;
-    var owned_factor = (volume) / owned;  // up to a double factor
-    var min = -2.25 * (1+owned_factor); //max of 5% up
-    var max = 2.5 * (1+owned_factor); // max of 5% down
+    if (owned == 0) owned = 1.0;
+    var owned_factor = 2.0 * (volume) / owned;  // up to a double factor
+    if (owned_factor > 2) owned_factor = 2;
+    var min = -4.5;
+    var max = 5; // max of 5% down
 
     if (last_price > price){
         max -= 0.5; // if we're going down, go down
@@ -28,7 +33,6 @@ function GetNextPrice(stock){
     if (last_price < price){
         min += 0.5 // if we're going up, go up
     }
-    
     
     if (value < 0){ // if people are selling
         max -= owned_factor; // make max smaller
@@ -41,7 +45,7 @@ function GetNextPrice(stock){
     if (volume == 0){
         min -= 0.25; // if no one is selling, make it go down?
     }
-    if (price < 10) min = 0;
+    if (price < 3) min = 0;
     var percentage_change = 0;
     var range = max - min;
     while (percentage_change == 0){
@@ -119,17 +123,36 @@ function Init(socket, io) {
         //advance the day
         currentGame["g_day"] += 1;
         //Update prices
+        var total_price = 0;
         for (var stock_index in currentGame["g_shares"]){
             //update the price
             var stock = currentGame["g_shares"][stock_index];
+            if (stock.s_index) continue;
             var price = stock["s_price"];
-            currentGame["g_shares"][stock_index]["s_price"] = GetNextPrice(stock);
+            var next_price = GetNextPrice(stock);
+            currentGame["g_shares"][stock_index]["s_price"] = next_price;
             currentGame["g_shares"][stock_index]["s_volume"] = 0;
             currentGame["g_shares"][stock_index]["s_volume_v"] = 0;
             
             currentGame["g_shares"][stock_index]["s_day"] += 1;
             currentGame["g_shares"][stock_index]["s_history"].push(price);
+            total_price += next_price;
             //console.log(stock);
+        }
+        //do the index funds
+        for (var stock_index in currentGame["g_shares"]){
+            var stock = currentGame["g_shares"][stock_index];
+            if (!stock.s_index) continue; //skip non index funds
+            var price = stock["s_price"];
+            var next_price = Math.round(total_price * 1.0 / stock.s_factor);
+            currentGame["g_shares"][stock_index]["s_day"] += 1;
+            currentGame["g_shares"][stock_index]["s_history"].push(price);
+            currentGame["g_shares"][stock_index]["s_price"] = next_price;
+            var volume = stock["s_volume"];
+            var value = stock["s_volume_v"];
+            var price = stock["s_price"];
+            var owned = stock["s_owned"];
+            console.log(stock.s_name+" vol:"+volume+" val:"+value+" price:"+price);
         }
         io.to(gameRoomRoot).emit(gameRoomRoot+"sync", currentGame);
     });

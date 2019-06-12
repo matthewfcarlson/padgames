@@ -61,15 +61,15 @@
         </div>
       </div>
       <hr/>
-      <pre class="card">
+      <!--pre class="card">
         {{_data}}
-      </pre>
+      </pre-->
     </div>
     <div v-else>
       <h2>Day: {{g_day}}</h2>
       <div class="btn-group btn-group-toggle btn-group-justified" role="group" data-toggle="buttons" aria-label="Basic example">
         <label class="btn btn-secondary" v-for="(stock, id) in g_shares" :for="'stock'+id" @click="currentStock = id">
-          <input type="radio" name="stocks" :id="'stock'+id" :value="id" >Stock {{ stock.s_name }}</input>
+          <input type="radio" name="stocks" :id="'stock'+id" :value="id" style="padding:0">{{ stock.s_name }}<br/>${{ stock.s_price }}</input>
         </label>
       </div>
       <br/>
@@ -91,6 +91,9 @@
       <button class="btn btn-primary btn-block" @click="Advance">Advance Day</button>
       <hr/>
       <button class="btn btn-danger btn-block" @click="GameReset">Reset Game</button>
+      <div>
+        <div v-for=" (stock, id) in g_shares"><b>{{g_shares.s_name}}:</b> {{ ShareHoldersFor(id) }}</div>
+      </div>
       
     </div>
     <div class="text-center">
@@ -148,7 +151,7 @@ export default {
       return false;
     },
     gameOver: function(){
-      if (this.g_day > 30) return true;
+      if (this.g_day > 21) return true;
       return false;
     },
     maxShares: function(){
@@ -180,6 +183,9 @@ export default {
     },
     Advance: function() { //advance the day
       this.$socket.emit(ROOT + "advance");
+    },
+    ShareHoldersFor: function(index){
+      return "";
     },
     AggregateShares: function(shares){
       var aggregated = {};
