@@ -16,6 +16,7 @@ import {
   closest, 
   panDetect
 } from './utils'
+
 export default {
 
   name: 'keyboardInput',

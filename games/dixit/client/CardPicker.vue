@@ -36,9 +36,7 @@
       <p>When you're ready press this button:</p>
       <button @click="PickCard(cardIndex)" class="btn btn-success btn-block btn-outline">Ready</button>
     </div>
-    {{storyTeller}}
     <div v-else>You picked <card style="max-width:30vw" :cardId="cardIndex"></card></div>
-    <script src="https://bundle.run/css-scroll-snap-polyfill@0.1.2"></script>
   </div>
 </template>
 <script>
@@ -48,6 +46,7 @@ import VueScroll from "vue-scroll";
 import Card from "./Card";
 
 import Velocity from "velocity-animate";
+//import "https://bundle.run/css-scroll-snap-polyfill@0.1.2";
 
 Vue.use(VueScroll);
 export default {

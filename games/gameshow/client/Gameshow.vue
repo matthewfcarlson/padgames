@@ -40,7 +40,7 @@
       <div is="Scores" v-bind:teams="teams"></div>
     </div>
     <div v-else-if="playerTeam == ''">
-      <h3>Click to join a team<h3>
+      <h3>Click to join a team</h3>
       <div is="TeamList" v-bind:teams="teams" @click="gamePickTeam"></div>
     </div>
     <div v-else>

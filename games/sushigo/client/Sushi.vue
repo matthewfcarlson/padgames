@@ -12,7 +12,7 @@
     </div>
 
     <div v-else-if="!isLandscape">
-      <h2>Please turn your phone sideways.
+      <h2>Please turn your phone sideways.</h2>
     </div>
     
     <div class="container-fluid" v-else-if="isPhone && playerID == -1 && !game.isPlaying">

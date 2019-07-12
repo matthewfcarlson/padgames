@@ -4,9 +4,9 @@
         <button class="btn btn-primary btn-lg" @click="start">Click to Start</button>
     </div>
     <div v-else-if="question.id >= 0">
-        <h1>When asked, <b>"{{GameData.questions[question.id]}}?"</b><h1>
+        <h1>When asked, <b>"{{GameData.questions[question.id]}}?"</b></h1>
         <h1>They said <b>"{{GameData.answers[question.person][question.id]}}"</b></h1>
-        <h3>Choices: <b v-for="(data,answer) in GameData.answers" v-bind:key="answer">{{answer}}&nbsp;<b></h3>
+        <h3>Choices: <b v-for="(data,answer) in GameData.answers" v-bind:key="answer">{{answer}}&nbsp;</b></h3>
     </div>
     <h2 v-if="currentTeamsTurn != ''"><b>{{currentTeamsTurn}}</b> is answering and they have <b>{{timeClock}} left</b></h2>
     <hr/>
