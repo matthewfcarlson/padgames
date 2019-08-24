@@ -4,6 +4,7 @@ node_modules/*
 *.key.txt
 dist/
 /.vscode
+.vscode/
 /dist/
 /dist
 dist/index.html
