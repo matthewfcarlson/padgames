@@ -1,4 +1,4 @@
-# codewords
+# padgames
 This is a collection of games that can be played with your friends and their phones. It also works better if you have a large screen in the middle.
 
 It can be found at www.padgames.app
