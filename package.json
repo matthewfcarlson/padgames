@@ -2,6 +2,12 @@
   "name": "pad-games",
   "version": "0.0.2",
   "private": true,
+  "author": {"name": "Matthew Carlson", "url": "https://matthewfcarlson.github.io"},
+  "license": "	MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/matthewfcarlson/padgames/issues"
+  },
+  "repository": "github:matthewfcarlson/padgames",
   "description": "Games based around websockets and bringing people together",
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^1.0.0",
