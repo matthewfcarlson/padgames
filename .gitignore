@@ -5,6 +5,8 @@ node_modules/*
 dist/
 /.vscode
 .vscode/
-/dist/
+/dist*/
 /dist
-dist/index.html
+/dist_client
+/dist_server
+
