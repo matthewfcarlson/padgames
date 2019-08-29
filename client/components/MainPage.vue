@@ -14,10 +14,10 @@
 
 <script>
 export default {
-  name: "HelloWorld",
+  name: "PadGames",
   data() {
     return {
-      games: [],
+      games: GameRoutes,
     };
   }
 };
