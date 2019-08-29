@@ -2,11 +2,8 @@
 node_modules/*
 *.bat
 *.key.txt
-dist/
 /.vscode
 .vscode/
-/dist*/
-/dist
 /dist_client
 /dist_server
 
