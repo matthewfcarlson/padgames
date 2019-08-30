@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* tslint:disable:no-console */
 export interface ILogger {
     info(msg: any): void;
     warn(msg: any): void;

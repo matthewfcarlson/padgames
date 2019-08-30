@@ -14,18 +14,23 @@ dotenv.config();
 // port is now available to the Node.js runtime
 // as if it were an environment variable
 const port = process.env.SERVER_PORT || 3000;
-
+const contentsDir = path.join(__dirname, "../dist_client");
+const staticFileMiddleware = express.static(contentsDir);
+app.get("/", (req, res) => {
+    res.sendFile(path.join(contentsDir, "index.html"));
+  });
+app.get("/robots.txt", (req, res) => {
+    res.sendFile(path.join(contentsDir, "public/robots.txt"));
+  });
+// use static middleware to resolve files
+app.use(staticFileMiddleware);
 app.use(
     history({
-        disableDotRule: true,
+        index: '/app.html',
         verbose: true
     })
 );
-
-const staticFileMiddleware = express.static(path.join(__dirname, "../dist_client"));
-
-// Handle requests for static assets
-app.use("/public", express.static); )
+app.use(staticFileMiddleware);
 
 httpServer.listen(port, () => {
     // tslint:disable-next-line:no-console

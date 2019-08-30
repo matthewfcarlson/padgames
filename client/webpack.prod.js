@@ -100,6 +100,7 @@ webpackConfig.plugins = [...webpackConfig.plugins,
   }),
   new HtmlWebpackPlugin({
     inject: true,
+    filename : "app.html",
     template: helpers.root('/client/src/index.html'),
     favicon: helpers.root('/client/src/favicon.ico'),
     minify: {
