@@ -1,23 +1,41 @@
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
+import http from "http";
+import socket from 'socket.io';
+import history from "connect-history-api-fallback";
+const app = express();
+const httpServer = new http.Server(app);
+const io = socket(httpServer);
 
 // initialize configuration
 dotenv.config();
-
-const app = express();
 
 // port is now available to the Node.js runtime
 // as if it were an environment variable
 const port = process.env.SERVER_PORT || 3000;
 
-// define a route handler for the default home page
-app.get( "/", ( req, res ) => {
-    res.send( "Hello Ellen!" );
-} );
+app.use(
+    history({
+        disableDotRule: true,
+        verbose: true
+    })
+);
+app.get("/index.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "../dist_client/index.html"));
+});
 
-// start the Express server
-app.listen( port, () => {
-     // tslint:disable-next-line:no-console
-    console.log( `server started at http://localhost:${ port }` );
-} );
+// Handle requests for static assets
+app.use("/static", express.static(path.join(__dirname, "../dist_client/static")));
+
+httpServer.listen(port, () => {
+    // tslint:disable-next-line:no-console
+    console.log("Listening on " + port);
+});
+
+io.on("connection", (clientSocket) => {
+    // tslint:disable-next-line:no-console
+    console.log("New connection from " + clientSocket.id);
+});
+
+
