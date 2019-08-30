@@ -13,7 +13,7 @@ dotenv.config();
 
 // port is now available to the Node.js runtime
 // as if it were an environment variable
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.SERVER_PORT ||  process.env.PORT || 3000;
 const contentsDir = path.join(__dirname, "../dist_client");
 const staticFileMiddleware = express.static(contentsDir);
 app.get("/", (req, res) => {
