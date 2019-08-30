@@ -55,6 +55,7 @@
     "server-build:dev": "npm-run-all server-build server-dev",
     "client-build:dev": "npm-run-all client-build client-dev",
     "server-start": "node .",
+    "client": "npm run client-dev",
     "server": "npm run server-dev",
     "start": "npm-run-all --parallel client-dev server-dev"
   },
