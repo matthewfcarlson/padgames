@@ -21,12 +21,11 @@ app.use(
         verbose: true
     })
 );
-app.get("/index.html", (req, res) => {
-    res.sendFile(path.join(__dirname, "../dist_client/index.html"));
-});
+
+const staticFileMiddleware = express.static(path.join(__dirname, "../dist_client"));
 
 // Handle requests for static assets
-app.use("/static", express.static(path.join(__dirname, "../dist_client/static")));
+app.use("/public", express.static); )
 
 httpServer.listen(port, () => {
     // tslint:disable-next-line:no-console

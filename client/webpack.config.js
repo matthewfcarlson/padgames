@@ -1,12 +1,22 @@
 
 var path = require('path')
 var webpack = require('webpack')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const output_dir = path.resolve(__dirname, '../dist_client')
+const src_dir = path.resolve(__dirname, './src')
+const public_src_dir = path.resolve(__dirname, "./public")
+const public_out_dir = path.join(output_dir, "public")
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: path.join(src_dir, '/index.ts'),
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist_client/',
+    path: output_dir,
+    publicPath: "/",
+    filename: 'js/[name].[hash].js',
+    chunkFilename: 'js/[name].[hash].js',
     filename: 'build.js'
   },
   module: {
@@ -39,42 +49,44 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.html$/,
+        loader: 'raw-loader',
+        exclude: ['/client/src/index.html']
       }
     ]
   },
   resolve: {
-    extensions: ['.ts', '.js', '.vue', '.json'],
+    extensions: ['.ts', '.js', '.vue', '.json', '.html'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
-  devServer: {
-    historyApiFallback: true,
-    noInfo: true
-  },
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map'
-}
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
+  devtool: '#eval-source-map',
+  plugins: [
+    // make sure to include the plugin for the magic
+    new VueLoaderPlugin(),
+    new NamedModulesPlugin(),
+    new CopyWebpackPlugin([{
+        from: public_src_dir,
+        to: public_out_dir
+      } ]),
+    new PrerenderSPAPlugin({
+        // Required - The path to the webpack-outputted app to prerender.
+        staticDir: output_dir,
+        // Required - Routes to render.
+        routes: [ '/', '/about'],
     })
-  ])
+  ]
 }
