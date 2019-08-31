@@ -9,6 +9,8 @@ const env = {
     API_KEY: '"XXXX-XXXXX-XXXX-XXXX"'
   };
 
+webpackConfig.mode = 'development'
+
 webpackConfig.module.rules = [...webpackConfig.module.rules,
   {
     test: /\.scss$/,
