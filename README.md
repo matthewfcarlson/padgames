@@ -1,5 +1,7 @@
 # padgames
 
+[![Build Status](https://dev.azure.com/matthewfcarlson/padgames/_apis/build/status/matthewfcarlson.padgames?branchName=master)](https://dev.azure.com/matthewfcarlson/padgames/_build/latest?definitionId=1&branchName=master)
+
 Pad games is a collection of games that can played via webapp on your phone, using an ipad or laptop as the central screen.
 It aims to be flexible and easy to use.
 

@@ -1,8 +1,10 @@
 <template>
-  <div class="about container">
-    <NavBar/>
-    <h1>This is an about page</h1>
-    <img alt="Vue logo" class="img-fluid" src="/public/mockup.png" />
+  <div class="about">
+    <NavBar />
+    <div class="container">
+      <h1>This is an about page</h1>
+      <img alt="Vue logo" class="img-fluid" src="/public/mockup.png" />
+    </div>
   </div>
 </template>
 

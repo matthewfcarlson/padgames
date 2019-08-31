@@ -1,7 +1,9 @@
 <template>
-  <div class="contact container">
+  <div class="contact">
     <NavBar/>
-    <h1>This is an contact page</h1>
+    <div class="container">
+      <h1>This is an contact page</h1>
+    </div>
   </div>
 </template>
 

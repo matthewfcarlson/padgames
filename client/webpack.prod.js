@@ -16,16 +16,25 @@ const env = {
   API_KEY: '"XXXX-XXXXX-XXXX-XXXX"'
 }
 
+webpackConfig.mode = "production"
+
 webpackConfig.module.rules = [...webpackConfig.module.rules,
 {
   test: /\.scss$/,
-  use: [{
+  use: [
+    {
+      loader: 'style-loader'
+    },
+    {
       loader: MiniCssExtractPlugin.loader,
       options: {
         minimize: false,
         sourceMap: false,
         importLoaders: 2
       }
+    },
+    {
+      loader: 'css-loader'
     },
     {
       loader: 'postcss-loader',
