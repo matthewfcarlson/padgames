@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="404">
     <NavBar />
-    <div class="404 text-center">
+    <div class="container text-center">
       <div class="jumbotron">
         <h1>404</h1>
         <h2>{{$route.path}} was not found!</h2>

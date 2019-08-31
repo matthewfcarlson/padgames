@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light container" role="navigation">
-    <a class="navbar-brand font-weight-bold" href="/">padgames</a>
+    <a class="navbar-brand font-weight-bold ml-lg-4" href="/">padgames</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -14,7 +14,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav ml-auto mr-lg-4">
         <router-link
           :to="'/'+curr_route"
           v-slot="{ href, route, navigate, isActive }"
