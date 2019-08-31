@@ -1,10 +1,12 @@
 <template>
-  <div class="404 container">
+  <div class="container">
     <NavBar />
-    <div class="jumbotron">
-      <h1>Not found!</h1>
+    <div class="404 text-center">
+      <div class="jumbotron">
+        <h1>Not found!</h1>
+      </div>
+      <img alt="Vue logo" class="img-fluid img-center" src="/public/default_sushi.png" />
     </div>
-    <img alt="Vue logo" class="img-fluid img-center" src="/public/default_sushi.png" />
   </div>
   
 </template>
