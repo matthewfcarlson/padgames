@@ -2,7 +2,7 @@
   <div class="home">
     <NavBar />
     <div class="container">
-      <div class="jumbotron text-center">
+      <div class="jumbotron text-center bg-transparent">
         <h1 class="display-4">
           Play Games Together
           <br />Anywhere You Are
@@ -50,8 +50,6 @@ import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
 export default class Home extends Vue {}
 </script>
 
-<style scoped>
-.jumbotron {
-  background-color: inherit;
-}
+<style scoped lang="css">
+
 </style>
