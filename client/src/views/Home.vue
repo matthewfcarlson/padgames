@@ -12,7 +12,7 @@
           Stop staring at your phones silently and play together.
           With virtually unlimited players per game, it’s fun for everyone.
         </p>
-        <router-link  class="btn btn-primary btn-lg" href="/host" role="button">Host a Game</router-link>
+        <router-link  class="btn btn-primary btn-lg" to="/host" role="button">Host a Game</router-link>
         <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
       </div>      
     </div>

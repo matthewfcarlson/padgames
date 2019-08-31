@@ -63,22 +63,22 @@ $animate: all 0.2s ease-in-out;
       height: 5px;
       margin: 5px 0 0;
       transition: $animate;
-      transition-duration: 0.15s;
+      transition-duration: 0.20s;
       opacity: 0;
     }
-    &:after {
+    &:after, &:before {
       left: 0;
       background-color: purple;
     }
   }
   &.active {
     .nav-link{
-      &:before, &:after {
+      &:after {
         height: 2px;
       }
     }
   }
-  &.active,
+  //&.active,
   &:hover {
     cursor: pointer;
     .nav-link {
