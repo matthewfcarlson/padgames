@@ -58,7 +58,7 @@ $animate: all 0.2s ease-in-out;
     &:after {
       content: "";
       position: absolute;
-      bottom: -5px;
+      bottom: -2px;
       width: 0px;
       height: 5px;
       margin: 5px 0 0;
@@ -74,18 +74,25 @@ $animate: all 0.2s ease-in-out;
   &.active {
     .nav-link{
       &:after {
-        height: 2px;
+        height: 1px;
       }
     }
-  }
-  //&.active,
+  }  
   &:hover {
     cursor: pointer;
     .nav-link {
-      &:before,
+      &:before {
+        width: 100%;
+        opacity: 1.0;
+      }
+    }
+  }
+  &.active {
+    cursor: pointer;
+    .nav-link {
       &:after {
         width: 100%;
-        opacity: 0.5;
+        opacity: 1.0;
       }
     }
   }
