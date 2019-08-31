@@ -12,10 +12,9 @@
           Stop staring at your phones silently and play together.
           With virtually unlimited players per game, it’s fun for everyone.
         </p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Host a Game</a>
-        <a class="btn btn-success btn-lg" href="#" role="button">Join a Game</a>
-      </div>
-      <img alt="Vue logo" class="img-fluid" src="/public/default_sushi.png" />
+        <router-link  class="btn btn-primary btn-lg" href="/host" role="button">Host a Game</router-link>
+        <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
+      </div>      
     </div>
     <div>
       Games that get your family or friends talking
