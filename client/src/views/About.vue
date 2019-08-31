@@ -2,6 +2,7 @@
   <div class="about">
     <NavBar/>
     <h1>This is an about page</h1>
+    <img alt="Vue logo" class="img-fluid" src="/public/mockup.png" />
   </div>
 </template>
 
