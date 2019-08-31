@@ -6,7 +6,7 @@
         <h1>Not found!</h1>
       </div>
       <img alt="Vue logo" class="img-fluid img-center" src="/public/default_sushi.png" />
-      Sorry about that! Maybe you should file an issue on <a href="https://github.com/matthewfcarlson/padgames/issues/new">Github?</a>
+      <p>Sorry about that! Maybe you should file an issue on <a href="https://github.com/matthewfcarlson/padgames/issues/new">Github?</a></p>
     </div>
   </div>
   
