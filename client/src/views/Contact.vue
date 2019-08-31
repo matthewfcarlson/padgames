@@ -1,5 +1,5 @@
 <template>
-  <div class="contact">
+  <div class="contact container">
     <NavBar/>
     <h1>This is an contact page</h1>
   </div>
