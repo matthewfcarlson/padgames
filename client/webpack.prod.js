@@ -8,6 +8,7 @@ const helpers = require('./webpack.helpers')
 const webpack = require('webpack')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const SitemapPlugin = require('sitemap-webpack-plugin').default;
 
 const env = {
   ENV: '"production"',
@@ -50,7 +51,7 @@ webpackConfig.module.rules = [...webpackConfig.module.rules,
       }
     },
     'style-loader'
-  ]  
+  ]
 },
 {
   test: /\.(jpg|png|gif)$/,
@@ -99,7 +100,7 @@ webpackConfig.optimization = {
 }
 
 webpackConfig.plugins = [...webpackConfig.plugins,
-  
+
 new MiniCssExtractPlugin({
   filename: 'css/[name].[contenthash].css',
   disable: process.env.NODE_ENV === 'development'
@@ -137,7 +138,9 @@ new CompressionPlugin({
 new webpack.DefinePlugin({
   'process.env': env
 }),
-new FaviconsWebpackPlugin(helpers.root('/client/src/favicon.png'))
-]
+new FaviconsWebpackPlugin(helpers.root('/client/src/favicon.png')),
+new SitemapPlugin('https://padgames.app', ['/', '/about/', '/games/', '/contact'], {}) //TODO figure out how to make this configurable
+];
+
 
 module.exports = webpackConfig
