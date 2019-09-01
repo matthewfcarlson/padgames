@@ -19,6 +19,7 @@ const staticFileMiddleware = express.static(contentsDir);
 app.get("/", (req, res) => {
     res.sendFile(path.join(contentsDir, "index.html"));
   });
+// map robots to the public folder
 app.get("/robots.txt", (req, res) => {
     res.sendFile(path.join(contentsDir, "public/robots.txt"));
   });
