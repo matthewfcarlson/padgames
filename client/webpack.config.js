@@ -25,14 +25,6 @@ module.exports = {
   module: {
     rules: [
       {
-      test: /\.dynamicjs$/,
-        use: [
-          {
-            loader: 'val-loader'
-          }
-        ]
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
