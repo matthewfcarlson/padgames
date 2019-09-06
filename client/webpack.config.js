@@ -9,6 +9,9 @@ const public_out_dir = path.join(output_dir, "public")
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const DynamicRoutes = require('./webpack.dynamic')
+
+console.log("Generated "+DynamicRoutes+" routes")
 
 module.exports = {
   entry: path.join(src_dir, '/index.ts'),
@@ -21,6 +24,14 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+      test: /\.dynamicjs$/,
+        use: [
+          {
+            loader: 'val-loader'
+          }
+        ]
+      },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -63,6 +74,9 @@ module.exports = {
         exclude: ['/client/src/index.html']
       }
     ]
+  },
+  node: {
+    fs: 'empty'
   },
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json', '.html'],

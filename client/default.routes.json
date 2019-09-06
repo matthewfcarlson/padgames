@@ -1,0 +1,21 @@
+[{
+    "path": "/",
+    "component": "./src/views/Home.vue"
+  },
+  {
+    "path": "/about",
+    "chunkName": "about",
+    "component": "./src/views/About.vue"
+  },
+  {
+    "path": "/contact",
+    "chunkName": "contact",
+    "component": "./src/views/Contact.vue"
+  },
+  {
+    "path": "*",
+    "priority": -1,
+    "chunkName": "404",
+    "component": "./src/views/404.vue"
+  }
+]

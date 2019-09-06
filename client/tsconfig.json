@@ -3,12 +3,14 @@
       "outDir": "../dist_client/",
       "sourceMap": true,
       "strict": true,
-      "module": "esnext",
+      "module": "commonjs",
       "moduleResolution": "node",
-      "target": "es5",
+      "target": "ES3",
       "skipLibCheck": true,
       "esModuleInterop": true,
-      "experimentalDecorators": true
+      "experimentalDecorators": true,
+      "allowSyntheticDefaultImports": true,
+      "rootDirs": ["./src/", "./"]
   },
   "include": [
       "./src/**/*",

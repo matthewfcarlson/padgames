@@ -1,5 +1,5 @@
 [{
-    "path": "/passphrase",
+    "route": "/passphrase",
     "name": "Pass Phrase",
     "desc_comp": "client/index.vue",
     "game_comp": "client/game.vue"
