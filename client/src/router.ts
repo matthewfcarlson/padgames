@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import DynamicRoutes from "../routes.dynamic";
+import DynamicRoutes from "./routes.dynamic";
 import { Logger } from "./util/logger";
 Vue.use(Router);
 

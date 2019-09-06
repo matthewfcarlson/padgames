@@ -30,16 +30,37 @@
 //     component: () => import(/* webpackChunkName: "404" */ "./views/404.vue")
 //   }
 // ];
-const fs = require('fs');
+const fs = require("fs");
 const glob = require("glob");
 const imports = [];
-const routes = []
+const routes = [];
+const inputFile = "./client/default-routes.ts";
+const outputFile = "./client/src/routes.dynamic.ts";
 
+let code = "";
+if (fs.existsSync(outputFile)) { //TODO figure out if we're in development- if we're doing prod we should be running this every time
+  console.log("Skipping generation of dynamic routes to speed up compile time");
+  module.exports = -1;
+} else {
+  console.log("Generating dynamic routes");
+  // 1. glob the file system looking for *routes.json
+  let glob_options = {
+    ignore: "./node_modules/*"
+  };
+  let files = glob.sync("./**/*routes.json", glob_options);
+  console.log(files);
+  //throw new Error("Stop here");  
+  // 2. Read in each file and add to the list of routes
 
-outputFile = "./client/routes.dynamic.ts";
-fs.writeFile(outputFile, code, (err)=> {
-  if (err) throw err;
-  console.log("Saved directory file to ", outputFile);
-} )
+  // 3. Figure out the import path and if it has a chunk name
 
-module.exports = 2;
+  // 4. Generate the strings based on the inputs
+
+  // 5. output the file
+  fs.writeFile(outputFile, code, err => {
+    if (err) throw err;
+    console.log("Saved directory file to ", outputFile);
+  });
+
+  module.exports = files.length;
+}
