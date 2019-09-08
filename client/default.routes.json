@@ -1,21 +1,24 @@
 [{
     "path": "/",
+    "name": "Home",
     "component": "./src/views/Home.vue"
   },
   {
     "path": "/about",
-    "chunkName": "about",
+    "name": "About",
+    "chunk": true,
     "component": "./src/views/About.vue"
   },
   {
     "path": "/contact",
-    "chunkName": "contact",
+    "name": "Contact",
+    "chunk": true,
     "component": "./src/views/Contact.vue"
   },
   {
     "path": "*",
     "priority": -1,
-    "chunkName": "404",
+    "name": "NotFound",
     "component": "./src/views/404.vue"
   }
 ]

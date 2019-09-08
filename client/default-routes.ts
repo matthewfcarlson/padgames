@@ -1,9 +1,9 @@
-import Home from "./src/views/Home.vue";
+import * as Route1 from "./src/views/Home.vue";
 export default  [
       {
         path: "/",
         name: "home",
-        component: Home
+        component: Route1
       },
       {
         path: "/about",

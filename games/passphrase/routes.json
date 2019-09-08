@@ -1,7 +1,14 @@
 [{
-    "route": "/passphrase",
-    "name": "Pass Phrase",
-    "desc_comp": "client/index.vue",
-    "game_comp": "client/game.vue"
+    "path": "/passphrase",
+    "name": "passphrase",
+    "chunk": true,
+    "component": "./client/index.vue"
+},
+{
+    "path": "/passphrase/:gameId",
+    "name": "passphrase_game",
+    "chunk": true,
+    "isGame": true,
+    "component": "./client/game.vue"
 }
 ]
