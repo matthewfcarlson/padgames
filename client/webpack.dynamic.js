@@ -65,9 +65,7 @@ if (fs.existsSync(outputFile)) { //TODO figure out if we're in development- if w
       //remap directory
       let route_comp_path = path.join(directory, routes_json[route_index]["component"]);
       let route_comp_rel_path = path.relative(output_dir, route_comp_path);
-      if (route_comp_rel_path[0] != ".") route_comp_rel_path = "./"+ route_comp_rel_path;
-      console.log(route_comp_rel_path);
-      console.log(route_comp_rel_path.replace(/\\/g, "/"));
+      if (route_comp_rel_path[0] != ".") route_comp_rel_path = "./" + route_comp_rel_path;
 
       routes_json[route_index]["component"] = route_comp_rel_path.replace(/\\/g, "/");
     }
@@ -103,8 +101,6 @@ if (fs.existsSync(outputFile)) { //TODO figure out if we're in development- if w
     var route_text = "{\n  " + route_texts.join(",\n  ") + "\n}";
     routes.push(route_text);
   }
-  console.log(imports);
-  console.log(routes);
   // 5. Generate the strings based on the inputs
   var code = imports.join("\n");
   code += "\n\nexport default  [";
