@@ -55,7 +55,7 @@
     "server-build": "npm-run-all server-clean server-lint server-tsc",
     "server-build-prod": "npm-run-all server-clean server-lint server-tsc",
     "server-dev": "nodemon --watch server -e ts,ejs,js --exec npm run server-build:start",
-    "client-dev": "nodemon --watch client -e ts,ejs,vue --exec npm run client-build",
+    "client-dev": "nodemon --watch client -e vue --exec npm run client-build",
     "server-build:dev": "npm-run-all server-build server-dev",
     "server-build:start": "npm-run-all server-build start",
     "client-build:dev": "npm-run-all client-build client-dev",

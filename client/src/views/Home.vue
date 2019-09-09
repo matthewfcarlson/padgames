@@ -40,6 +40,7 @@
       </div>
     </div>
     <!-- Mailing list signup -->
+    <NewsLetter/>
     <div>
       Want to be updated on everything going on?
       Signup to our newsletter to hear the latest news! We promise few emails and we'll never give your email away.
@@ -65,10 +66,12 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
+import NewsLetter from '../components/NewsLetter.vue';
 
 @Component({
   components: {
-    NavBar
+    NavBar,
+    NewsLetter
   }
 })
 export default class Home extends Vue {}

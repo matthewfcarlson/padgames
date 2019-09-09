@@ -38,7 +38,8 @@ const outputFile = "./client/src/routes.dynamic.ts";
 if (fs.existsSync(outputFile)) { //TODO figure out if we're in development- if we're doing prod we should be running this every time
   console.log("Skipping generation of dynamic routes to speed up compile time");
   module.exports = -1;
-} else {
+} 
+else {
   const imports = [];
   const routes = [];
   console.log("Generating dynamic routes");
@@ -55,7 +56,6 @@ if (fs.existsSync(outputFile)) { //TODO figure out if we're in development- if w
     const routes_text = fs.readFileSync(file_path)
     const routes_json = JSON.parse(routes_text);
     const directory = path.dirname(file_path);
-    console.log(directory);
     //resolve the various parts of the file
     for (var route_index in routes_json) {
       if (!("priority" in routes_json[route_index])) routes_json[route_index]["priority"] = 0;
