@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-dark escape-gutters text-white py-1">
+    <div class="bg-info escape-gutters text-white py-1">
         <h1 class="text-center">Footer </h1>
     </div>
 </template>

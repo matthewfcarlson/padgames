@@ -55,7 +55,7 @@
           class="col-md-8 col-lg-6 col-sm-12 text-muted"
         >Ever been sitting around with your family or friends in the room, all on your phones, not talking? Games that are designed to help you talk and have fun together.</div>
       </div>
-      <br/>
+      <br />
       <div class="row">
         <div class="col-sm-3 col-xs-6 p-1">
           <div class="bg-primary rounded" style="min-height:200px">Game 1</div>
@@ -69,7 +69,6 @@
         <div class="col-sm-3 col-xs-6 p-1">
           <div class="bg-info rounded" style="min-height:200px">Game 4</div>
         </div>
-        
       </div>
       <br />
     </div>
@@ -78,9 +77,9 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col text-center">
-            <h3>What does it cost?</h3>
-            <p>Free to join</p>
-            <p>$1 to host</p>
+            <h2>What does it cost?</h2>
+            <h2 class="font-weight-bold"><span class="text-success">Free</span> to join</h2>
+            <h2 class="font-weight-bold"><span class="text-success">$1</span> to host</h2>
             <br />
             <p>Joining games will always be free. Unlocking a game for $1 will give you unlimited hosts. Or you can unlock all the games for one low price of $X.99</p>
           </div>
@@ -95,8 +94,19 @@
       </div>
     </div>
     <!-- FAQ -->
-    <div>FAQ</div>
-    <Footer/>
+    <div class="bg-dark escape-gutters text-white">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h1>FAQ</h1>
+          </div>
+          <div class="col">FAQ</div>
+          <div class="col">FAQ</div>
+          <div class="col">FAQ</div>
+        </div>
+      </div>
+    </div>
+    <Footer />
   </div>
 </template>
 
