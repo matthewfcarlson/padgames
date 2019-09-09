@@ -51,27 +51,42 @@
     </div>
     <!-- Game choices -->
     <div class="container">
+      <!-- TODO replace this BR with padding on the root container -->
+      <br />
       <div class="row">
-        <div class="col col-sm-12 lead">A wide choice of games</div>
-        <div class="col col-sm-12">
-          Ever been sitting around with your family or friends in the room, all on your phones, not talking? Games that are designed to help you talk and have fun together.
+        <div class="col-6 col-sm-12">
+          <h4>A wide choice of games</h4>
         </div>
+        <div
+          class="col-6 col-sm-12"
+        >Ever been sitting around with your family or friends in the room, all on your phones, not talking? Games that are designed to help you talk and have fun together.</div>
       </div>
       <div class="row">
-        <div class="col-sm-6 col-xs-12 col br-5 bg-primary">
-          Game 1
+        <div class="col-sm-6 col-xs-12 col br-5">
+          <div class="bg-primary rounded" style="min-height:100px">Game 1</div>
         </div>
+        <div class="col-sm-6 col-xs-12 col br-5">
+          <div class="bg-warning rounded" style="min-height:100px">Game 2</div>
+        </div>
+        <div class="col-sm-6 col-xs-12 col br-5">
+          <div class="bg-secondary rounded" style="min-height:100px">Game 3</div>
+        </div>
+        <div class="col-sm-6 col-xs-12 col br-5">
+          <div class="bg-info rounded" style="min-height:100px">Game 4</div>
+        </div>
+        
       </div>
+      <br />
     </div>
     <!-- cost -->
-    <div class="bg-gray escape-gutters">
+    <div class="bg-secondary escape-gutters">
       <div class="container">
         <div class="row align-items-center">
           <div class="col text-center">
             <h3>What does it cost?</h3>
             <p>Free to join</p>
             <p>$1 to host</p>
-            <br/>
+            <br />
             <p>Joining games will always be free. Unlocking a game for $1 will give you unlimited hosts. Or you can unlock all the games for one low price of $X.99</p>
           </div>
           <div class="col">
