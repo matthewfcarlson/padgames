@@ -54,6 +54,7 @@
 
 <script lang="ts">
 //TODO modify the vue js code to handle webform logic - we should send a post to the website!
+// Look to see what their code does and try to replicate it?
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
