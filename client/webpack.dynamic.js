@@ -1,5 +1,4 @@
 // go through the ../../games folder and copy all of the route.json information.
-//var glob = require("glob");
 // This was attempted with virtual modules but it didn't lead to good results
 // Example routes
 // import * as Route1 from "./src/views/Home.vue";
@@ -65,7 +64,7 @@ if (fs.existsSync(outputFile)) { //TODO figure out if we're in development- if w
       //remap directory
       let route_comp_path = path.join(directory, routes_json[route_index]["component"]);
       let route_comp_rel_path = path.relative(output_dir, route_comp_path);
-      if (route_comp_rel_path[0] != ".") route_comp_rel_path = "./" + route_comp_rel_path;
+      if (route_comp_rel_path[0] != ".") route_comp_rel_path = "./" + route_comp_rel_path; 
 
       routes_json[route_index]["component"] = route_comp_rel_path.replace(/\\/g, "/");
     }
@@ -106,6 +105,8 @@ if (fs.existsSync(outputFile)) { //TODO figure out if we're in development- if w
   code += "\n\nexport default  [";
   code += routes.join(",\n");
   code += "];"
+
+  //TODO figure out what to do the games vs the routes
 
   // 6. output the file
   fs.writeFile(outputFile, code, err => {
