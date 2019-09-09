@@ -2,7 +2,7 @@
   <div class="home">
     <NavBar />
     <!-- Main header -->
-    <div class="container">
+    <div class="container py-1">
       <div class="jumbotron text-center bg-transparent">
         <h1 class="display-4 font-weight-bold">
           Play Games Together
@@ -18,7 +18,7 @@
       </div>
     </div>
     <!-- Games that get your friends and family talking -->
-    <div class="bg-primary escape-gutters text-white">
+    <div class="bg-primary escape-gutters text-white py-1">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-4 col-sm-12">
@@ -40,39 +40,34 @@
       </div>
     </div>
     <!-- Mailing list signup -->
-    <NewsLetter />
     <div class="container">
-      <div class>Want to be updated on everything going on?</div>Signup to our newsletter to hear the latest news! We promise few emails and we'll never give your email away.
-      <input
-        type="email"
-        class="input-control"
-        placeholder="your email here :)"
-      />
+      <NewsLetter />
     </div>
     <!-- Game choices -->
-    <div class="container">
+    <div class="container py-1">
       <!-- TODO replace this BR with padding on the root container -->
       <br />
       <div class="row">
-        <div class="col-6 col-sm-12">
+        <div class="col-md-4 col-lg-6 col-sm-12">
           <h4>A wide choice of games</h4>
         </div>
         <div
-          class="col-6 col-sm-12"
+          class="col-md-8 col-lg-6 col-sm-12 text-muted"
         >Ever been sitting around with your family or friends in the room, all on your phones, not talking? Games that are designed to help you talk and have fun together.</div>
       </div>
+      <br/>
       <div class="row">
-        <div class="col-sm-6 col-xs-12 col br-5">
-          <div class="bg-primary rounded" style="min-height:100px">Game 1</div>
+        <div class="col-sm-3 col-xs-6 p-1">
+          <div class="bg-primary rounded" style="min-height:200px">Game 1</div>
         </div>
-        <div class="col-sm-6 col-xs-12 col br-5">
-          <div class="bg-warning rounded" style="min-height:100px">Game 2</div>
+        <div class="col-sm-3 col-xs-6 p-1">
+          <div class="bg-warning rounded" style="min-height:200px">Game 2</div>
         </div>
-        <div class="col-sm-6 col-xs-12 col br-5">
-          <div class="bg-secondary rounded" style="min-height:100px">Game 3</div>
+        <div class="col-sm-3 col-xs-6 p-1">
+          <div class="bg-secondary rounded" style="min-height:200px">Game 3</div>
         </div>
-        <div class="col-sm-6 col-xs-12 col br-5">
-          <div class="bg-info rounded" style="min-height:100px">Game 4</div>
+        <div class="col-sm-3 col-xs-6 p-1">
+          <div class="bg-info rounded" style="min-height:200px">Game 4</div>
         </div>
         
       </div>
@@ -101,6 +96,7 @@
     </div>
     <!-- FAQ -->
     <div>FAQ</div>
+    <Footer/>
   </div>
 </template>
 
@@ -108,11 +104,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
 import NewsLetter from "../components/NewsLetter.vue";
+import Footer from "../components/Footer.vue";
 
 @Component({
   components: {
     NavBar,
-    NewsLetter
+    NewsLetter,
+    Footer
   }
 })
 export default class Home extends Vue {}
