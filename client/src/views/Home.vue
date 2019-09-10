@@ -33,7 +33,7 @@
             <p class="lead font-weight-bold">Games that get your family or friends talking</p>
             <p>Most games work with a central tablet or two that everyone can see and then their phones act as controllers. Some games only require one phone per team.</p>
             <p>Games are flexible for your situation and some can be played with just phones or just the tablet in the middle.</p>
-            <p>Since it is hosted on the internet, people can join from anywhere! You’ll need to be able to communicate with your teammates, so a phone call or discord is recommended.</p>
+            <p>Since it is hosted on the internet, people can join from anywhere! You’ll need to be able to communicate with your teammates, so a phone call, discord, or being in person is recommended.</p>
             <br class="d-none d-md-block" />
           </div>
         </div>
@@ -107,10 +107,10 @@
               <p>
                 Well, I origionally did. I don't think anybody besides my family and friends ever played.
                 But if I wanted to start advertising and creating new games, I would probably need to charge.
-                If you want to buy me some food, feel free to donate
+                If you want to buy me a bagel, feel free to donate
                 <a
                   href="https://ko-fi.com/padgames"
-                >here</a>.
+                >here</a>. I would be very grateful.
               </p>
             </div>
             <div class="faq_q">
