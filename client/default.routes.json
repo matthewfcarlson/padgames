@@ -1,0 +1,42 @@
+[{
+    "path": "/",
+    "name": "Home",
+    "component": "./src/views/Home.vue"
+  },
+  {
+    "path": "/about",
+    "name": "About",
+    "chunk": true,
+    "component": "./src/views/About.vue"
+  },
+  {
+    "path": "/contact",
+    "name": "Contact",
+    "chunk": true,
+    "component": "./src/views/Contact.vue"
+  },
+  {
+    "path": "/construct",
+    "name": "Construction",
+    "chunk": true,
+    "component": "./src/views/Construction.vue"
+  },
+  {
+    "path": "/host",
+    "name": "Construction",
+    "chunk": true,
+    "component": "./src/views/Construction.vue"
+  },
+  {
+    "path": "/join",
+    "name": "Construction",
+    "chunk": true,
+    "component": "./src/views/Construction.vue"
+  },
+  {
+    "path": "*",
+    "priority": -1,
+    "name": "NotFound",
+    "component": "./src/views/404.vue"
+  }
+]

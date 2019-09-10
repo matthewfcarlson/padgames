@@ -9,6 +9,9 @@ const public_out_dir = path.join(output_dir, "public")
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const DynamicRoutes = require('./webpack.dynamic')
+
+console.log("Generated "+DynamicRoutes+" routes")
 
 module.exports = {
   entry: path.join(src_dir, '/index.ts'),
@@ -64,6 +67,9 @@ module.exports = {
       }
     ]
   },
+  node: {
+    fs: 'empty'
+  },
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json', '.html'],
     alias: {
@@ -88,7 +94,7 @@ module.exports = {
         indexPath: path.join(output_dir, 'app.html'),
 
         // Required - Routes to render.
-        routes: [ '/', '/about'],
+        routes: [ '/', '/about', '/contact', '/host', '/join'],
     })
   ]
 }

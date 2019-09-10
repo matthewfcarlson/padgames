@@ -55,7 +55,7 @@
     "server-build": "npm-run-all server-clean server-lint server-tsc",
     "server-build-prod": "npm-run-all server-clean server-lint server-tsc",
     "server-dev": "nodemon --watch server -e ts,ejs,js --exec npm run server-build:start",
-    "client-dev": "nodemon --watch client -e ts,ejs,vue --exec npm run client-build",
+    "client-dev": "nodemon --watch client -e vue --exec npm run client-build",
     "server-build:dev": "npm-run-all server-build server-dev",
     "server-build:start": "npm-run-all server-build start",
     "client-build:dev": "npm-run-all client-build client-dev",
@@ -88,6 +88,7 @@
     "css-loader": "^3.2.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "favicons-webpack-plugin": "^1.0.1",
+    "fs": "0.0.1-security",
     "fs-extra": "^8.1.0",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^24.9.0",
@@ -107,6 +108,7 @@
     "sass": "^1.22.10",
     "sass-loader": "^8.0.0",
     "shelljs": "^0.8.3",
+    "sitemap-webpack-plugin": "^0.6.0",
     "style-loader": "^1.0.0",
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
@@ -120,6 +122,7 @@
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7"
+    "webpack-cli": "^3.3.7",
+    "webpack-virtual-modules": "^0.1.11"
   }
 }

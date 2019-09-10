@@ -6,4 +6,4 @@ node_modules/*
 .vscode/
 /dist_client
 /dist_server
-
+*.dynamic.ts

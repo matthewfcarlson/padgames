@@ -8,4 +8,10 @@ $theme-colors: (
 );
 $body-bg: #fefefe;
 $body-color: #111;
+
 @import "~bootstrap/scss/bootstrap";
+
+.escape-gutters {
+  margin-right: -15px; //TODO use $container-padding-x
+  margin-left: -15px;
+}
