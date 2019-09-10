@@ -94,7 +94,7 @@ module.exports = {
         indexPath: path.join(output_dir, 'app.html'),
 
         // Required - Routes to render.
-        routes: [ '/', '/about'],
+        routes: [ '/', '/about', '/contact', '/host', '/join'],
     })
   ]
 }
