@@ -82,7 +82,12 @@
             </h2>
             <br />
             <p>Joining games will always be free. Unlocking a game for $1 will give you unlimited hosts. Or you can unlock all the games for one low price of $X.99</p>
-            <p class="secondary-text">The prices are really low just to keep the lights on. If you love padgames, <a href="https://ko-fi.com/padgames">consider donating!</a></p>
+            <p class="secondary-text">
+              The prices are really low just to keep the lights on. If you love padgames,
+              <a
+                href="https://ko-fi.com/padgames"
+              >consider donating!</a>
+            </p>
           </div>
           <div class="col">
             <img
@@ -95,26 +100,88 @@
       </div>
     </div>
     <!-- FAQ -->
-    <div class="bg-dark escape-gutters text-white py-5">
+    <div class="bg-info escape-gutters py-5">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col">FAQ
-            Why not, you know, make it free?
-            Well, I origionally did. I don't think anybody besides my family and friends ever played.
-            But if I wanted to start advertising and creating new games, I would probably need to charge.
-            If you want to buy me some food, feel free to donate <a href="https://ko-fi.com/padgames">here</a>. 
+          <div class="col">
+            <div class="faq_q">
+              <div class="lead">Why not, you know, make it free?</span>
+              <p>Well, I origionally did. I don't think anybody besides my family and friends ever played.
+              But if I wanted to start advertising and creating new games, I would probably need to charge.
+              If you want to buy me some food, feel free to donate
+              <a
+                href="https://ko-fi.com/padgames"
+              >here</a>.
+              </p>
+            </div>
+            <div class="faq_q">
+              <div class="lead">How many players can be in a game?</span>
+              <p>Unlimited though some games might get a little weird. Games here have two rules: they have to allow for unlimited players and they have to use two devices (like two phones or a tablet and a phone).</p>
+            </div>
+            <div class="faq_q">
+              <div class="lead">How many players can be in a game?</span>
+              <p>Unlimited though some games might get a little weird. Games here have two rules: they have to allow for unlimited players and they have to use two devices (like two phones or a tablet and a phone).</p>
+            </div>
           </div>
           <div class="col">
-            <h1>FAQ</h1>
-            <p>
-              <span class="lead">Why did you start PadGames?</span>
-              I was sitting around one christmas with my family and we were all on our phones in the same room.
+            <h1>
+              <i class="fas fa-comments fa-3x"></i>FAQ
+            </h1>
+            <div class="faq_q">
+              <div class="lead">Why did you start padgames?</div>
+              <p>I was sitting around one christmas with my family and we were all on our phones in the same room.
               A few people asked if we could play some board games but no one was willing to setup the new board games we had just gotten.
               I wished that there was a way we could play our new games from our phones without having to setup the game.
-            </p>
+              I happened to have my laptop nearby and started coding up a small web version of a new game we had started playing using websockets so it would work on phones.</p>
+            </div>
+            <div class="faq_q">
+              <div class="lead">Why charge money?</div>
+              <p>Servers don't grow on trees sadly (though a server farm of trees sounds awesome).
+              The cost is to help pay for servers and to encourage me to develop more games!</p>
+            </div>
           </div>
-          <div class="col">FAQ</div>
-          <div class="col">FAQ</div>
+          <div class="col">
+            <div class="faq_q">
+              <div class="lead">Will I have my games forever?</div>
+              <p>In the sad event that padgames has to close it's doors, all code will be uploaded to Github so you can host your own!</p>
+            </div>
+            <div class="faq_q">
+              <div class="lead">What parts of padgames are opensource?</div>
+              <p>The main pages, the game engine itself, and other parts are open source.
+              Check it out
+              <a
+                href="https://github.com/matthewfcarlson/padgames"
+              >on github!</a>
+              The only closed source part of padgames is the actual games themselves.</p>
+            </div>
+            <div class="faq_q">
+              <div class="lead">What sort of data do you collect?</div>
+              <p>I'm happy to report that I'm 100% GDPR compliant because I collect no PII (Personally identifying information).
+              I do technically collect enough information to make user accounts (to keep track of who has paid and whatnot) and aggregated statistics about games played.
+              To see more information about what is collected see</p>
+              <router-link to="/about">the about page</router-link>
+            </div>
+          </div>
+          <div class="col">
+            <div class="faq_q">
+              <div class="lead">What does it mean to pay $1 to host games?</div>
+              <p>
+                To be to host a game for friends or strangers if you swing that way, you need to pay $1.
+                Once you've paid for this, you will be host as many games with as many players are you want!
+              </p>
+            </div>
+            <div class="faq_q">
+              <div class="lead">I found a bug or have an idea!</div>
+              <router-link to="/contact">Contact us</router-link>or open a
+              <a href="https://github.com/matthewfcarlson/padgames/issues">github issue</a>
+              I'd love to hear from you.
+              Alternatively, if you have a fully formed game that you want on the padgames platforms (I will need to vet the quality of the code), you can submit a PR to padgames. Your game will be free as I don't want to charge for other's work.
+            </div>
+            <div class="faq_q">
+              <div class="lead">There's no ads?</div>
+              <p>Nope. I hate ads. My goal is never to have any ads.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
