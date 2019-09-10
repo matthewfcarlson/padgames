@@ -118,8 +118,8 @@
               <p>Unlimited though some games might get a little weird. Games here have two rules: they have to allow for unlimited players and they have to use two devices (like two phones or a tablet and a phone).</p>
             </div>
             <div class="faq_q">
-              <div class="lead">How many players can be in a game?</div>
-              <p>Unlimited though some games might get a little weird. Games here have two rules: they have to allow for unlimited players and they have to use two devices (like two phones or a tablet and a phone).</p>
+              <div class="lead">Will I have my games forever?</div>
+              <p>In the sad event that padgames has to close it's doors, all code will be uploaded to Github so you can host your own!</p>
             </div>
           </div>
           <div class="col">
@@ -145,10 +145,6 @@
           </div>
           <div class="col">
             <div class="faq_q">
-              <div class="lead">Will I have my games forever?</div>
-              <p>In the sad event that padgames has to close it's doors, all code will be uploaded to Github so you can host your own!</p>
-            </div>
-            <div class="faq_q">
               <div class="lead">What parts of padgames are opensource?</div>
               <p>
                 The main pages, the game engine itself, and other parts are open source.
@@ -165,8 +161,8 @@
                 I'm happy to report that I'm 100% GDPR compliant because I collect no PII (Personally identifying information).
                 I do technically collect enough information to make user accounts (to keep track of who has paid and whatnot) and aggregated statistics about games played.
                 To see more information about what is collected see
+                <router-link to="/about">the about page</router-link>
               </p>
-              <router-link to="/about">the about page</router-link>
             </div>
           </div>
           <div class="col">
@@ -192,7 +188,7 @@
         </div>
       </div>
     </div>
-    <Footer show-newsletter=true />
+    <Footer show-newsletter="true" />
   </div>
 </template>
 
