@@ -16,6 +16,12 @@
     "component": "./src/views/Contact.vue"
   },
   {
+    "path": "/pricing",
+    "name": "Pricing",
+    "chunk": true,
+    "component": "./src/views/Pricing.vue"
+  },
+  {
     "path": "/construct",
     "name": "Construction",
     "chunk": true,

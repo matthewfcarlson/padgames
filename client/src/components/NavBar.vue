@@ -39,7 +39,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class NavBar extends Vue {
   //TODO read in data from routes.dynamic.ts
-  routes = ["games", "faq", "about"];
+  routes = ["games", "pricing", "about"];
   //TODO figure out if we're logged in?
 }
 </script>

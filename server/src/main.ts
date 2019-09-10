@@ -33,6 +33,16 @@ app.use(
 );
 app.use(staticFileMiddleware);
 
+
+app.use((req, res) => {
+    res.status(404).send('404: Page not Found');
+});
+
+app.use((err, res, next) => {
+    console.error(err.statusMessage);
+    res.status(500).send('Something broke!');
+});
+
 httpServer.listen(port, () => {
     // tslint:disable-next-line:no-console
     console.log("Listening on " + port);

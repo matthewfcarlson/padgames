@@ -76,12 +76,13 @@
               <span class="text-success">Free</span> to join
             </h2>
             <h2 class="font-weight-bold">
-              <span class="text-success">$1</span> to host
+              <span class="text-success">Free</span> or <span class="text-success">$1+</span> to host
             </h2>
             <br />
-            <p>Joining games will always be free. Unlocking a game for $1 will give you unlimited hosts. Or you can unlock all the games for one low price of $X.99</p>
+            <p>Joining games will always be free. <router-link to="/pricing">See how pricing works</router-link></p>
             <p class="secondary-text">
-              The prices are really low just to keep the lights on. If you love padgames,
+              The prices are really low just to keep the lights on. 
+              If you love padgames,
               <a
                 href="https://ko-fi.com/padgames"
               >consider donating!</a>
