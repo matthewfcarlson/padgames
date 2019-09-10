@@ -70,7 +70,7 @@
     <div class="bg-secondary escape-gutters py-5">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col text-center">
+          <div class="col-md-6 col-sm-12 text-center">
             <h2>What does it cost?</h2>
             <h2 class="font-weight-bold">
               <span class="text-success">Free</span> to join
@@ -87,7 +87,7 @@
               >consider donating!</a>
             </p>
           </div>
-          <div class="col">
+          <div class="col-md-6 col-sm-12">
             <img
               src="/public/default_sushi.png"
               class="img-fluid img-center"
@@ -101,7 +101,7 @@
     <div class="bg-info escape-gutters py-5">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col">
+          <div class="col-md-3 col-sm-12">
             <div class="faq_q">
               <div class="lead">Why not, you know, make it free?</div>
               <p>
@@ -122,7 +122,7 @@
               <p>In the sad event that padgames has to close it's doors, all code will be uploaded to Github so you can host your own!</p>
             </div>
           </div>
-          <div class="col">
+          <div class="col-md-3 col-sm-12">
             <h1>
               <i class="fas fa-comments fa-3x"></i>FAQ
             </h1>
@@ -143,7 +143,7 @@
               </p>
             </div>
           </div>
-          <div class="col">
+          <div class="col-md-3 col-sm-12">
             <div class="faq_q">
               <div class="lead">What parts of padgames are opensource?</div>
               <p>
@@ -165,7 +165,7 @@
               </p>
             </div>
           </div>
-          <div class="col">
+          <div class="col-md-3 col-sm-12">
             <div class="faq_q">
               <div class="lead">What does it mean to pay $1 to host games?</div>
               <p>
