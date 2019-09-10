@@ -41,11 +41,9 @@
     </div>
     <!-- Game choices -->
     <div class="container py-5">
-      <!-- TODO replace this BR with padding on the root container -->
-      <br />
       <div class="row">
         <div class="col-md-4 col-lg-6 col-sm-12">
-          <h4>A wide choice of games</h4>
+          <h2 class="font-weight-bold">A wide choice of games</h2>
         </div>
         <div
           class="col-md-8 col-lg-6 col-sm-12 text-muted"
@@ -105,21 +103,22 @@
         <div class="row align-items-center">
           <div class="col">
             <div class="faq_q">
-              <div class="lead">Why not, you know, make it free?</span>
-              <p>Well, I origionally did. I don't think anybody besides my family and friends ever played.
-              But if I wanted to start advertising and creating new games, I would probably need to charge.
-              If you want to buy me some food, feel free to donate
-              <a
-                href="https://ko-fi.com/padgames"
-              >here</a>.
+              <div class="lead">Why not, you know, make it free?</div>
+              <p>
+                Well, I origionally did. I don't think anybody besides my family and friends ever played.
+                But if I wanted to start advertising and creating new games, I would probably need to charge.
+                If you want to buy me some food, feel free to donate
+                <a
+                  href="https://ko-fi.com/padgames"
+                >here</a>.
               </p>
             </div>
             <div class="faq_q">
-              <div class="lead">How many players can be in a game?</span>
+              <div class="lead">How many players can be in a game?</div>
               <p>Unlimited though some games might get a little weird. Games here have two rules: they have to allow for unlimited players and they have to use two devices (like two phones or a tablet and a phone).</p>
             </div>
             <div class="faq_q">
-              <div class="lead">How many players can be in a game?</span>
+              <div class="lead">How many players can be in a game?</div>
               <p>Unlimited though some games might get a little weird. Games here have two rules: they have to allow for unlimited players and they have to use two devices (like two phones or a tablet and a phone).</p>
             </div>
           </div>
@@ -129,15 +128,19 @@
             </h1>
             <div class="faq_q">
               <div class="lead">Why did you start padgames?</div>
-              <p>I was sitting around one christmas with my family and we were all on our phones in the same room.
-              A few people asked if we could play some board games but no one was willing to setup the new board games we had just gotten.
-              I wished that there was a way we could play our new games from our phones without having to setup the game.
-              I happened to have my laptop nearby and started coding up a small web version of a new game we had started playing using websockets so it would work on phones.</p>
+              <p>
+                I was sitting around one christmas with my family and we were all on our phones in the same room.
+                A few people asked if we could play some board games but no one was willing to setup the new board games we had just gotten.
+                I wished that there was a way we could play our new games from our phones without having to setup the game.
+                I happened to have my laptop nearby and started coding up a small web version of a new game we had started playing using websockets so it would work on phones.
+              </p>
             </div>
             <div class="faq_q">
               <div class="lead">Why charge money?</div>
-              <p>Servers don't grow on trees sadly (though a server farm of trees sounds awesome).
-              The cost is to help pay for servers and to encourage me to develop more games!</p>
+              <p>
+                Servers don't grow on trees sadly (though a server farm of trees sounds awesome).
+                The cost is to help pay for servers and to encourage me to develop more games!
+              </p>
             </div>
           </div>
           <div class="col">
@@ -147,18 +150,22 @@
             </div>
             <div class="faq_q">
               <div class="lead">What parts of padgames are opensource?</div>
-              <p>The main pages, the game engine itself, and other parts are open source.
-              Check it out
-              <a
-                href="https://github.com/matthewfcarlson/padgames"
-              >on github!</a>
-              The only closed source part of padgames is the actual games themselves.</p>
+              <p>
+                The main pages, the game engine itself, and other parts are open source.
+                Check it out
+                <a
+                  href="https://github.com/matthewfcarlson/padgames"
+                >on github!</a>
+                The only closed source part of padgames is the actual games themselves.
+              </p>
             </div>
             <div class="faq_q">
               <div class="lead">What sort of data do you collect?</div>
-              <p>I'm happy to report that I'm 100% GDPR compliant because I collect no PII (Personally identifying information).
-              I do technically collect enough information to make user accounts (to keep track of who has paid and whatnot) and aggregated statistics about games played.
-              To see more information about what is collected see</p>
+              <p>
+                I'm happy to report that I'm 100% GDPR compliant because I collect no PII (Personally identifying information).
+                I do technically collect enough information to make user accounts (to keep track of who has paid and whatnot) and aggregated statistics about games played.
+                To see more information about what is collected see
+              </p>
               <router-link to="/about">the about page</router-link>
             </div>
           </div>
@@ -185,7 +192,7 @@
         </div>
       </div>
     </div>
-    <Footer />
+    <Footer show-newsletter=true />
   </div>
 </template>
 

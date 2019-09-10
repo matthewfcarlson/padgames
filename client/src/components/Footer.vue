@@ -1,19 +1,19 @@
 <template>
   <div class="bg-dark escape-gutters text-white py-5 text-sm">
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
         <div class="col">
           Made with love by Matthew Carlson
           ©2019 | All rights reserved
         </div>
         <div class="col">
-          <ul class="list">
+          <ul class="list-unstyled">
             <li>
               <a href="https://ko-fi.com/padgames">Donate</a>
             </li>
           </ul>
         </div>
-        <div class="col">
+        <div class="col" v-if="showNewsletter">
           <NewsLetter />
         </div>
       </div>
@@ -22,7 +22,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+//TODO make sure that this is at the bottom of the screen?
+import { Component, Vue, Prop } from "vue-property-decorator";
 import NewsLetter from "./NewsLetter.vue";
 
 @Component({
@@ -30,7 +31,9 @@ import NewsLetter from "./NewsLetter.vue";
     NewsLetter
   }
 })
-export default class Footer extends Vue {}
+export default class Footer extends Vue {
+  @Prop({default: false}) private showNewsletter!: boolean;
+}
 </script>
 
 <style scoped lang="scss">

@@ -16,6 +16,18 @@
     "component": "./src/views/Contact.vue"
   },
   {
+    "path": "/host",
+    "name": "Construction",
+    "chunk": true,
+    "component": "./src/views/Construction.vue"
+  },
+  {
+    "path": "/join",
+    "name": "Construction",
+    "chunk": true,
+    "component": "./src/views/Construction.vue"
+  },
+  {
     "path": "*",
     "priority": -1,
     "name": "NotFound",
