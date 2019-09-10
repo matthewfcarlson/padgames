@@ -18,7 +18,7 @@
       </div>
     </div>
     <!-- Games that get your friends and family talking -->
-    <div class="bg-primary escape-gutters text-white py-1">
+    <div class="bg-primary escape-gutters text-white py-5">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-4 col-sm-12">
@@ -39,12 +39,8 @@
         </div>
       </div>
     </div>
-    <!-- Mailing list signup -->
-    <div class="container">
-      <NewsLetter />
-    </div>
     <!-- Game choices -->
-    <div class="container py-1">
+    <div class="container py-5">
       <!-- TODO replace this BR with padding on the root container -->
       <br />
       <div class="row">
@@ -73,15 +69,20 @@
       <br />
     </div>
     <!-- cost -->
-    <div class="bg-secondary escape-gutters">
+    <div class="bg-secondary escape-gutters py-5">
       <div class="container">
         <div class="row align-items-center">
           <div class="col text-center">
             <h2>What does it cost?</h2>
-            <h2 class="font-weight-bold"><span class="text-success">Free</span> to join</h2>
-            <h2 class="font-weight-bold"><span class="text-success">$1</span> to host</h2>
+            <h2 class="font-weight-bold">
+              <span class="text-success">Free</span> to join
+            </h2>
+            <h2 class="font-weight-bold">
+              <span class="text-success">$1</span> to host
+            </h2>
             <br />
             <p>Joining games will always be free. Unlocking a game for $1 will give you unlimited hosts. Or you can unlock all the games for one low price of $X.99</p>
+            <p class="secondary-text">The prices are really low just to keep the lights on. If you love padgames, <a href="https://ko-fi.com/padgames">consider donating!</a></p>
           </div>
           <div class="col">
             <img
@@ -94,13 +95,24 @@
       </div>
     </div>
     <!-- FAQ -->
-    <div class="bg-dark escape-gutters text-white">
+    <div class="bg-dark escape-gutters text-white py-5">
       <div class="container">
-        <div class="row">
+        <div class="row align-items-center">
+          <div class="col">FAQ
+            Why not, you know, make it free?
+            Well, I origionally did. I don't think anybody besides my family and friends ever played.
+            But if I wanted to start advertising and creating new games, I would probably need to charge.
+            If you want to buy me some food, feel free to donate <a href="https://ko-fi.com/padgames">here</a>. 
+          </div>
           <div class="col">
             <h1>FAQ</h1>
+            <p>
+              <span class="lead">Why did you start PadGames?</span>
+              I was sitting around one christmas with my family and we were all on our phones in the same room.
+              A few people asked if we could play some board games but no one was willing to setup the new board games we had just gotten.
+              I wished that there was a way we could play our new games from our phones without having to setup the game.
+            </p>
           </div>
-          <div class="col">FAQ</div>
           <div class="col">FAQ</div>
           <div class="col">FAQ</div>
         </div>
@@ -113,13 +125,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
-import NewsLetter from "../components/NewsLetter.vue";
 import Footer from "../components/Footer.vue";
 
 @Component({
   components: {
     NavBar,
-    NewsLetter,
     Footer
   }
 })

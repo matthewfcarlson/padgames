@@ -10,6 +10,7 @@
       <img alt="Vue logo" class="img-fluid img-center" src="/public/default_sushi.png" />
       
     </div>
+    <Footer/>
   </div>
   
 </template>
@@ -17,10 +18,12 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
+import Footer from '../components/Footer.vue';
 
 @Component({
   components: {
-    NavBar
+    NavBar,
+    Footer
   }
 })
 export default class NotFound extends Vue {}
