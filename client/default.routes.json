@@ -16,6 +16,12 @@
     "component": "./src/views/Contact.vue"
   },
   {
+    "path": "/construct",
+    "name": "Construction",
+    "chunk": true,
+    "component": "./src/views/Construction.vue"
+  },
+  {
     "path": "/host",
     "name": "Construction",
     "chunk": true,
