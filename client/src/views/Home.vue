@@ -47,7 +47,7 @@
         </div>
         <div
           class="col-md-8 col-lg-6 col-sm-12 text-muted"
-        >Ever been sitting around with your family or friends in the room, all on your phones, not talking? Games that are designed to help you talk and have fun together.</div>
+        >Ever been sitting around with your family or friends in the room, all on your phones, not talking? Padgames is designed to help you communicate and have fun together.</div>
       </div>
       <br />
       <div class="row">
