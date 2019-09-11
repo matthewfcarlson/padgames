@@ -23,14 +23,14 @@
     <div class="bg-primary escape-gutters text-white py-5 mt-n5">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-md-5 col-lg-4 col-sm-12 order-lg-1 order-xs-2">
+          <div class="col-md-5 col-lg-4 col-sm-12 order-md-1 order-sm-2">
             <img
               src="/public/undraw_family_couch.svg"
               class="img-fluid img-center"
               alt="family playing together"
             />
           </div>
-          <div class="col-md-7 col-lg-8 col-sm-12 order-lg-2 order-xs-1">
+          <div class="col-md-7 col-lg-8 col-sm-12 order-md-2 order-sm-1">
             <br class="d-none d-md-block" />
             <p class="lead font-weight-bold">Games that get your family or friends talking</p>
             <p>Most games work with a central tablet or two that everyone can see and then their phones act as controllers. Some games only require one phone per team.</p>
