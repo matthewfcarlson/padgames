@@ -3,7 +3,7 @@
     <NavBar />
     <!-- Main header -->
     <div class="container py-1">
-      <div class="jumbotron text-center bg-transparent mb-0">
+      <div class="jumbotron text-center bg-transparent mb-0 pb-2">
         <h1 class="display-4 font-weight-bold">
           Play Games Together
           <br />Anywhere You Are
@@ -26,7 +26,7 @@
       />
     </div>
     <!-- Games that get your friends and family talking -->
-    <div class="bg-primary escape-gutters text-white py-5 nmt-6">
+    <div class="bg-primary escape-gutters text-white py-5 mt-n7">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-5 col-lg-4 col-sm-12 order-2 order-md-1">
@@ -37,12 +37,12 @@
             />
           </div>
           <div class="col-md-7 col-lg-8 col-sm-12 order-1 order-md-2">
-            <br class="d-none d-md-block" />
+            <br class="" />
             <p class="lead font-weight-bold">Games that get your family or friends talking</p>
             <p>Most games work with a central tablet or two that everyone can see and then their phones act as controllers. Some games only require one phone per team.</p>
             <p>Games are flexible for your situation and some can be played with just phones or just the tablet in the middle.</p>
             <p>Since it is hosted on the internet, people can join from anywhere! You’ll need to be able to communicate with your teammates, so a phone call, discord, or being in person is recommended.</p>
-            <br class="d-none d-md-block" />
+            <br />
           </div>
         </div>
       </div>

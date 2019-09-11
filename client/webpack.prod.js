@@ -9,7 +9,8 @@ const webpack = require('webpack')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const SitemapPlugin = require('sitemap-webpack-plugin').default;
-const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const PrerenderSPAPlugin = require('prerender-spa-plugin');
+var path = require('path');
 
 const env = {
   ENV: '"production"',
@@ -19,6 +20,8 @@ const env = {
 }
 
 webpackConfig.mode = "production"
+
+const output_dir = webpackConfig.output.path;
 
 webpackConfig.module.rules = [...webpackConfig.module.rules,
 {
