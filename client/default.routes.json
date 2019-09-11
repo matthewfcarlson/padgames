@@ -40,7 +40,7 @@
     "component": "./src/views/Construction.vue"
   },
   {
-    "path": "/500",
+    "path": "/error",
     "name": "ServerError",
     "component": "./src/views/500.vue"
   },

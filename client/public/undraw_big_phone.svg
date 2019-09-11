@@ -42,15 +42,22 @@
      id="namedview316"
      showgrid="false"
      inkscape:zoom="0.82820555"
-     inkscape:cx="1661.6979"
-     inkscape:cy="393.19716"
+     inkscape:cx="1436.3826"
+     inkscape:cy="492.02914"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g1389"
+     inkscape:current-layer="layer8"
      units="mm" />
   <defs
      id="defs9">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 402.985 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="2834.6457 : 402.985 : 1"
+       inkscape:persp3d-origin="1417.3229 : 268.65667 : 1"
+       id="perspective2852" />
     <linearGradient
        id="fe3366dc-1c26-4135-9415-0b0409d0ae5c"
        x1="699.46002"
@@ -209,8 +216,7 @@
      id="layer1"
      inkscape:label="Background"
      style="display:inline"
-     transform="translate(0,2.1146038e-5)"
-     sodipodi:insensitive="true">
+     transform="translate(0,2.1146038e-5)">
     <path
        style="opacity:0.1;fill:#465c8b"
        d="m 1499.1053,111.4 c -64.72,-2.25 -126.36,-23.14 -185.22,-46 -58.86,-22.86 -117.16,-48.19 -180.37,-60.3 -40.59,-7.79 -87.06,-8.89 -119.8,12.88 -31.49996,21 -41.67996,57.15 -47.14996,90.72 -4.12,25.27 -6.54,51.85 4.74,75.5 7.84,16.42 21.74,30.22 31.35996,46 33.47,54.72 9.81,122.2 -26.44996,175.63 -17,25.06 -36.75,49 -49.88,75.66 -13.13,26.66 -19.2,57.25 -7.71,84.46 11.38,27 38.51,47.24 67.9,61.5 59.68996,28.94 129.99996,37.23 198.60996,41.92 151.83,10.39 304.46,5.89 456.69,1.39 56.34,-1.67 112.92,-3.36 168.34,-12.07 30.78,-4.84 62.55,-12.52 84.89,-31 28.37,-23.53 35.4,-63.38 16.39,-92.88 -31.88,-49.49 -120,-61.79 -142.31,-114.9 -12.26,-29.23 0.33,-61.8 18.16,-88.91 38.24,-58.17 102.33,-109.19 105.7,-175.68 2.32,-45.66 -28.49,-91.39 -76.13,-113 -49.93,-22.65 -119.18,-19.8 -156,17.69 -37.95,38.52 -104.61,53.37 -161.76,51.39 z"
@@ -524,8 +530,7 @@
      id="layer10"
      inkscape:label="display"
      style="display:inline"
-     transform="translate(0,2.1146038e-5)"
-     sodipodi:insensitive="true">
+     transform="translate(0,2.1146038e-5)">
     <path
        inkscape:connector-curvature="0"
        style="fill:#6c63ff;stroke-width:0.43006858"
@@ -618,25 +623,25 @@
     <polygon
        transform="matrix(0.43006861,0,0,0.43006861,1203.9314,241.97304)"
        style="fill:none;stroke:#535461;stroke-width:2;stroke-miterlimit:10"
-       points="259.18,252.08 244.18,239.08 229.18,252.08 "
+       points="244.18,239.08 229.18,252.08 259.18,252.08 "
        stroke-miterlimit="10"
        id="polygon80" />
     <polygon
        transform="matrix(0.43006861,0,0,0.43006861,1203.9314,241.97304)"
        style="fill:none;stroke:#535461;stroke-width:2;stroke-miterlimit:10"
-       points="259.18,380.08 244.18,393.08 229.18,380.08 "
+       points="244.18,393.08 229.18,380.08 259.18,380.08 "
        stroke-miterlimit="10"
        id="polygon82" />
     <polygon
        transform="matrix(0.43006861,0,0,0.43006861,1203.9314,241.97304)"
        style="fill:none;stroke:#535461;stroke-width:2;stroke-miterlimit:10"
-       points="180.18,331.08 167.18,316.08 180.18,301.08 "
+       points="167.18,316.08 180.18,301.08 180.18,331.08 "
        stroke-miterlimit="10"
        id="polygon84" />
     <polygon
        transform="matrix(0.43006861,0,0,0.43006861,1203.9314,241.97304)"
        style="fill:none;stroke:#535461;stroke-width:2;stroke-miterlimit:10"
-       points="308.18,331.08 321.18,316.08 308.18,301.08 "
+       points="321.18,316.08 308.18,301.08 308.18,331.08 "
        stroke-miterlimit="10"
        id="polygon86" />
     <circle
@@ -809,7 +814,7 @@
     <polygon
        transform="matrix(0.43006861,0,0,0.43006861,1203.9314,241.97304)"
        style="fill:none;stroke:#e2e2ec;stroke-width:2;stroke-miterlimit:10"
-       points="698.68,249.08 713.68,273.08 684.68,273.08 "
+       points="713.68,273.08 684.68,273.08 698.68,249.08 "
        stroke-miterlimit="10"
        id="polygon140" />
     <rect
@@ -859,7 +864,6 @@
      id="layer3"
      inkscape:label="Person_right"
      transform="translate(0,2.1146038e-5)"
-     sodipodi:insensitive="true"
      style="display:inline">
     <path
        inkscape:connector-curvature="0"
@@ -920,7 +924,7 @@
     <polygon
        transform="matrix(0.64737626,0,0,0.64737626,1618.3559,295.49729)"
        style="fill:#2f2e41"
-       points="579.42,226.498 573.097,259.262 573.097,263.076 582.955,232.239 "
+       points="573.097,259.262 573.097,263.076 582.955,232.239 579.42,226.498 "
        id="polygon28" />
     <path
        inkscape:connector-curvature="0"
@@ -1008,7 +1012,6 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="person_left"
-     sodipodi:insensitive="true"
      style="display:inline">
     <ellipse
        style="opacity:0.1;fill:#6c63ff;stroke-width:0.82952428"
@@ -1354,7 +1357,6 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="person_far_left"
-     sodipodi:insensitive="true"
      style="display:inline">
     <ellipse
        cx="578.17944"
@@ -1856,7 +1858,7 @@
     <polygon
        transform="matrix(-0.85708357,0,0,0.85708357,1452.7546,110.00648)"
        style="fill:#4b4b5b"
-       points="932.16,386.22 948.51,380.3 930.34,363.18 913.47,368.85 "
+       points="948.51,380.3 930.34,363.18 913.47,368.85 932.16,386.22 "
        id="polygon656" />
     <circle
        style="fill:#e7c7ca;stroke-width:0.85708356"
@@ -2009,12 +2011,11 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="person_far_right"
-     sodipodi:insensitive="true"
      style="display:inline">
     <polygon
        transform="matrix(0.42873614,0,0,0.42873614,2109.2131,381.56868)"
        style="fill:#f2f2f2"
-       points="905,666 943,666 1046,474 905,387.09 "
+       points="943,666 1046,474 905,387.09 905,666 "
        id="polygon23" />
     <path
        inkscape:connector-curvature="0"
@@ -2127,7 +2128,7 @@
     <polygon
        transform="matrix(0.42873614,0,0,0.42873614,2109.2131,381.56868)"
        style="fill:#2f2e41"
-       points="596.611,432.575 630.477,482.652 615.536,484.655 586.65,430.572 "
+       points="630.477,482.652 615.536,484.655 586.65,430.572 596.611,432.575 "
        id="polygon69" />
     <path
        inkscape:connector-curvature="0"
@@ -2287,8 +2288,7 @@
      inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="person_left_close"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <ellipse
        cx="1127.6891"
        cy="722.8985"
@@ -2390,7 +2390,6 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="person_far_right2"
-     sodipodi:insensitive="true"
      style="display:inline">
     <path
        inkscape:connector-curvature="0"
@@ -2410,7 +2409,7 @@
     <polygon
        transform="matrix(0.50369984,0,0,0.50369984,2101.8071,315.22343)"
        style="fill:#ffb9b9"
-       points="861.213,715.904 852.787,740.779 891.549,754.261 918.513,755.946 916.828,732.352 "
+       points="852.787,740.779 891.549,754.261 918.513,755.946 916.828,732.352 861.213,715.904 "
        id="polygon16" />
     <path
        inkscape:connector-curvature="0"
