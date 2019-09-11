@@ -15,6 +15,7 @@ dotenv.config();
 // as if it were an environment variable
 const port = process.env.SERVER_PORT ||  process.env.PORT || 3000;
 const contentsDir = path.join(__dirname, "../dist_client");
+const serverAssetsDir = path.join(__dirname, "../server/assets"); // TODO have webpack handle this
 const staticFileMiddleware = express.static(contentsDir);
 /*app.get("/", (req, res) => {
     res.sendFile(path.join(contentsDir, "index.html"));
@@ -35,7 +36,7 @@ app.use(staticFileMiddleware);
 
 
 app.use((req, res) => {
-    res.status(404).send('404: Page not Found');
+    res.status(404).sendFile(path.join(serverAssetsDir, "404.html"));
 });
 
 app.use((err, res, next) => {

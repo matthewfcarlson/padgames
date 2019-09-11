@@ -2,8 +2,15 @@
   <div class="home">
     <NavBar />
     <!-- Main header -->
+    <div class="escape-gutters overflow-hidden" style="height:25rem; position:relative;">
+      <img
+        style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);height:100%;"
+        src="/public/undraw_big_phone.svg"
+        alt="a big phone that every comes together on"
+      />
+    </div>
     <div class="container py-1">
-      <div class="jumbotron text-center bg-transparent mb-0 pb-2">
+      <div class="jumbotron text-center bg-transparent mb-0 pb-2 pt-1">
         <h1 class="display-4 font-weight-bold">
           Play Games Together
           <br />Anywhere You Are
@@ -18,15 +25,8 @@
         <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
       </div>
     </div>
-    <div class="escape-gutters overflow-hidden" style="overflow:hidden; height:25rem; position:relative;">
-      <img
-        style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);height:100%;"
-        src="/public/undraw_big_phone.svg"
-        alt="a big phone that every comes together on"
-      />
-    </div>
     <!-- Games that get your friends and family talking -->
-    <div class="bg-primary escape-gutters text-white py-5 mt-n7">
+    <div class="bg-primary escape-gutters text-white py-5">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-5 col-lg-4 col-sm-12 order-2 order-md-1">
@@ -37,7 +37,7 @@
             />
           </div>
           <div class="col-md-7 col-lg-8 col-sm-12 order-1 order-md-2">
-            <br class="" />
+            <br class />
             <p class="lead font-weight-bold">Games that get your family or friends talking</p>
             <p>Most games work with a central tablet or two that everyone can see and then their phones act as controllers. Some games only require one phone per team.</p>
             <p>Games are flexible for your situation and some can be played with just phones or just the tablet in the middle.</p>
