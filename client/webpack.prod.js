@@ -151,7 +151,7 @@ new PrerenderSPAPlugin({
   routes: [ '/', '/about', '/contact', '/host', '/join'],
 }),
 new FaviconsWebpackPlugin(helpers.root('/client/src/favicon.png')),
-new SitemapPlugin('https://padgames.app', ['/', '/about/', '/games/', '/contact', '/pricing'], {}) //TODO figure out how to make this configurable
+new SitemapPlugin('https://padgames.app', ['/', '/about/', '/games/', '/contact', '/pricing', '/500'], {}) //TODO figure out how to make this configurable
 ];
 
 

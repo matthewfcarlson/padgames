@@ -40,9 +40,15 @@
     "component": "./src/views/Construction.vue"
   },
   {
+    "path": "/500",
+    "name": "ServerError",
+    "component": "./src/views/500.vue"
+  },
+  {
     "path": "*",
     "priority": -1,
     "name": "NotFound",
     "component": "./src/views/404.vue"
   }
+
 ]
