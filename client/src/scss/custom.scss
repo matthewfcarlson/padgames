@@ -10,11 +10,11 @@ $theme-colors: (
 $body-bg: #fefefe;
 $body-color: #111;
 $spacers: (
-  "n1": $spacer * -0.25,
-  "n2": $spacer * -0.5,
-  "n3": $spacer * -1.0,
-  "n4": $spacer * -1.5,
-  "n5": $spacer * -3.0,
+  6: $spacer * 4,
+  7: $spacer * 5,
+  8: $spacer * 6,
+  9: $spacer * 8,
+  10: $spacer * 10
 );
 
 @import "~bootstrap/scss/bootstrap";

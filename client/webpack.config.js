@@ -8,7 +8,6 @@ const public_src_dir = path.resolve(__dirname, "./public")
 const public_out_dir = path.join(output_dir, "public")
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
-const PrerenderSPAPlugin = require('prerender-spa-plugin')
 const DynamicRoutes = require('./webpack.dynamic')
 
 console.log("Generated "+DynamicRoutes+" routes")
@@ -87,14 +86,6 @@ module.exports = {
     new CopyWebpackPlugin([{
         from: public_src_dir,
         to: public_out_dir
-      } ]),
-    new PrerenderSPAPlugin({
-        // Required - The path to the webpack-outputted app to prerender.
-        staticDir: output_dir,
-        indexPath: path.join(output_dir, 'app.html'),
-
-        // Required - Routes to render.
-        routes: [ '/', '/about', '/contact', '/host', '/join'],
-    })
+      } ])
   ]
 }

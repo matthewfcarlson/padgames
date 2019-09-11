@@ -9,6 +9,7 @@ const webpack = require('webpack')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const SitemapPlugin = require('sitemap-webpack-plugin').default;
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
 
 const env = {
   ENV: '"production"',
@@ -137,6 +138,14 @@ new CompressionPlugin({
 }),
 new webpack.DefinePlugin({
   'process.env': env
+}),
+new PrerenderSPAPlugin({
+  // Required - The path to the webpack-outputted app to prerender.
+  staticDir: output_dir,
+  indexPath: path.join(output_dir, 'app.html'),
+
+  // Required - Routes to render.
+  routes: [ '/', '/about', '/contact', '/host', '/join'],
 }),
 new FaviconsWebpackPlugin(helpers.root('/client/src/favicon.png')),
 new SitemapPlugin('https://padgames.app', ['/', '/about/', '/games/', '/contact'], {}) //TODO figure out how to make this configurable

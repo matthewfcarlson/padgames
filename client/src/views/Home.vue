@@ -13,24 +13,30 @@
           Stop staring at your phones silently and play together.
           With virtually unlimited players per game, it’s fun for everyone.
         </p>
-        <br/>
+        <br />
         <router-link class="btn btn-primary btn-lg" to="/host" role="button">Host a Game</router-link>
         <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
-        <img class="img-fluid img-center" src="/public/undraw_big_phone.svg" alt="a big phone that every comes together on" />
       </div>
     </div>
+    <div class="escape-gutters overflow-hidden" style="overflow:hidden; height:25rem; position:relative;">
+      <img
+        style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);height:100%;"
+        src="/public/undraw_big_phone.svg"
+        alt="a big phone that every comes together on"
+      />
+    </div>
     <!-- Games that get your friends and family talking -->
-    <div class="bg-primary escape-gutters text-white py-5 mt-n5">
+    <div class="bg-primary escape-gutters text-white py-5 nmt-6">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-md-5 col-lg-4 col-sm-12 order-md-1 order-sm-2">
+          <div class="col-md-5 col-lg-4 col-sm-12 order-2 order-md-1">
             <img
               src="/public/undraw_family_couch.svg"
               class="img-fluid img-center"
               alt="family playing together"
             />
           </div>
-          <div class="col-md-7 col-lg-8 col-sm-12 order-md-2 order-sm-1">
+          <div class="col-md-7 col-lg-8 col-sm-12 order-1 order-md-2">
             <br class="d-none d-md-block" />
             <p class="lead font-weight-bold">Games that get your family or friends talking</p>
             <p>Most games work with a central tablet or two that everyone can see and then their phones act as controllers. Some games only require one phone per team.</p>
@@ -78,12 +84,16 @@
               <span class="text-success">Free</span> to join
             </h2>
             <h2 class="font-weight-bold">
-              <span class="text-success">Free</span> or <span class="text-success">$1+</span> to host
+              <span class="text-success">Free</span> or
+              <span class="text-success">$1+</span> to host
             </h2>
             <br />
-            <p>Joining games will always be free. <router-link to="/pricing">See how pricing works</router-link></p>
+            <p>
+              Joining games will always be free.
+              <router-link to="/pricing">See how pricing works</router-link>
+            </p>
             <p class="secondary-text">
-              The prices are really low just to keep the lights on. 
+              The prices are really low just to keep the lights on.
               If you love padgames,
               <a
                 href="https://ko-fi.com/padgames"
