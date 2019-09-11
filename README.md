@@ -91,3 +91,69 @@ So people don't need to install an app, just load up the website or scan the roo
 You could just go to a nearby park, talk to the cool old people playing chess or the young couple on the picnic blanket and ask them to play.
 Frankly that sounds terrifying, but hey you're the one who doesn't have any friends to play with.
 Some of the games don't actually need you to stand next to each other, invite some strangers to play with you via the power of the internet and hop into a discord together.
+
+## Development
+
+### Steps for getting started
+
+1. Clone the repo to a local directory
+2. Run "npm install" to get the dependencies you need
+3. Run "npm run dev" - this  compiles the server and client and starts the server
+4. With any luck you should see a "listening on port 3000" in your console (it might not be the last thing printed since route generation can take a while)
+
+### Guide to contributing
+
+Feel free to create an issue and go ahead with a PR to fix it. Tag me and I'll assign it to you. If you make a PR, I'll add you to the list of contributors on the about page. If you're a regular contributor, we can talk about furthuring your role at PadGames and what goals you have.
+
+### Architecture
+
+Everything in this repo is typescript from both the server and client side.
+Padgames has three sections: client, server, and games. Client and Server are compiled into dist_client and dist_server respectively.
+The games folder contains all the public/free games as well as a submodule to the private repo that contains the paid/closed source games.
+This allows the engine and games of PadGames to be open source and freely modifyable but prevents someone from simply hosting their own padgames with all the games I've made.
+As mentioned in earlier docs, in the event that PadGames shuts down due to a lack of time, legal copyright issues, or money to keep the servers up, all private code will be merged into the padgames codebase on github for anyone to use.
+
+#### Routes
+
+Since the games aren't known while we're writing the code, in the webpack step runs webpack.dynamic.js that looks for routes.json files.
+The routes.json files look like this:
+
+```json
+[{
+    "path": "/websitepath",
+    "name": "named-route",
+    "chunk": true,
+    "component": "./client/index.vue"
+},
+{
+    "path": "/websitepath2",
+    "name": "named-route2",
+    "chunk": true,
+    "isGame": true,
+    "component": "./client/game.vue"
+}
+]
+```
+
+Different attributes mean different things. Chunk means lazy load, isGame means that it should be put into the list of games. 
+Future information will be included in this file to generate more at compile time.
+Once the schema of the file is standardized, a doc will be created detailing it.
+So to add a new route on the client side, make sure to add a routes.json or in the default.routes.json.
+
+#### Communication between client and server
+
+Client and server communicate over websockets as it's a pretty universal technology. 
+I've used socket.io as it's easy and fairly reliable (I've found a few bugs here and there).
+If you have a better suggestion for a cross platform, web compatible method, please drop me a line (matt@padgames.app)
+
+#### Room system
+
+Each game generated gets a unique room code (5 letters long).
+Codes are randomly assigned.
+TODO: finish this section
+
+#### Sharding
+
+Right now, I don't have a good way to scale out. I'll explore this in the future if demand ever requires it.
+One way I've been considering is assigning ranges of room codes to servers as needed. This makes it harder to scale down.
+Another option is to have data stored in a database rather than in-memory and just have game state be served from that.
