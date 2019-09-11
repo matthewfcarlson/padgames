@@ -2,7 +2,7 @@
   <div class="about">
     <NavBar />
     <div class="container">
-      <h1>This is an about page</h1>
+      <h1>This is an Pricing page</h1>
     </div>
     <Footer/>
   </div>
