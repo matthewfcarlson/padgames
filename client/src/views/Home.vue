@@ -3,7 +3,7 @@
     <NavBar />
     <!-- Main header -->
     <div class="container py-1">
-      <div class="jumbotron text-center bg-transparent">
+      <div class="jumbotron text-center bg-transparent mb-0">
         <h1 class="display-4 font-weight-bold">
           Play Games Together
           <br />Anywhere You Are
@@ -13,22 +13,24 @@
           Stop staring at your phones silently and play together.
           With virtually unlimited players per game, it’s fun for everyone.
         </p>
+        <br/>
         <router-link class="btn btn-primary btn-lg" to="/host" role="button">Host a Game</router-link>
         <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
+        <img class="img-fluid img-center" src="/public/undraw_big_phone.svg" alt="a big phone that every comes together on" />
       </div>
     </div>
     <!-- Games that get your friends and family talking -->
-    <div class="bg-primary escape-gutters text-white py-5">
+    <div class="bg-primary escape-gutters text-white py-5 mt-n5">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-md-4 col-sm-12">
+          <div class="col-md-5 col-lg-4 col-sm-12 order-lg-1 order-xs-2">
             <img
-              src="/public/default_sushi.png"
+              src="/public/undraw_family_couch.svg"
               class="img-fluid img-center"
               alt="family playing together"
             />
           </div>
-          <div class="col-md-8 col-sm-12">
+          <div class="col-md-7 col-lg-8 col-sm-12 order-lg-2 order-xs-1">
             <br class="d-none d-md-block" />
             <p class="lead font-weight-bold">Games that get your family or friends talking</p>
             <p>Most games work with a central tablet or two that everyone can see and then their phones act as controllers. Some games only require one phone per team.</p>
@@ -90,7 +92,7 @@
           </div>
           <div class="col-md-6 col-sm-12">
             <img
-              src="/public/default_sushi.png"
+              src="/public/undraw_make_it_rain.svg"
               class="img-fluid img-center"
               alt="family playing together"
             />
