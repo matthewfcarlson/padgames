@@ -41,8 +41,8 @@
      id="namedview329"
      showgrid="false"
      inkscape:zoom="1.8684118"
-     inkscape:cx="241.71864"
-     inkscape:cy="507.42775"
+     inkscape:cx="755.52402"
+     inkscape:cy="400.38497"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
@@ -88,7 +88,8 @@
      transform="translate(-113 -92.74)"
      fill="#465c8b"
      opacity="0.2"
-     id="path14" />
+     id="path14"
+     style="opacity:1;fill:#ffffff;fill-opacity:1" />
   <path
      d="M836.89,358.2H312.55a23.89,23.89,0,0,0-23.89,23.89V689.42a23.89,23.89,0,0,0,23.89,23.89H836.89a23.89,23.89,0,0,0,23.89-23.89V382.09A23.89,23.89,0,0,0,836.89,358.2Z"
      transform="translate(-113 -92.74)"
