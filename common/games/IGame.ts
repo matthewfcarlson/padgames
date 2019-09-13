@@ -1,4 +1,4 @@
-import { IPlayer } from '../rooms/RoomSystem';
+import { IPlayer, IRoom } from '../rooms/RoomSystem';
 import { IPlayerID } from '../players/IPlayer';
 
 export enum EGameState {
@@ -8,21 +8,15 @@ export enum EGameState {
     GAME_ENDED
 }
 
+
 export interface IGame {
     id: string;
-    players: IPlayer[];
+    room: IRoom;
     state: EGameState;
 
     /**
-     * Sets the host player in the game
-     * Assumes that the player already exists
-     * @param player Sets the player for host
-     */
-    SetHostPlayer(player: IPlayerID): void;
-
-    /**
      * Adds a player to the game or sets the status
-     * @param player the player 
+     * @param player the player that we're setting the status of
      */
     SetPlayerStatus(player: IPlayerID): boolean;
 
