@@ -41,13 +41,13 @@
      inkscape:window-height="1425"
      id="namedview316"
      showgrid="false"
-     inkscape:zoom="0.82820555"
-     inkscape:cx="953.41072"
-     inkscape:cy="492.02914"
+     inkscape:zoom="3.3128222"
+     inkscape:cx="1395.9244"
+     inkscape:cy="290.5521"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer11"
+     inkscape:current-layer="layer10"
      units="mm" />
   <defs
      id="defs9">
@@ -216,7 +216,8 @@
      id="layer1"
      inkscape:label="Background"
      style="display:inline"
-     transform="translate(0,2.1146038e-5)">
+     transform="translate(0,2.1146038e-5)"
+     sodipodi:insensitive="true">
     <path
        style="opacity:0.1;fill:#465c8b"
        d="m 1499.1053,111.4 c -64.72,-2.25 -126.36,-23.14 -185.22,-46 -58.86,-22.86 -117.16,-48.19 -180.37,-60.3 -40.59,-7.79 -87.06,-8.89 -119.8,12.88 -31.49996,21 -41.67996,57.15 -47.14996,90.72 -4.12,25.27 -6.54,51.85 4.74,75.5 7.84,16.42 21.74,30.22 31.35996,46 33.47,54.72 9.81,122.2 -26.44996,175.63 -17,25.06 -36.75,49 -49.88,75.66 -13.13,26.66 -19.2,57.25 -7.71,84.46 11.38,27 38.51,47.24 67.9,61.5 59.68996,28.94 129.99996,37.23 198.60996,41.92 151.83,10.39 304.46,5.89 456.69,1.39 56.34,-1.67 112.92,-3.36 168.34,-12.07 30.78,-4.84 62.55,-12.52 84.89,-31 28.37,-23.53 35.4,-63.38 16.39,-92.88 -31.88,-49.49 -120,-61.79 -142.31,-114.9 -12.26,-29.23 0.33,-61.8 18.16,-88.91 38.24,-58.17 102.33,-109.19 105.7,-175.68 2.32,-45.66 -28.49,-91.39 -76.13,-113 -49.93,-22.65 -119.18,-19.8 -156,17.69 -37.95,38.52 -104.61,53.37 -161.76,51.39 z"
@@ -226,7 +227,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer11"
-     inkscape:label="Background2">
+     inkscape:label="Background2"
+     sodipodi:insensitive="true">
     <circle
        style="fill:#6c63ff"
        cx="935.5368"
@@ -445,7 +447,8 @@
      id="layer4"
      inkscape:label="Phone2"
      style="display:inline"
-     transform="translate(0,2.1146038e-5)">
+     transform="translate(0,2.1146038e-5)"
+     sodipodi:insensitive="true">
     <g
        id="g1389"
        transform="translate(763.12292)">
@@ -683,102 +686,6 @@
        stroke-miterlimit="10"
        id="circle98" />
     <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1407.4313"
-       cy="421.77612"
-       r="7.7412348"
-       id="circle100" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1395.6001"
-       cy="395.93759"
-       r="1.6901697"
-       id="circle102" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1401.9307"
-       cy="395.93759"
-       r="1.6901697"
-       id="circle104" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1401.0878"
-       cy="403.95837"
-       r="1.6901697"
-       id="circle106" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1407.0012"
-       cy="404.14331"
-       r="1.7202743"
-       id="circle108" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1412.906"
-       cy="403.95837"
-       r="1.6901697"
-       id="circle110" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1398.5547"
-       cy="400.16092"
-       r="1.6901697"
-       id="circle112" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1403.9907"
-       cy="400.27267"
-       r="1.7202743"
-       id="circle114" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1409.5817"
-       cy="400.27267"
-       r="1.7202743"
-       id="circle116" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1415.4392"
-       cy="400.16092"
-       r="1.6901697"
-       id="circle118" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1407.0012"
-       cy="395.97202"
-       r="1.7202743"
-       id="circle120" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1413.0222"
-       cy="395.97202"
-       r="1.7202743"
-       id="circle122" />
-    <circle
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       cx="1417.9723"
-       cy="395.93759"
-       r="1.6901697"
-       id="circle124" />
-    <rect
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       x="1339.4805"
-       y="338.77289"
-       width="9.4615088"
-       height="16.342607"
-       rx="3.6555829"
-       ry="3.6555829"
-       id="rect126" />
-    <rect
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       x="1465.0604"
-       y="338.77289"
-       width="9.4615088"
-       height="16.342607"
-       rx="3.6555829"
-       ry="3.6555829"
-       id="rect128" />
-    <circle
        style="fill:#535461;stroke-width:0.43006858"
        cx="1504.6268"
        cy="355.11548"
@@ -802,52 +709,6 @@
        cy="398.55243"
        r="10.321647"
        id="circle136" />
-    <rect
-       style="fill:#e2e2ec;stroke-width:0.43006858"
-       x="1353.2427"
-       y="332.75192"
-       width="107.08709"
-       height="57.199123"
-       rx="9.3539925"
-       ry="9.3539925"
-       id="rect138" />
-    <polygon
-       transform="matrix(0.43006861,0,0,0.43006861,1203.9314,241.97304)"
-       style="fill:none;stroke:#e2e2ec;stroke-width:2;stroke-miterlimit:10"
-       points="713.68,273.08 684.68,273.08 698.68,249.08 "
-       stroke-miterlimit="10"
-       id="polygon140" />
-    <rect
-       style="fill:none;stroke:#e2e2ec;stroke-width:0.86013716;stroke-miterlimit:10"
-       x="1477.3175"
-       y="372.31827"
-       width="10.751715"
-       height="9.4615088"
-       stroke-miterlimit="10"
-       id="rect142" />
-    <circle
-       style="fill:none;stroke:#e2e2ec;stroke-width:0.86013716;stroke-miterlimit:10"
-       cx="1527.4204"
-       cy="375.75879"
-       r="6.0209603"
-       stroke-miterlimit="10"
-       id="circle144" />
-    <line
-       style="fill:none;stroke:#e2e2ec;stroke-width:0.86013716;stroke-miterlimit:10"
-       x1="1501.4012"
-       y1="393.71414"
-       x2="1511.0778"
-       y2="403.39069"
-       stroke-miterlimit="10"
-       id="line146" />
-    <line
-       style="fill:none;stroke:#e2e2ec;stroke-width:0.86013716;stroke-miterlimit:10"
-       x1="1511.2928"
-       y1="393.71414"
-       x2="1501.4012"
-       y2="403.17566"
-       stroke-miterlimit="10"
-       id="line148" />
     <path
        inkscape:connector-curvature="0"
        style="fill:none;stroke-width:0.43006858"
@@ -859,7 +720,8 @@
      id="layer3"
      inkscape:label="Person_right"
      transform="translate(0,2.1146038e-5)"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <path
        inkscape:connector-curvature="0"
        style="fill:#e6e6e6;stroke-width:0.64737624"
@@ -919,7 +781,7 @@
     <polygon
        transform="matrix(0.64737626,0,0,0.64737626,1618.3559,295.49729)"
        style="fill:#2f2e41"
-       points="573.097,259.262 573.097,263.076 582.955,232.239 579.42,226.498 "
+       points="573.097,263.076 582.955,232.239 579.42,226.498 573.097,259.262 "
        id="polygon28" />
     <path
        inkscape:connector-curvature="0"
@@ -1007,7 +869,8 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="person_left"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <ellipse
        style="opacity:0.1;fill:#6c63ff;stroke-width:0.82952428"
        cx="833.24823"
@@ -1352,7 +1215,8 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="person_far_left"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <ellipse
        cx="578.17944"
        cy="668.13446"
@@ -1853,7 +1717,7 @@
     <polygon
        transform="matrix(-0.85708357,0,0,0.85708357,1452.7546,110.00648)"
        style="fill:#4b4b5b"
-       points="948.51,380.3 930.34,363.18 913.47,368.85 932.16,386.22 "
+       points="930.34,363.18 913.47,368.85 932.16,386.22 948.51,380.3 "
        id="polygon656" />
     <circle
        style="fill:#e7c7ca;stroke-width:0.85708356"
@@ -2006,11 +1870,12 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="person_far_right"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <polygon
        transform="matrix(0.42873614,0,0,0.42873614,2109.2131,381.56868)"
        style="fill:#f2f2f2"
-       points="943,666 1046,474 905,387.09 905,666 "
+       points="1046,474 905,387.09 905,666 943,666 "
        id="polygon23" />
     <path
        inkscape:connector-curvature="0"
@@ -2123,7 +1988,7 @@
     <polygon
        transform="matrix(0.42873614,0,0,0.42873614,2109.2131,381.56868)"
        style="fill:#2f2e41"
-       points="630.477,482.652 615.536,484.655 586.65,430.572 596.611,432.575 "
+       points="615.536,484.655 586.65,430.572 596.611,432.575 630.477,482.652 "
        id="polygon69" />
     <path
        inkscape:connector-curvature="0"
@@ -2283,7 +2148,8 @@
      inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="person_left_close"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <ellipse
        cx="1127.6891"
        cy="722.8985"
@@ -2385,7 +2251,8 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="person_far_right2"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <path
        inkscape:connector-curvature="0"
        style="fill:#2f2e41;stroke-width:0.50369984"
@@ -2404,7 +2271,7 @@
     <polygon
        transform="matrix(0.50369984,0,0,0.50369984,2101.8071,315.22343)"
        style="fill:#ffb9b9"
-       points="852.787,740.779 891.549,754.261 918.513,755.946 916.828,732.352 861.213,715.904 "
+       points="891.549,754.261 918.513,755.946 916.828,732.352 861.213,715.904 852.787,740.779 "
        id="polygon16" />
     <path
        inkscape:connector-curvature="0"

@@ -35,8 +35,8 @@ const glob = require("glob");
 const path = require("path");
 const outputFile = "./client/src/routes.dynamic.ts";
 
-if (fs.existsSync(outputFile)) { // && fs.statSync(outputFile).size > 0) { //TODO figure out if we're in development- if we're doing prod we should be running this every time
-  console.log(fs.lstatSync().size);
+if (fs.existsSync(outputFile) && fs.statSync(outputFile).size > 0) { //TODO figure out if we're in development- if we're doing prod we should be running this every time
+  console.log(fs.statSync(outputFile).size);
   console.log("Skipping generation of dynamic routes to speed up compile time");
   module.exports = -1;
 } 
