@@ -6,7 +6,6 @@ const output_dir = path.resolve(__dirname, '../dist_client')
 const src_dir = path.resolve(__dirname, './src')
 const public_src_dir = path.resolve(__dirname, "./public")
 const public_out_dir = path.join(output_dir, "public")
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
 const DynamicRoutes = require('./webpack.dynamic')
 
@@ -19,7 +18,6 @@ module.exports = {
     publicPath: "/",
     filename: 'js/[name].[hash].js',
     chunkFilename: 'js/[name].[hash].js',
-    filename: 'build.js'
   },
   module: {
     rules: [
@@ -46,20 +44,6 @@ module.exports = {
         }
       },
       {
-        test: /\.(png|jpg|gif)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]'
-        }
-      },
-      {
-        test: /\.svg$/,
-        loader: 'svg-inline-loader',
-        options: {
-          removeTags: true
-        }
-      },
-      {
         test: /\.css$/,
         use: [
           'vue-style-loader',
@@ -80,7 +64,7 @@ module.exports = {
     extensions: ['.ts', '.js', '.vue', '.json', '.html'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
-    }
+    },
   },
   performance: {
     hints: false
@@ -90,9 +74,9 @@ module.exports = {
     // make sure to include the plugin for the magic
     new VueLoaderPlugin(),
     new NamedModulesPlugin(),
-    new CopyWebpackPlugin([{
-        from: public_src_dir,
-        to: public_out_dir
-      } ])
+    // new CopyWebpackPlugin([{
+    //     from: public_src_dir,
+    //     to: public_out_dir
+    //   } ])
   ]
 }

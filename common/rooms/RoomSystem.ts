@@ -10,7 +10,7 @@ export enum PlayerState {
 export interface IPlayer {
     id: IPlayerID;
     status: PlayerState;
-    isHost: boolean; //only one player should be allowed to be the host player
+    isHost: boolean; // only one player should be allowed to be the host player
 }
 
 export interface IRoom {

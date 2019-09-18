@@ -5,7 +5,7 @@
     <div class="escape-gutters overflow-hidden" style="height:25rem; position:relative;">
       <img
         style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);height:100%;"
-        src="/public/undraw_big_phone.svg"
+        src="../../assets/undraw_big_phone.svg"
         alt="a big phone that every comes together on"
       />
     </div>
@@ -31,7 +31,7 @@
         <div class="row align-items-center">
           <div class="col-md-5 col-lg-4 col-sm-12 order-2 order-md-1">
             <img
-              src="/public/undraw_family_couch.svg"
+              src="../../assets/undraw_family_couch.svg"
               class="img-fluid img-center"
               alt="family playing together"
             />
@@ -102,7 +102,7 @@
           </div>
           <div class="col-md-6 col-sm-12">
             <img
-              src="/public/undraw_make_it_rain.svg"
+              src="../../assets/undraw_make_it_rain.svg"
               class="img-fluid img-center"
               alt="family playing together"
             />
