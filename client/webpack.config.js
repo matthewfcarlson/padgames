@@ -61,7 +61,7 @@ module.exports = {
     fs: 'empty'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.vue', '.json', '.html', ".svg", ".png"],
+    extensions: ['.ts', '.js', '.vue', '.json', '.html', ".svg", "."],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       "client": src_dir,

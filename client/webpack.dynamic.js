@@ -62,6 +62,7 @@ else {
       if (!("priority" in routes_json[route_index])) routes_json[route_index]["priority"] = 0;
       if (!("isGame" in routes_json[route_index])) routes_json[route_index]["isGame"] = false;
       if (!("chunk" in routes_json[route_index])) routes_json[route_index]["chunk"] = false;
+      if (!("routeName" in routes_json[route_index])) routes_json[route_index]["routeName"] = routes_json[route_index]["name"];
       //remap directory
       let route_comp_path = path.join(directory, routes_json[route_index]["component"]);
       let route_comp_rel_path = path.relative(output_dir, route_comp_path);
@@ -80,6 +81,7 @@ else {
     const route = sorted_routes[route_index];
     const route_path = route["path"];
     const route_name = route["name"];
+    const route_path_name = route["routeName"];
     const route_comp = route["component"]; //TODO resolve path relative to the folder?
     const route_id = "Route" + route_index;
     const route_isGame = route["isGame"];
@@ -95,7 +97,7 @@ else {
 
     var route_texts = [];
     route_texts.push('path: "' + route_path + '"');
-    route_texts.push('name: "' + route_name + '"');
+    route_texts.push('name: "' + route_path_name + '"');
     //route_texts.push('isGame: ' + route_isGame);
     route_texts.push(comp_load);
     var route_text = "{\n  " + route_texts.join(",\n  ") + "\n}";

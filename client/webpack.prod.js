@@ -64,7 +64,7 @@ webpackConfig.module.rules = [
       {
         loader: "file-loader",
         options: {
-          name: "[name].[ext]",
+          name: '[contenthash].[ext]',
           publicPath: "/public/img",
           outputPath: "public/img/"
         }

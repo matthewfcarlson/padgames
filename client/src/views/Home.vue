@@ -5,7 +5,7 @@
     <div class="escape-gutters overflow-hidden" style="height:25rem; position:relative;">
       <img
         style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);height:100%;"
-        src="../../assets/undraw_big_phone.svg"
+        src="~assets/undraw_big_phone.svg"
         alt="a big phone that every comes together on"
       />
     </div>
@@ -21,8 +21,10 @@
           With virtually unlimited players per game, it’s fun for everyone.
         </p>
         <br />
-        <router-link class="btn btn-primary btn-lg" to="/host" role="button">Host a Game</router-link>
-        <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
+        <div class="btn-group btn-block" role="group" aria-label="Basic example">
+          <router-link class="btn btn-primary btn-lg" to="/host" role="button">Host a Game</router-link>
+          <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
+        </div>
       </div>
     </div>
     <!-- Games that get your friends and family talking -->
@@ -31,7 +33,7 @@
         <div class="row align-items-center">
           <div class="col-md-5 col-lg-4 col-sm-12 order-2 order-md-1">
             <img
-              src="../../assets/undraw_family_couch.svg"
+              src="~assets/undraw_family_couch.svg"
               class="img-fluid img-center"
               alt="family playing together"
             />
@@ -60,16 +62,16 @@
       <br />
       <div class="row">
         <div class="col-sm-3 col-xs-6 p-1">
-          <div class="bg-primary rounded" style="min-height:200px">Game 1</div>
+          <router-link tag="div" class="bg-primary rounded p-2 align-text-bottom" to="/game/passphrase" style="min-height:200px">PassPhrase</router-link>
         </div>
         <div class="col-sm-3 col-xs-6 p-1">
-          <div class="bg-warning rounded" style="min-height:200px">Game 2</div>
+          <router-link tag="div" class="bg-warning rounded p-2 align-text-bottom" to="/game/pingo" style="min-height:200px">Pingo - coming soon!</router-link>
+        </div>
+        <div class="col-sm-3 col-xs-6 p-1 align-text-bottom">
+          <div class="bg-secondary rounded p-2 align-text-bottom" style="min-height:200px">Music - coming soon!</div>
         </div>
         <div class="col-sm-3 col-xs-6 p-1">
-          <div class="bg-secondary rounded" style="min-height:200px">Game 3</div>
-        </div>
-        <div class="col-sm-3 col-xs-6 p-1">
-          <div class="bg-info rounded" style="min-height:200px">Game 4</div>
+          <div class="bg-info rounded p-2 align-text-bottom" style="min-height:200px">Werewolves - coming soon!</div>
         </div>
       </div>
       <br />
@@ -102,7 +104,7 @@
           </div>
           <div class="col-md-6 col-sm-12">
             <img
-              src="../../assets/undraw_make_it_rain.svg"
+              src="~assets/undraw_make_it_rain.svg"
               class="img-fluid img-center"
               alt="family playing together"
             />

@@ -31,12 +31,14 @@
     "path": "/host",
     "name": "Construction",
     "chunk": true,
+    "routeName":"Host",
     "component": "./src/views/Construction.vue"
   },
   {
     "path": "/join",
     "name": "Construction",
     "chunk": true,
+    "routeName":"Join",
     "component": "./src/views/Construction.vue"
   },
   {
