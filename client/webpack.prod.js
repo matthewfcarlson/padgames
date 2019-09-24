@@ -64,8 +64,8 @@ webpackConfig.module.rules = [
       {
         loader: "file-loader",
         options: {
-          regExp: /(img\/.*)/,
           name: "[name].[ext]",
+          publicPath: "/public/img",
           outputPath: "public/img/"
         }
       },
@@ -75,7 +75,7 @@ webpackConfig.module.rules = [
     ]
   },
   {
-    test: /\.(eot|svg|ttf|woff|woff2)$/,
+    test: /\.(eot|ttf|woff|woff2)$/,
     loader: "file-loader",
     options: {
       regExp: /(fonts\/.*)/,

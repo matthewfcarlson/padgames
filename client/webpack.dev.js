@@ -29,7 +29,7 @@ webpackConfig.module.rules = [...webpackConfig.module.rules,
     test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
     loader: 'file-loader',
     options: {
-      publicPath: "./public",
+      publicPath: "/public/img",
       outputPath: "public/img/"
     }
   }

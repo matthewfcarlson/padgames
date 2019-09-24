@@ -4,7 +4,7 @@ var webpack = require('webpack')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const output_dir = path.resolve(__dirname, '../dist_client')
 const src_dir = path.resolve(__dirname, './src')
-const public_src_dir = path.resolve(__dirname, "./public")
+const public_src_dir = path.resolve(__dirname, "./assets")
 const public_out_dir = path.join(output_dir, "public")
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
 const DynamicRoutes = require('./webpack.dynamic')
@@ -16,8 +16,8 @@ module.exports = {
   output: {
     path: output_dir,
     publicPath: "/",
-    filename: 'js/[name].[hash].js',
-    chunkFilename: 'js/[name].[hash].js',
+    filename: 'public/js/[name].[hash].js',
+    chunkFilename: 'public/js/[name].[hash].js',
   },
   module: {
     rules: [
@@ -61,9 +61,11 @@ module.exports = {
     fs: 'empty'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.vue', '.json', '.html'],
+    extensions: ['.ts', '.js', '.vue', '.json', '.html', ".svg", ".png"],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      "client": src_dir,
+      "assets": public_src_dir
     },
   },
   performance: {
