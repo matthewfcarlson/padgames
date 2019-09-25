@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import DynamicRoutes from "./routes.dynamic";
-import { Logger } from "./util/logger";
+import { Logger } from "../../common/util/logger";
 Vue.use(Router);
 
 const logger = new Logger();

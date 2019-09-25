@@ -4,6 +4,7 @@ import path from "path";
 import http from "http";
 import socket from 'socket.io';
 import history from "connect-history-api-fallback";
+import AuthorizationSetup from "./authentication/auth";
 const app = express();
 const httpServer = new http.Server(app);
 const io = socket(httpServer);
@@ -14,12 +15,10 @@ dotenv.config();
 // port is now available to the Node.js runtime
 // as if it were an environment variable
 const port = process.env.SERVER_PORT ||  process.env.PORT || 3000;
-const contentsDir = path.join(__dirname, "../dist_client");
+const contentsDir = path.join(__dirname, "../../../dist_client");
 const serverAssetsDir = path.join(__dirname, "../server/assets"); // TODO have webpack handle this?
 const staticFileMiddleware = express.static(contentsDir);
-/*app.get("/", (req, res) => {
-    res.sendFile(path.join(contentsDir, "index.html"));
-  });*/
+
 // map robots to the public folder
 app.get("/robots.txt", (req, res) => {
     res.sendFile(path.join(contentsDir, "public/robots.txt"));
@@ -34,6 +33,8 @@ app.use(
 );
 app.use(staticFileMiddleware);
 
+// Setup authentication
+AuthorizationSetup(app);
 
 app.use((req, res) => {
     res.status(404).sendFile(path.join(serverAssetsDir, "404.html"));

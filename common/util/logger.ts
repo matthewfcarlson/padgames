@@ -21,3 +21,5 @@ export class Logger implements ILogger {
     }
 
   }
+
+export let RootLogger = new Logger();
