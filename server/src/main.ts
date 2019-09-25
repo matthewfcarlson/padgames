@@ -22,7 +22,7 @@ const staticFileMiddleware = express.static(contentsDir);
 // map robots to the public folder
 app.get("/robots.txt", (req, res) => {
     res.sendFile(path.join(contentsDir, "public/robots.txt"));
-  });
+});
 // use static middleware to resolve files
 app.use(staticFileMiddleware);
 app.use(
@@ -32,6 +32,9 @@ app.use(
     })
 );
 app.use(staticFileMiddleware);
+
+// Make sure we parse the body
+app.use(express.urlencoded({ extended: true }));
 
 // Setup authentication
 AuthorizationSetup(app);
