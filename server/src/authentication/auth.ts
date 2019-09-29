@@ -4,8 +4,8 @@ import session from "express-session";
 
 import passport from "passport";
 
-function SetupPassport(passport: passport.Authenticator) {
-    RootLogger.info("Configuring passport?")
+function SetupPassport(pass: passport.Authenticator) {
+    RootLogger.info("Configuring passport?");
 }
 
 export default function AuthorizationSetup(app: express.Application) {
@@ -17,7 +17,7 @@ export default function AuthorizationSetup(app: express.Application) {
     // Express session
     app.use(
         session({
-            secret: 'secret', //TODO handle the secret through variables?
+            secret: 'secret', // TODO handle the secret through variables?
             resave: true,
             saveUninitialized: true
         })

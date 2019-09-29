@@ -25,9 +25,10 @@
             <a class="nav-link" :href="href" @click="navigate">{{ curr_route }}</a>
           </li>
         </router-link>
-        <li class="nav-item">
+        <!-- TODO finish authentication -->
+        <!--li class="nav-item">
           <router-link class="nav-link" to="/login">login</router-link>
-        </li>
+        </li-->
       </ul>
     </div>
   </nav>

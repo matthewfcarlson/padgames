@@ -16,21 +16,18 @@
     "component": "./src/views/Contact.vue"
   },
   {
-    "path": "/pricing",
-    "name": "Pricing",
-    "chunk": true,
-    "component": "./src/views/Pricing.vue"
+    "path": "/games",
+    "name": "Games",
+    "component": "./src/views/Games.vue"
   },
   {
-    "path": "/construct",
-    "name": "Construction",
-    "chunk": true,
-    "component": "./src/views/Construction.vue"
+    "path": "/pricing",
+    "name": "Pricing",
+    "component": "./src/views/Pricing.vue"
   },
   {
     "path": "/host",
     "name": "Construction",
-    "chunk": true,
     "routeName":"Host",
     "component": "./src/views/Construction.vue"
   },

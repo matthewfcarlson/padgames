@@ -74,9 +74,11 @@
           <div class="bg-info rounded p-2 align-text-bottom" style="min-height:200px">Werewolves - coming soon!</div>
         </div>
       </div>
+      <router-link to="/games"> See more games or suggest a game yourself <i class="fas fa-arrow-right"></i> </router-link>
       <br />
     </div>
     <!-- cost -->
+    <!-- TODO rework this section -->
     <div class="bg-secondary escape-gutters py-5">
       <div class="container">
         <div class="row align-items-center">
