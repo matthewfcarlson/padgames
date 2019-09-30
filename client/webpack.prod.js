@@ -153,7 +153,14 @@ webpackConfig.plugins = [
     // Required - The path to the webpack-outputted app to prerender.
     staticDir: output_dir,
     indexPath: path.join(output_dir, "app.html"),
-
+    minify: {
+      collapseBooleanAttributes: true,
+      collapseWhitespace: true,
+      decodeEntities: true,
+      keepClosingSlash: true,
+      sortAttributes: true,
+      removeComments: true
+    },
     // Required - Routes to render.
     routes: ["/", "/about", "/contact", "/host", "/join"]
   }),
