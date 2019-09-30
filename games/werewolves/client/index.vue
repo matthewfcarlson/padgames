@@ -2,7 +2,7 @@
   <div class="phasephrase">
     <NavBar/>
     <div class="container">
-      <h1>This is an passphrase description page</h1>
+      <h1>This is an werewolves description page</h1>
     </div>
   </div>
 </template>
@@ -19,5 +19,5 @@ import Footer from 'Client/components/Footer.vue';
     Footer
   }
 })
-export default class PhasePhrase extends Vue {}
+export default class WereWolves extends Vue {}
 </script>

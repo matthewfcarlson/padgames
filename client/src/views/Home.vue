@@ -62,19 +62,56 @@
       <br />
       <div class="row">
         <div class="col-sm-3 col-xs-6 p-1">
-          <router-link tag="div" class="bg-primary rounded p-2 align-text-bottom" to="/game/passphrase" style="min-height:200px">PassPhrase</router-link>
+          <!-- TODO move all this into CSS classes -->
+          <!-- TODO move to for loop -->
+          <router-link tag="div" class="bg-primary rounded p-2 game-logo" to="/game/passphrase">
+            <img
+              src="~assets/passphrase_logo.svg"
+              alt="a secret agent that is deciding what to say"
+              class="game-logo"
+            />
+            <span class="text-white">Passphrase</span>
+          </router-link>
         </div>
         <div class="col-sm-3 col-xs-6 p-1">
-          <router-link tag="div" class="bg-warning rounded p-2 align-text-bottom" to="/game/pingo" style="min-height:200px">Pingo - coming soon!</router-link>
-        </div>
-        <div class="col-sm-3 col-xs-6 p-1 align-text-bottom">
-          <div class="bg-secondary rounded p-2 align-text-bottom" style="min-height:200px">Music - coming soon!</div>
+          <router-link tag="div" class="bg-warning rounded p-2 game-logo" to="/game/pingo">
+            <img src="~assets/logo_Pingo.svg" alt="a camera with a bingo ball cage inside" />
+            <span>
+              Pingo
+              <small>(coming soon!)</small>
+            </span>
+          </router-link>
         </div>
         <div class="col-sm-3 col-xs-6 p-1">
-          <div class="bg-info rounded p-2 align-text-bottom" style="min-height:200px">Werewolves - coming soon!</div>
+          <router-link tag="div" class="bg-info rounded p-2 game-logo" to="/game/music">
+            <img
+              src="~assets/logo_music.svg"
+              alt="a secret agent that is deciding what to say"
+              class="game-logo"
+            />
+            <span>
+              Music
+              <small>(coming soon!)</small>
+            </span>
+          </router-link>
+        </div>
+        <div class="col-sm-3 col-xs-6 p-1">
+          <router-link tag="div" class="bg-secondary rounded p-2 game-logo" to="/game/werewolves">
+            <img
+              src="~assets/logo_werewolves.svg"
+              alt="a secret agent that is deciding what to say"
+            />
+            <span class="text-white">
+              Werewolves
+              <small>(coming soon!)</small>
+            </span>
+          </router-link>
         </div>
       </div>
-      <router-link to="/games"> See more games or suggest a game yourself <i class="fas fa-arrow-right"></i> </router-link>
+      <router-link to="/games">
+        See more games or suggest a game yourself
+        <i class="fas fa-arrow-right"></i>
+      </router-link>
       <br />
     </div>
     <!-- cost -->
@@ -224,4 +261,22 @@ export default class Home extends Vue {}
 </script>
 
 <style scoped lang="css">
+.game-logo {
+  min-height: 200px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.game-logo > img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+}
+.game-logo > span {
+  position: absolute;
+  bottom: 0;
+  font-size: 1.5em;
+}
 </style>

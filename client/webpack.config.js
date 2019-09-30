@@ -64,8 +64,8 @@ module.exports = {
     extensions: ['.ts', '.js', '.vue', '.json', '.html', ".svg", "."],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      "client": src_dir,
-      "assets": public_src_dir
+      Client: src_dir,
+      'assets': public_src_dir
     },
   },
   performance: {

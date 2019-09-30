@@ -92,7 +92,7 @@ else {
       comp_load = 'component: () => import(/* webpackChunkName: "' + route_name + '" */ "' + route_comp + '")'
     }
     else {
-      imports.push('import ' + route_name + ' from "' + route_comp + '"')
+      imports.push('import ' + route_name + ' from "' + route_comp + '";')
     }
 
     var route_texts = [];

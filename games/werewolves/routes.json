@@ -1,0 +1,13 @@
+[{
+    "path": "/game/werewolves",
+    "name": "werewolves",
+    "component": "./client/index.vue"
+},
+{
+    "path": "/game/werewolves/:gameId",
+    "name": "werewolves_game",
+    "chunk": true,
+    "isGame": true,
+    "component": "./client/game.vue"
+}
+]

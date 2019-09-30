@@ -1,11 +1,10 @@
 [{
-    "path": "/games/passphrase",
+    "path": "/game/passphrase",
     "name": "passphrase",
-    "chunk": true,
     "component": "./client/index.vue"
 },
 {
-    "path": "/games/passphrase/:gameId",
+    "path": "/game/passphrase/:gameId",
     "name": "passphrase_game",
     "chunk": true,
     "isGame": true,
