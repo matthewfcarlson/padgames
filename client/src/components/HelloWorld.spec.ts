@@ -1,5 +1,5 @@
 import {shallowMount} from "@vue/test-utils";
-//import HelloWorld from "./HelloWorld.vue";
+// import HelloWorld from "./HelloWorld.vue";
 
 
 describe("HelloWorld.vue", () => {
@@ -8,6 +8,6 @@ describe("HelloWorld.vue", () => {
     /*const wrapper = shallowMount(HelloWorld, {
       propsData: { msg }
     });*/
-    //expect(wrapper.text()).toMatch(msg);
+    // expect(wrapper.text()).toMatch(msg);
   });
 });
