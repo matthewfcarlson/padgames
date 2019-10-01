@@ -1,22 +1,38 @@
 <template>
-  <div id="mlb2-1488508" class="ml-form-embedContainer ml-subscribe-form ml-subscribe-form-1488508">
-    <div class="ml-form-align-center">
+  <div>
+    <p class="lead mb-0">Want to be updated on everything going on?</p>
+    <p>
+      Signup for our our monthlyish newsletter! We'll never give your email away.
+      <br />
+    </p>
+    <form
+      action="https://app.mailerlite.com/webforms/submit/u6p7v6"
+      data-code="u6p7v6"
+      method="post"
+      target="_blank"
+    >
+      <div class="input-group">
+        <input
+          type="email"
+          class="form-control"
+          data-inputmask
+          name="fields[email]"
+          value
+          placeholder="Email"
+          aria-label="Recipient's email"
+        />
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+        </div>
+      </div>
+    </form>
+    <!--div class="ml-form-align-center">
       <div class="ml-form-embedWrapper embedForm">
         <div class="ml-form-embedBody ml-form-embedBodyHorizontal row-form">
           <div class="ml-form-embedContent" style=" ">
-            <h4>Want to be updated on everything going on?</h4>
-            <p>
-              Signup for our our monthlyish newsletter to hear the latest news! We'll never give your email away. Maybe we'll even throw in some goodies for email subscribers!
-              <br />
-            </p>
+            
           </div>
-          <form
-            class="ml-block-form"
-            action="https://app.mailerlite.com/webforms/submit/u6p7v6"
-            data-code="u6p7v6"
-            method="post"
-            target="_blank"
-          >
+          
             <div class="ml-form-formContent horozintalForm">
               <div class="ml-form-horizontalRow">
                 <div class="ml-input-horizontal">
@@ -24,15 +40,7 @@
                     <div
                       class="ml-field-group ml-field-email ml-validate-email ml-validate-required"
                     >
-                      <input
-                        style="width: 100%;"
-                        type="email"
-                        class="form-control"
-                        data-inputmask
-                        name="fields[email]"
-                        value
-                        placeholder="Email"
-                      />
+                     
                     </div>
                   </div>
                 </div>
@@ -48,7 +56,7 @@
           </form>
         </div>
       </div>
-    </div>
+    </div-->
   </div>
 </template>
 

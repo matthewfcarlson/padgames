@@ -3,11 +3,11 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          Made with love by Matthew Carlson
+          Made with love by Matthew Carlson<br/>
           ©2019 | All rights reserved
         </div>
         <div class="col">
-          <ul class="list-unstyled">
+          <ul class="list-unstyled link-white">
             <li>
               <a href="https://ko-fi.com/padgames">Donate</a>
             </li>

@@ -27,3 +27,10 @@ $spacers: (
 .text-sm {
   font-size:0.8rem;
 }
+
+a.link-white, .link-white a{
+  color:white;
+}
+a.link-white:hover, .link-white a:hover{
+  color:blue;
+}
