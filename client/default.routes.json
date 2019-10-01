@@ -26,6 +26,11 @@
     "component": "./src/views/Pricing.vue"
   },
   {
+    "path": "/privacy",
+    "name": "Privacy",
+    "component": "./src/views/Privacy.vue"
+  },
+  {
     "path": "/host",
     "name": "Construction",
     "routeName":"Host",
