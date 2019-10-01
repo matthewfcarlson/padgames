@@ -1,7 +1,16 @@
 <template>
   <div>
     <p class="lead mb-0">Want to be updated on everything going on?</p>
-    <div v-if="!subscribed">
+    <div v-if="subscribed" class="text-center">
+      <p class="lead">Thanks for subscribing</p>
+    </div>
+    <div v-else-if="subscribing" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <p>Subscribing you now</p>
+    </div>
+    <div v-else>
       <p>
         Signup for our our monthlyish newsletter! We'll never give your email away.
         <br />
@@ -13,6 +22,7 @@
         target="_blank"
         @submit="subscribeToNewsLetter"
       >
+        <input type="hidden" name="ml-submit" value="1" />
         <div class="input-group">
           <input
             type="email"
@@ -29,45 +39,6 @@
         </div>
       </form>
     </div>
-    <div v-else-if="subscribing">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <p>Subscribing you now</p>
-    </div>
-    <div v-else>Thanks for subscribing</div>
-
-    <!--div class="ml-form-align-center">
-      <div class="ml-form-embedWrapper embedForm">
-        <div class="ml-form-embedBody ml-form-embedBodyHorizontal row-form">
-          <div class="ml-form-embedContent" style=" ">
-            
-          </div>
-          
-            <div class="ml-form-formContent horozintalForm">
-              <div class="ml-form-horizontalRow">
-                <div class="ml-input-horizontal">
-                  <div style="width: 100%;" class="horizontal-fields">
-                    <div
-                      class="ml-field-group ml-field-email ml-validate-email ml-validate-required"
-                    >
-                     
-                    </div>
-                  </div>
-                </div>
-                <input type="hidden" name="ml-submit" value="1" />
-                <div class="ml-button-horizontal">
-                  <button type="submit" class="primary">Subscribe</button>
-                  <button disabled="disabled" style="display: none;" type="button" class="loading">
-                    <div class="ml-form-embedSubmitLoad"></div>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div-->
   </div>
 </template>
 
