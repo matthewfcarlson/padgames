@@ -29,9 +29,6 @@ stages:
       vmImage: $(vmImageName)
       
     steps:
-    - checkout: self
-      clean: true
-      submodules: true
 
     - task: NodeTool@0
       inputs:
