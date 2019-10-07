@@ -21,9 +21,13 @@
           With virtually unlimited players per game, it’s fun for everyone.
         </p>
         <br />
-        <div class="btn-group btn-block" role="group" aria-label="Basic example">
+        <div class="btn-group btn-block" role="group" aria-label="Basic example" v-if="games_ready">
           <router-link class="btn btn-primary btn-lg" to="/host" role="button">Host a Game</router-link>
           <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
+        </div>
+        <div v-else class="jumbotron">
+          <h3>PadGames isn't quite ready yet.<br/>Want to be the first to hear about it?</h3>
+          <NewsLetter :showText=false />
         </div>
       </div>
     </div>
@@ -250,14 +254,18 @@
 import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
 import Footer from "../components/Footer.vue";
+import NewsLetter from "../components/NewsLetter.vue";
 
 @Component({
   components: {
     NavBar,
-    Footer
+    Footer,
+    NewsLetter
   }
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  games_ready= false;
+}
 </script>
 
 <style scoped lang="css">

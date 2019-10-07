@@ -19,5 +19,5 @@ import Footer from 'Client/components/Footer.vue';
     Footer
   }
 })
-export default class PhasePhrase extends Vue {}
+export default class PassPhrase extends Vue {}
 </script>

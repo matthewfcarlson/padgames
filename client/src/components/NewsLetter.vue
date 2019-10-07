@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="lead mb-0">Want to be updated on everything going on?</p>
+    <p class="lead mb-0" v-if="showText">Want to be updated on everything going on?</p>
     <div v-if="subscribed" class="text-center">
       <i class="far fa-laugh-wink fa-3x"></i><br>
       <p class="lead">Thanks for subscribing</p>
@@ -12,7 +12,7 @@
       <p>Subscribing you now</p>
     </div>
     <div v-else>
-      <p>
+      <p v-if="showText">
         Signup for our our monthlyish newsletter! We'll never give your email away.
         <br />
       </p>
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import axios from 'axios'
 
 @Component
@@ -55,6 +55,8 @@ export default class NewsLetter extends Vue {
   error = false;
   email = "";
   campaign = "u6p7v6";
+
+  @Prop({default: true}) private showText!: boolean;
 
   subscribeToNewsLetter(e: Event) {
     console.log(e);
