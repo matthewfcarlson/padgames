@@ -2,6 +2,7 @@
   <div>
     <p class="lead mb-0">Want to be updated on everything going on?</p>
     <div v-if="subscribed" class="text-center">
+      <i class="far fa-laugh-wink fa-3x"></i><br>
       <p class="lead">Thanks for subscribing</p>
     </div>
     <div v-else-if="subscribing" class="text-center">
@@ -29,6 +30,7 @@
             class="form-control"
             data-inputmask
             name="fields[email]"
+            v-model="email"
             value
             placeholder="Email"
             aria-label="Recipient's email"
@@ -43,19 +45,32 @@
 </template>
 
 <script lang="ts">
-//TODO modify the vue js code to handle webform logic - we should send a post to the website!
-// Look to see what their code does and try to replicate it?
 import { Component, Vue } from "vue-property-decorator";
+import axios from 'axios'
 
 @Component
 export default class NewsLetter extends Vue {
   subscribed = false;
   subscribing = false;
+  error = false;
+  email = "";
+  campaign = "u6p7v6";
 
   subscribeToNewsLetter(e: Event) {
     console.log(e);
     e.preventDefault();
     this.subscribing = true;
+    this.error = false;
+    const email_encoded = encodeURI(this.email);
+    console.log(email_encoded);
+    const request_url = `https://app.mailerlite.com/webforms/submit/${this.campaign}?callback=jQuery183018512865745406493_test&fields%5Bemail%5D=${email_encoded}&ml-submit=1&ajax=1`;
+    var self = this;
+    axios.get(request_url).then((response) => {
+      console.log(response);
+      self.subscribing = false;
+      if (response.status == 200) self.subscribed = true;
+      else self.error = true;
+    });
 
     // TODO send AJAX request to mail
   }
