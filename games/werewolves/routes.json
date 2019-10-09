@@ -8,6 +8,7 @@
     "name": "werewolves_game",
     "chunk": true,
     "isGame": true,
-    "component": "./client/game.vue"
+    "component": "./client/game.vue",
+    "gameLogo": "./client/assets/logo_werewolves.svg"
 }
 ]

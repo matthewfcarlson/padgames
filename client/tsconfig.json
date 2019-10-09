@@ -5,7 +5,7 @@
       "strict": true,
       "module": "commonjs",
       "moduleResolution": "node",
-      "target": "ES3",
+      "target": "ES5",
       "skipLibCheck": true,
       "esModuleInterop": true,
       "experimentalDecorators": true,

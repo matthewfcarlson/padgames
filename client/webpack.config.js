@@ -4,6 +4,7 @@ var webpack = require('webpack')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const output_dir = path.resolve(__dirname, '../dist_client')
 const src_dir = path.resolve(__dirname, './src')
+const games_dir = path.resolve(__dirname, '../games')
 const public_src_dir = path.resolve(__dirname, "./assets")
 const public_out_dir = path.join(output_dir, "public")
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
@@ -65,6 +66,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       Client: src_dir,
+      Games: games_dir,
       'assets': public_src_dir
     },
   },

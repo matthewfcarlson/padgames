@@ -8,6 +8,7 @@
     "name": "passphrase_game",
     "chunk": true,
     "isGame": true,
-    "component": "./client/game.vue"
+    "component": "./client/game.vue",
+    "gameLogo": "./client/assets/passphrase_logo.svg"
 }
 ]

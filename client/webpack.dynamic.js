@@ -34,6 +34,7 @@ const fs = require("fs");
 const glob = require("glob");
 const path = require("path");
 const outputFile = "./client/src/routes.dynamic.ts";
+const gamesFolder = "./games";
 
 if (fs.existsSync(outputFile) && fs.statSync(outputFile).size > 0) { //TODO figure out if we're in development- if we're doing prod we should be running this every time
   console.log(fs.statSync(outputFile).size);
@@ -67,9 +68,13 @@ else {
       //remap directory
       let route_comp_path = path.join(directory, routes_json[route_index]["component"]);
       let route_comp_rel_path = path.relative(output_dir, route_comp_path);
+      let route_dir_rel_path = path.relative(output_dir, directory);
+      let route_game_rel_path = path.relative(path.resolve(gamesFolder), directory);
       if (route_comp_rel_path[0] != ".") route_comp_rel_path = "./" + route_comp_rel_path; 
 
       routes_json[route_index]["component"] = route_comp_rel_path.replace(/\\/g, "/");
+      routes_json[route_index]["relative_dir"] = route_dir_rel_path.replace(/\\/g, "/");
+      routes_json[route_index]["game_relative_dir"] = route_game_rel_path.replace(/\\/g, "/");
     }
     all_routes = all_routes.concat(routes_json);
   }
@@ -83,6 +88,7 @@ else {
     const route_path = route["path"];
     const route_name = route["name"];
     const route_path_name = route["routeName"];
+    const route_display_name = route["displayName"] || route_name;
     const route_comp = route["component"]; //TODO resolve path relative to the folder?
     const route_id = "Route" + route_index;
     const route_isGame = route["isGame"];
@@ -106,8 +112,13 @@ else {
 
     if (route_isGame) {
       var game_texts = [];
-      game_texts.push('name: "' + route_path_name + '"');
+      let logo_path = path.join(route["relative_dir"], route["gameLogo"] || "logo.svg").replace(/\\/g, "/");
+      game_texts.push('name: "' + route_display_name + '"');
       game_texts.push('url: "' + route_path + '"');
+      game_texts.push('color: "' + (route["gameColor"] || "#226699") + '"');
+      game_texts.push('description: "' + (route["description"] || "") + '"');
+      game_texts.push('logo: require("./' + logo_path + '")');
+      
       var game_text = "{\n  " + game_texts.join(",\n  ") + "\n}";
       games.push(game_text);
     }

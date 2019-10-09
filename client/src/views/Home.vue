@@ -65,50 +65,16 @@
       </div>
       <br />
       <div class="row">
-        <div class="col-sm-3 col-xs-6 p-1">
-          <!-- TODO move all this into CSS classes -->
-          <!-- TODO move to for loop -->
-          <router-link tag="div" class="bg-primary rounded p-2 game-logo" to="/game/passphrase">
+        <!-- TODO move all this into CSS classes -->
+        <!-- TODO make this a component? -->
+        <div v-for="game in games" :key="game.name" class="col-sm-3 col-xs-6 p-1">
+          <router-link tag="div" class="bg-primary rounded p-2 game-logo" :to="game.url" :style="{ 'background-color': game.color}">
             <img
-              src="~assets/passphrase_logo.svg"
-              alt="a secret agent that is deciding what to say"
+              :src="game.logo"
+              alt="game logo"
               class="game-logo"
             />
-            <span class="text-white">Passphrase</span>
-          </router-link>
-        </div>
-        <div class="col-sm-3 col-xs-6 p-1">
-          <router-link tag="div" class="bg-warning rounded p-2 game-logo" to="/game/pingo">
-            <img src="~assets/logo_Pingo.svg" alt="a camera with a bingo ball cage inside" />
-            <span>
-              Pingo
-              <small>(coming soon!)</small>
-            </span>
-          </router-link>
-        </div>
-        <div class="col-sm-3 col-xs-6 p-1">
-          <router-link tag="div" class="bg-info rounded p-2 game-logo" to="/game/music">
-            <img
-              src="~assets/logo_music.svg"
-              alt="a secret agent that is deciding what to say"
-              class="game-logo"
-            />
-            <span>
-              Music
-              <small>(coming soon!)</small>
-            </span>
-          </router-link>
-        </div>
-        <div class="col-sm-3 col-xs-6 p-1">
-          <router-link tag="div" class="bg-secondary rounded p-2 game-logo" to="/game/werewolves">
-            <img
-              src="~assets/logo_werewolves.svg"
-              alt="a secret agent that is deciding what to say"
-            />
-            <span class="text-white">
-              Werewolves
-              <small>(coming soon!)</small>
-            </span>
+            <span class="text-white">{{game.name}}</span>
           </router-link>
         </div>
       </div>
@@ -260,6 +226,7 @@ import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
 import Footer from "../components/Footer.vue";
 import NewsLetter from "../components/NewsLetter.vue";
+import { AllGames } from "../routes.dynamic";
 
 @Component({
   components: {
@@ -270,6 +237,10 @@ import NewsLetter from "../components/NewsLetter.vue";
 })
 export default class Home extends Vue {
   games_ready= false;
+
+  get games(){
+    return AllGames.slice(0,4); //create a copy of the first four games
+  }
 }
 </script>
 
