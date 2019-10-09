@@ -10,7 +10,7 @@
     "isGame": true,
     "component": "./client/game.vue",
     "description": "One clue, one number. That's all you have to guess all the passphrases in this game.",
-    "displayName": "Passohrase",
+    "displayName": "Passphrase",
     "gameLogo": "./client/assets/passphrase_logo.svg"
 }
 ]
