@@ -6,7 +6,7 @@
       <!-- TODO move to for loop -->
 
       <div v-for="game in games" :key="game.name" class="col-sm-3 col-xs-6 p-1">
-        <router-link tag="div" class="rounded p-2 game-logo" :to="game.url" :style="{ background-color: game.color">
+        <router-link tag="div" class="rounded p-2 game-logo" :to="game.url" :style="{ backgroundColor: game.color}">
           <img
             :src="game.logo"
             alt="a secret agent that is deciding what to say"

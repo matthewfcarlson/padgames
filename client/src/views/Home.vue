@@ -68,7 +68,7 @@
         <!-- TODO move all this into CSS classes -->
         <!-- TODO make this a component? -->
         <div v-for="game in games" :key="game.name" class="col-sm-3 col-xs-6 p-1">
-          <router-link tag="div" class="bg-primary rounded p-2 game-logo" :to="game.url" :style="{ 'background-color': game.color}">
+          <router-link tag="div" class="bg-primary rounded p-2 game-logo" :to="game.url" v-bind:style="{ backgroundColor: game.color}">
             <img
               :src="game.logo"
               alt="game logo"
