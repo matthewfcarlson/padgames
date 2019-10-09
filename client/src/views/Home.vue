@@ -101,7 +101,7 @@
             </h2>
             <h2 class="font-weight-bold">
               <span class="text-success">Free</span> to host
-              <div class="small">For now</div>
+              <span class="small">(For now)</span>
             </h2>
             <br />
             <p>
