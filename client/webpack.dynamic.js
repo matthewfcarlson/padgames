@@ -43,6 +43,7 @@ if (fs.existsSync(outputFile) && fs.statSync(outputFile).size > 0) { //TODO figu
 else {
   const imports = [];
   const routes = [];
+  const games = [];
   console.log("Generating dynamic routes");
   // 1. glob the file system looking for *routes.json
   let glob_options = {
@@ -102,12 +103,25 @@ else {
     route_texts.push(comp_load);
     var route_text = "{\n  " + route_texts.join(",\n  ") + "\n}";
     routes.push(route_text);
+
+    if (route_isGame) {
+      var game_texts = [];
+      game_texts.push('name: "' + route_path_name + '"');
+      game_texts.push('url: "' + route_path + '"');
+      var game_text = "{\n  " + game_texts.join(",\n  ") + "\n}";
+      games.push(game_text);
+    }
   }
   // 5. Generate the strings based on the inputs
-  var code = imports.join("\n");
-  code += "\n\nexport default  [";
-  code += routes.join(",\n");
-  code += "];"
+  var code_array = imports;
+  code_array.push("const AllRoutes = [");
+  code_array.push(routes.join(",\n"));
+  code_array.push("];")
+  code_array.push("const AllGames = [");
+  code_array.push(games.join(",\n"));
+  code_array.push("];");
+  code_array.push("export {AllRoutes, AllGames};");
+  const code = code_array.join("\n");
 
   //TODO figure out what to do the games vs the routes
 

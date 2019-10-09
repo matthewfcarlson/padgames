@@ -2,16 +2,8 @@
   <div class="404">
     <NavBar />
     <div class="container text-center">
-      <div class="jumbotron">
-        <img alt="happy sushi" class="w-25 img-center" src="~assets/undraw_under_construction.svg" />
-        <h1>Under Construction</h1>
-        <p class="lead">
-          padgames is still under construction.
-          We're working hard to bring you awesome games!
-          In the meantime, you can sign up for our news letter to be notified when anything changes.
-        </p>
-        <hr />
-        <NewsLetter />
+      <div v-for="game in games" :key="game.name">
+        {{ game }}
       </div>
     </div>
     <Footer />
@@ -23,6 +15,7 @@ import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
 import Footer from "../components/Footer.vue";
 import NewsLetter from "../components/NewsLetter.vue";
+import { AllGames } from "../routes.dynamic";
 
 @Component({
   components: {
@@ -31,5 +24,7 @@ import NewsLetter from "../components/NewsLetter.vue";
     NewsLetter
   }
 })
-export default class Games extends Vue {}
+export default class Games extends Vue {
+  games = AllGames;
+}
 </script>

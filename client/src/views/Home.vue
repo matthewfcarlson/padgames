@@ -118,6 +118,11 @@
       </router-link>
       <br />
     </div>
+    <div class="bg-dark escape-gutters py-5">
+      <div class="container">
+        Watch a family play padgames!
+      </div>
+    </div>
     <!-- cost -->
     <!-- TODO rework this section -->
     <div class="bg-secondary escape-gutters py-5">
@@ -129,8 +134,8 @@
               <span class="text-success">Free</span> to join
             </h2>
             <h2 class="font-weight-bold">
-              <span class="text-success">Free</span> or
-              <span class="text-success">$1+</span> to host
+              <span class="text-success">Free</span> to host
+              <div class="small">For now</div>
             </h2>
             <br />
             <p>
