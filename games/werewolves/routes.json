@@ -9,6 +9,9 @@
     "chunk": true,
     "isGame": true,
     "component": "./client/game.vue",
-    "gameLogo": "./client/assets/logo_werewolves.svg"
+    "gameLogo": "./client/assets/logo_werewolves.svg",
+    "description": "Work together to discover the werewolves within the group before they get everyone else.",
+    "displayName": "Werewolves",
+    "gameColor": "#6c757d"
 }
 ]
