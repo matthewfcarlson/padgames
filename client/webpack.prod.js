@@ -170,7 +170,7 @@ webpackConfig.plugins = [
   }),
   new SitemapPlugin(
     "https://padgames.app",
-    ["/", "/about/", "/games/", "/contact", "/pricing", "/500"],
+    ["/", "/about/", "/games/", "/contact", "/pricing", "/500", "/privacy", "/game/passphrase"],
     {}
   ) //TODO figure out how to make this configurable
 ];
