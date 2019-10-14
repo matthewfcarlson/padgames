@@ -204,7 +204,7 @@
             </div-->
             <div class="faq_q">
               <div class="lead">I found a bug or have an idea!</div>
-              <router-link to="/contact">Contact us</router-link>or open a
+              <router-link to="/contact">Contact us</router-link> or open a
               <a href="https://github.com/matthewfcarlson/padgames/issues">github issue</a>
               I'd love to hear from you.
               Alternatively, if you have a fully formed game that you want on the padgames platforms (I will need to vet the quality of the code), you can submit a PR to padgames. Your game will be free as I don't want to charge for other's work.
