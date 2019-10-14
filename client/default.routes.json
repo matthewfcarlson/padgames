@@ -28,20 +28,18 @@
   {
     "path": "/privacy",
     "name": "Privacy",
+    "chunk": true,
     "component": "./src/views/Privacy.vue"
   },
   {
     "path": "/host",
-    "name": "Construction",
-    "routeName":"Host",
-    "component": "./src/views/Construction.vue"
+    "name": "Host",
+    "component": "./src/views/Host.vue"
   },
   {
     "path": "/join",
-    "name": "Construction",
-    "chunk": true,
-    "routeName":"Join",
-    "component": "./src/views/Construction.vue"
+    "name": "Join",
+    "component": "./src/views/Join.vue"
   },
   {
     "path": "/error",

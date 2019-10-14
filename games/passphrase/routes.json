@@ -5,7 +5,8 @@
     "isGame": true,
     "description": "One clue, one number. That's all you have to guess all the passphrases in this game.",
     "displayName": "Passphrase",
-    "gameLogo": "./client/assets/passphrase_logo.svg"
+    "gameLogo": "./client/assets/passphrase_logo.svg",
+    "ready": true
 },
 {
     "path": "/game/passphrase/:gameId",

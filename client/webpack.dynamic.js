@@ -64,6 +64,7 @@ else {
       if (!("priority" in routes_json[route_index])) routes_json[route_index]["priority"] = 0;
       if (!("isGame" in routes_json[route_index])) routes_json[route_index]["isGame"] = false;
       if (!("chunk" in routes_json[route_index])) routes_json[route_index]["chunk"] = false;
+      if (!("ready" in routes_json[route_index])) routes_json[route_index]["ready"] = true;
       if (!("routeName" in routes_json[route_index])) routes_json[route_index]["routeName"] = routes_json[route_index]["name"];
       //remap directory
       let route_comp_path = path.join(directory, routes_json[route_index]["component"]);
@@ -112,9 +113,11 @@ else {
 
     if (route_isGame) {
       var game_texts = [];
+      var game_ready = route["ready"];
       let logo_path = path.join(route["relative_dir"], route["gameLogo"] || "logo.svg").replace(/\\/g, "/");
       game_texts.push('name: "' + route_display_name + '"');
       game_texts.push('id: "' + route_name + '"');
+      game_texts.push('ready: '+ game_ready)
       game_texts.push('url: "' + route_path + '"');
       game_texts.push('color: "' + (route["gameColor"] || "#226699") + '"');
       game_texts.push('description: "' + (route["description"] || "") + '"');

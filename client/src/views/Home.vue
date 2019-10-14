@@ -131,7 +131,7 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-3 col-sm-12">
-            <div class="faq_q">
+            <!--div class="faq_q">
               <div class="lead">Why not, you know, make it free?</div>
               <p>
                 Well, I origionally did. I don't think anybody besides my family and friends ever played.
@@ -141,7 +141,7 @@
                   href="https://ko-fi.com/padgames"
                 >here</a>. I would be very grateful.
               </p>
-            </div>
+            </div-->
             <div class="faq_q">
               <div class="lead">How many players can be in a game?</div>
               <p>Unlimited though some games might get a little weird. Games here have two rules: they have to allow for unlimited players and they have to use two devices (like two phones or a tablet and a phone).</p>
@@ -161,16 +161,16 @@
                 I was sitting around one christmas with my family and we were all on our phones in the same room.
                 A few people asked if we could play some board games but no one was willing to setup the new board games we had just gotten.
                 I wished that there was a way we could play our new games from our phones without having to setup the game.
-                I happened to have my laptop nearby and started coding up a small web version of a new game we had started playing using websockets so it would work on phones.
+                I happened to have my laptop nearby and started coding up a small web version.
               </p>
             </div>
-            <div class="faq_q">
+            <!--div class="faq_q">
               <div class="lead">Why charge money?</div>
               <p>
                 Servers don't grow on trees sadly (though a server farm of trees sounds awesome).
                 The cost is to help pay for servers and to encourage me to develop more games!
               </p>
-            </div>
+            </div-->
           </div>
           <div class="col-md-3 col-sm-12">
             <div class="faq_q">
@@ -190,18 +190,18 @@
                 I'm happy to report that I'm 100% GDPR compliant because I collect no PII (Personally identifying information).
                 I do technically collect enough information to make user accounts (to keep track of who has paid and whatnot) and aggregated statistics about games played.
                 To see more information about what is collected see
-                <router-link to="/about">the about page</router-link>
+                <router-link to="privacy">the privacy page</router-link>
               </p>
             </div>
           </div>
           <div class="col-md-3 col-sm-12">
-            <div class="faq_q">
+            <!--div class="faq_q">
               <div class="lead">What does it mean to pay $1 to host games?</div>
               <p>
                 To be to host a game for friends or strangers if you swing that way, you need to pay $1.
                 Once you've paid for this, you will be host as many games with as many players are you want!
               </p>
-            </div>
+            </div-->
             <div class="faq_q">
               <div class="lead">I found a bug or have an idea!</div>
               <router-link to="/contact">Contact us</router-link>or open a

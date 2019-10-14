@@ -12,19 +12,19 @@
               <a href="https://ko-fi.com/padgames">Donate</a>
             </li>
             <li>
-              <router-link to="/about">About</router-link>
+              <router-link to="about">About</router-link>
             </li>
             <li>
-              <router-link to="/about">Contact Us</router-link>
+              <router-link to="contact">Contact Us</router-link>
             </li>
             <li>
               <a href="https://github.com/matthewfcarlson/padgames">Github</a>
             </li>
             <li>
-              <router-link to="/privacy">Privacy Policy</router-link>
+              <router-link to="privacy">Privacy Policy</router-link>
             </li>
             <li>
-              <a href="https://padgames.app/sitemap.xml">Sitemap</a>
+              <a href="/sitemap.xml">Sitemap</a>
             </li>
           </ul>
         </div>
