@@ -114,6 +114,7 @@ else {
       var game_texts = [];
       let logo_path = path.join(route["relative_dir"], route["gameLogo"] || "logo.svg").replace(/\\/g, "/");
       game_texts.push('name: "' + route_display_name + '"');
+      game_texts.push('id: "' + route_name + '"');
       game_texts.push('url: "' + route_path + '"');
       game_texts.push('color: "' + (route["gameColor"] || "#226699") + '"');
       game_texts.push('description: "' + (route["description"] || "") + '"');

@@ -1,16 +1,16 @@
 [{
     "path": "/game/passphrase",
     "name": "passphrase",
-    "component": "./client/index.vue"
+    "component": "./client/index.vue",
+    "isGame": true,
+    "description": "One clue, one number. That's all you have to guess all the passphrases in this game.",
+    "displayName": "Passphrase",
+    "gameLogo": "./client/assets/passphrase_logo.svg"
 },
 {
     "path": "/game/passphrase/:gameId",
     "name": "passphrase_game",
     "chunk": true,
-    "isGame": true,
-    "component": "./client/game.vue",
-    "description": "One clue, one number. That's all you have to guess all the passphrases in this game.",
-    "displayName": "Passphrase",
-    "gameLogo": "./client/assets/passphrase_logo.svg"
+    "component": "./client/game.vue"
 }
 ]
