@@ -2,11 +2,11 @@
   <div class="bg-black escape-gutters text-white py-5 text-sm">
     <div class="container">
       <div class="row">
-        <div class="col">
+        <div class="col-md col-sm-12">
           Made with love by Matthew Carlson<br/>
           ©2019 | All rights reserved
         </div>
-        <div class="col">
+        <div class="col-md col-sm-12">
           <ul class="list-unstyled link-white">
             <li>
               <a href="https://ko-fi.com/padgames">Donate</a>
@@ -28,7 +28,7 @@
             </li>
           </ul>
         </div>
-        <div class="col" v-if="showNewsletter">
+        <div class="col-md col-sm-12" v-if="showNewsletter">
           <NewsLetter />
         </div>
       </div>

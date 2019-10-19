@@ -1,7 +1,7 @@
 <template>
   <div class="404">
     <NavBar />
-    <div class="games">
+    <div class="games container">
       <!-- TODO move all this into CSS classes -->
       <div v-for="game in games" :key="game.name" class="card mb-2">
         <div class="row no-gutters">
