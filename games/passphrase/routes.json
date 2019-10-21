@@ -6,6 +6,7 @@
     "description": "One clue, one number. That's all you have to guess all the passphrases in this game.",
     "displayName": "Passphrase",
     "gameLogo": "./client/assets/passphrase_logo.svg",
+    "chunk": "#226699",
     "ready": true
 },
 {

@@ -86,7 +86,7 @@
     </div>
     <div class="bg-dark escape-gutters py-5">
       <div class="container">
-        Watch a family play padgames!
+        <h3>Watch a family play padgames!</h3>
       </div>
     </div>
     <!-- cost -->

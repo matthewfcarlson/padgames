@@ -108,24 +108,33 @@ else {
     route_texts.push('name: "' + route_path_name + '"');
     //route_texts.push('isGame: ' + route_isGame);
     route_texts.push(comp_load);
-    var route_text = "{\n  " + route_texts.join(",\n  ") + "\n}";
-    routes.push(route_text);
+    
 
     if (route_isGame) {
       var game_texts = [];
       var game_ready = route["ready"];
       let logo_path = path.join(route["relative_dir"], route["gameLogo"] || "logo.svg").replace(/\\/g, "/");
+      var game_color = (route["gameColor"] || "#226699");
+      var game_description = route["description"] || "";
+      var props = {
+        color: game_color
+      };
+      route_texts.push("props: "+JSON.stringify(props));
       game_texts.push('name: "' + route_display_name + '"');
       game_texts.push('id: "' + route_name + '"');
       game_texts.push('ready: '+ game_ready)
       game_texts.push('url: "' + route_path + '"');
-      game_texts.push('color: "' + (route["gameColor"] || "#226699") + '"');
-      game_texts.push('description: "' + (route["description"] || "") + '"');
+      game_texts.push('color: "' + game_color + '"');
+      game_texts.push('description: "' + game_description + '"');
       game_texts.push('logo: require("./' + logo_path + '")');
       
       var game_text = "{\n  " + game_texts.join(",\n  ") + "\n}";
       games.push(game_text);
     }
+
+    // finish the route
+    var route_text = "{\n  " + route_texts.join(",\n  ") + "\n}";
+    routes.push(route_text);
   }
   // 5. Generate the strings based on the inputs
   var code_array = imports;
