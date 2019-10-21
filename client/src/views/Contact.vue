@@ -2,9 +2,16 @@
   <div class="contact">
     <NavBar />
     <div class="container pb-3">
-      <h1>Contact Us!</h1>
-      <p>We want you to feel welcome to contact us</p>
-      <a class="btn btn-lg btn-block btn-success" href="mailto:matt@padgames.app"><i class="far fa-envelope"></i> Reach out</a>
+      <h1>Please Contact Us</h1>
+      <img
+        src="~assets/undraw_contact_us.svg"
+        class="img-fluid img-center"
+        alt="the many ways to contact us"
+      />
+      <p>We want you to feel welcome to reach out and contact us</p>
+      <a class="btn btn-lg btn-block btn-success" href="mailto:matt@padgames.app">
+        <i class="far fa-envelope"></i> Reach out
+      </a>
       <br />
       <div class="issues">
         <h2>Github Issues</h2>
