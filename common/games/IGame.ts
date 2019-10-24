@@ -1,4 +1,4 @@
-import { IPlayer, IRoom } from '../rooms/RoomSystem';
+import { IRoom } from '../rooms/IRoom';
 import { IPlayerID } from '../players/IPlayer';
 
 export enum EGameState {
