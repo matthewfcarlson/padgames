@@ -8,15 +8,17 @@ import { IRoom, RoomId, GameType } from "../../../common/rooms/IRoom";
 export default class RoomManager {
 
     // TODO figure how to do a map in typescript
-    private roomStore:Map<RoomId, IRoom>  = new Map();
-    
+    private roomStore: Map<RoomId, IRoom> = new Map();
+
     /**
      * Figures out if a given game ID already exists
-     * @param id 
+     * @param id
      */
-    DoesRoomExist(id:RoomId):boolean {
+    public DoesRoomExist(id: RoomId): boolean {
         // We should just check our internal store
-        if (this.roomStore.has(id)) return true;
+        if (this.roomStore.has(id)) {
+            return true;
+        }
         return false;
     }
 
@@ -26,22 +28,22 @@ export default class RoomManager {
      * @param game the type of game you want to play
      * @retval the id of the game that is created or null if we were unable to create one
      */
-    CreateNewRoom(game: GameType):RoomId|null {
-        //Create a new room of the type specified
-        //Then returns a new room id
-        //TODO log an event of some kind
+    public CreateNewRoom(game: GameType): RoomId | null {
+        // Create a new room of the type specified
+        // Then returns a new room id
+        // TODO log an event of some kind
         return null;
     }
 
     /**
      * This gets the room for that room ID
      * If this is a foriegn game and we haven't populated this yet, the details
-     * will be requested from the other servers, so this make take a while in 
+     * will be requested from the other servers, so this make take a while in
      * some cases
      * @param id the room to get
-     * @retval the room object if it exists or 
+     * @retval the room object if it exists or
      */
-    GetRoom(id:RoomId):IRoom|null {
+    public GetRoom(id: RoomId): IRoom | null {
         return null;
     }
 
@@ -50,14 +52,14 @@ export default class RoomManager {
      * Sends out a notification to other servers to remove this game as well
      * @param id 
      */
-    RemoveGame(id:RoomId):boolean {
+    public RemoveGame(id: RoomId): boolean {
         return false;
     }
-    
+
     /**
      * Returns an iterable of the current rooms known by this server
      */
-    GetCurrentRooms():IterableIterator<RoomId> {
+    public GetCurrentRooms(): IterableIterator<RoomId> {
         return this.roomStore.keys();
     }
 
@@ -70,12 +72,12 @@ export default class RoomManager {
     private AddForiegnGame(id: RoomId, game: GameType): boolean {
         // Make sure we don't already know about this room
         if (this.DoesRoomExist(id)) {
-            //TODO: throw an error or log and error
+            // TODO: throw an error or log and error
             return false;
         }
         // Create a new ServerRoom
-        // Make it as foriegn
-        // 
+        // Mark it as foriegn
+        // Mark it as not fleshed out
         return false;
     }
 
@@ -86,5 +88,5 @@ export default class RoomManager {
     private CleanRooms(): number {
         return 0;
     }
-    
+
 }

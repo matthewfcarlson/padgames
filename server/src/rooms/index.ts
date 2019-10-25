@@ -4,20 +4,33 @@
 import RoomManager from "./room_manager";
 import express from "express";
 import socketio from "socket.io";
+import { RootLogger } from "../../../common/util/logger";
+import { nextTick } from "q";
 
 
 // Create the singleton global variable
 const gRoomManager = new RoomManager();
 // Gets the singleton room manager
 // TODO: research typescript singleton pattern
-export function GetRoomManager(): RoomManager {
+function GetRoomManager(): RoomManager {
     return gRoomManager;
 }
 
-// This is the middleware that express uses to setup the 
-export function RoomManagerMiddleware(handler: express.RequestHandler) {
-    // setup the /join and /host options to do the appropoate things
+function RoomHostMiddleware(request: express.Request, response: express.Response, next: any) {
+    RootLogger.info("Host");
+    next();
+}
 
+function RoomJoinMiddleware(request: express.Request, response: express.Response, next: any) {
+    RootLogger.info("Join");
+    next();
+}
+
+// This is the middleware that express uses to setup the
+export function RoomManagerMiddleware(app: express.Express) {
+    // setup the /join and /host options to do the appropiate things
+    app.get("/host/:gameId", RoomHostMiddleware);
+    app.get("/join/:roomId", RoomJoinMiddleware);
     // Also expose some testing endpoints if we are in dev mode?
 }
 
@@ -25,6 +38,6 @@ export function RoomManagerMiddleware(handler: express.RequestHandler) {
  * This setups the connections to handle players joining and leaving
  * @param io the socket io
  */
-export function RoomManageerSocketware(io:socketio.Client) {
-
+export function RoomManagerSocketware(io: socketio.Client) {
+    
 }

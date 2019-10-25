@@ -10,7 +10,7 @@ export interface IRoom {
     gameType: GameType;
 
     /**
-     * returns the index of the player that is currently the host
+     * returns the id of the player that is currently the host
      */
-    GetHostPlayer(): IPlayer;
+    GetHostPlayer(): IPlayerID;
 }

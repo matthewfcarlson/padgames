@@ -32,12 +32,12 @@
     "component": "./src/views/Privacy.vue"
   },
   {
-    "path": "/host/:gameid",
+    "path": "/host",
     "name": "Host",
     "component": "./src/views/Host.vue"
   },
   {
-    "path": "/join/:gameid",
+    "path": "/join",
     "name": "Join",
     "component": "./src/views/Join.vue"
   },

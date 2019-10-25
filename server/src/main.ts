@@ -5,6 +5,7 @@ import http from "http";
 import socket from 'socket.io';
 import history from "connect-history-api-fallback";
 import AuthorizationSetup from "./authentication/auth";
+import { RoomManagerSocketware, RoomManagerMiddleware } from "./rooms";
 const app = express();
 const httpServer = new http.Server(app);
 const io = socket(httpServer);
@@ -23,6 +24,17 @@ const staticFileMiddleware = express.static(contentsDir);
 app.get("/robots.txt", (req, res) => {
     res.sendFile(path.join(contentsDir, "public/robots.txt"));
 });
+
+
+// Make sure we parse the body
+app.use(express.urlencoded({ extended: true }));
+
+// Setup authentication
+AuthorizationSetup(app);
+
+// Setup room management
+RoomManagerMiddleware(app);
+
 // use static middleware to resolve files
 app.use(staticFileMiddleware);
 app.use(
@@ -32,12 +44,6 @@ app.use(
     })
 );
 app.use(staticFileMiddleware);
-
-// Make sure we parse the body
-app.use(express.urlencoded({ extended: true }));
-
-// Setup authentication
-AuthorizationSetup(app);
 
 app.use((req, res) => {
     res.status(404).sendFile(path.join(serverAssetsDir, "404.html"));
