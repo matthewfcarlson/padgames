@@ -18,12 +18,47 @@ function GetRoomManager(): RoomManager {
 
 function RoomHostMiddleware(request: express.Request, response: express.Response, next: any) {
     RootLogger.info("Host");
-    next();
+    // First we create a game
+    const isApi = request.path.startsWith("/api");
+    const newRoomID = GetRoomManager().CreateNewRoom(request.params["roomId"]);
+    console.log(newRoomID);
+    if (newRoomID == null) {
+        // We weren't able to create a new room
+        if (isApi) response.redirect("/host?error=1");
+        else response.sendStatus(404);
+    }
+    const url = "/join/" + newRoomID;
+    // TODO: should we redirect directly to the game
+    if (isApi) response.json({"url": url}); 
+    else response.redirect(url);
 }
 
 function RoomJoinMiddleware(request: express.Request, response: express.Response, next: any) {
     RootLogger.info("Join");
-    next();
+    const roomID = request.params["roomId"];
+    const isApi = request.path.startsWith("/api");
+    const roomExists =  GetRoomManager().DoesRoomExist(roomID);
+    
+    if (roomExists) {
+        // TODO: look up the game that we care about
+        // TODO: redirect to proper game
+        const url = "/game/" + roomID;
+        if (!isApi) {
+            response.redirect("/game/" + roomID);
+        }
+        else 
+        {
+            response.json({"url": url});
+        }
+    }
+    else {
+        if (!isApi) {
+            next();
+        }
+        else {
+            response.sendStatus(404);
+        }
+    }
 }
 
 // This is the middleware that express uses to setup the
@@ -31,7 +66,17 @@ export function RoomManagerMiddleware(app: express.Express) {
     // setup the /join and /host options to do the appropiate things
     app.get("/host/:gameId", RoomHostMiddleware);
     app.get("/join/:roomId", RoomJoinMiddleware);
+
+    // Also setup the api for those routes
+    app.get("/api/host/:gameId", RoomHostMiddleware);
+    app.get("/api/join/:roomId", RoomJoinMiddleware);
     // Also expose some testing endpoints if we are in dev mode?
+    if (process.env.NODE_ENV !== "production") {
+        app.get("/api/rooms", (req, res, next) => {
+            const rooms = GetRoomManager().GetCurrentRooms();
+            res.json(rooms);
+        });
+    }
 }
 
 /**
@@ -39,5 +84,5 @@ export function RoomManagerMiddleware(app: express.Express) {
  * @param io the socket io
  */
 export function RoomManagerSocketware(io: socketio.Client) {
-    
+    // TODO implement
 }

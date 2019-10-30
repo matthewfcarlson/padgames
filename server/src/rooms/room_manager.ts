@@ -1,4 +1,7 @@
 import { IRoom, RoomId, GameType } from "../../../common/rooms/IRoom";
+import room_codes from "./room_codes";
+import { RootLogger } from "../../../common/util/logger";
+import { ServerRoom } from "./server_room";
 
 // This handles all the room systems
 // This also handles communication with other servers?
@@ -12,7 +15,7 @@ export default class RoomManager {
 
     /**
      * Figures out if a given game ID already exists
-     * @param id
+     * @param id the room id
      */
     public DoesRoomExist(id: RoomId): boolean {
         // We should just check our internal store
@@ -22,6 +25,23 @@ export default class RoomManager {
         return false;
     }
 
+    private GetUnusedRoomId(): RoomId {
+        let potentialRoomCodeIndex = -1;
+        let iterationCount = 0;
+        while (potentialRoomCodeIndex === -1) {
+            potentialRoomCodeIndex = Math.floor(Math.random() * room_codes.length);
+            if (this.DoesRoomExist(room_codes[potentialRoomCodeIndex])) {
+                potentialRoomCodeIndex = -1;
+                // TODO figure out a better way to do this?
+                // Start walking the tree?
+                // ETC?
+                // TODO: have a list of unused room codes?
+            }
+            iterationCount += 1;
+        }
+        return room_codes[potentialRoomCodeIndex].toUpperCase();
+    }
+
     /**
      * Creates a game of the game type on this server
      * This also notified other servers of this new room
@@ -29,10 +49,21 @@ export default class RoomManager {
      * @retval the id of the game that is created or null if we were unable to create one
      */
     public CreateNewRoom(game: GameType): RoomId | null {
+        // Get an ID that isn't used
+        const id = this.GetUnusedRoomId();
         // Create a new room of the type specified
+        const room = new ServerRoom(game);
+        // TODO: determine if this game is a valid game type?
+        if (room == null) {
+            // TODO: log error
+            RootLogger.error("Failed to create room of type " + game + " for id " + id);
+            return null;
+        }
+        // Store game
+        this.roomStore.set(id, room);
         // Then returns a new room id
-        // TODO log an event of some kind
-        return null;
+        // TODO log an event of some kind that Room has been created
+        return id;
     }
 
     /**
@@ -44,29 +75,34 @@ export default class RoomManager {
      * @retval the room object if it exists or
      */
     public GetRoom(id: RoomId): IRoom | null {
-        return null;
+        if (this.DoesRoomExist(id)) {
+            return null;
+        }
+        return this.roomStore.get(id) || null;
     }
 
     /**
      * Removes the game specified from the listings
+     * The game must have zero connected clients and exist
      * Sends out a notification to other servers to remove this game as well
-     * @param id 
+     * @param id the room id
      */
     public RemoveGame(id: RoomId): boolean {
+        // TODO implement
         return false;
     }
 
     /**
      * Returns an iterable of the current rooms known by this server
      */
-    public GetCurrentRooms(): IterableIterator<RoomId> {
-        return this.roomStore.keys();
+    public GetCurrentRooms(): RoomId[] {
+        return Array.from(this.roomStore.keys());
     }
 
     /**
      * Adds a reference that a game exists on a different server
-     * @param id 
-     * @param game 
+     * @param id the room id
+     * @param game the game id
      * @retval returns true if successfully added or false if something went wrong
      */
     private AddForiegnGame(id: RoomId, game: GameType): boolean {
@@ -76,8 +112,19 @@ export default class RoomManager {
             return false;
         }
         // Create a new ServerRoom
+        const room = new ServerRoom(game, true);
         // Mark it as foriegn
         // Mark it as not fleshed out
+        this.roomStore.set(id, room);
+        return true;
+    }
+
+    /**
+     * Notify foriegn servers that a room has been created locally
+     * @param id the room to notify of
+     */
+    private NotifyForiegnServers(id: RoomId): boolean {
+        // TODO implement
         return false;
     }
 
@@ -86,7 +133,7 @@ export default class RoomManager {
      * @retval the number of rooms that were cleaned out
      */
     private CleanRooms(): number {
+        // TODO implement
         return 0;
     }
-
 }
