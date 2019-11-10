@@ -4,14 +4,34 @@
     <div class="container text-center">
       <div class="jumbotron">
         <img alt="happy sushi" class="w-25 img-center" src="~assets/undraw_under_construction.svg" />
-        <h1>Under Construction</h1>
+        <h1>Joining Game</h1>
         <p class="lead">
-          padgames is still under construction.
-          We're working hard to bring you awesome games!
-          In the meantime, you can sign up for our news letter to be notified when anything changes.
+          You'll need the room code to join.
+          Ask the person hosting the game to share it with you.
+          It will be a five letter word.
         </p>
         <hr />
-        <NewsLetter />
+        <div class="text-danger" v-if="error.length > 0">{{ error }}</div>
+        <form v-if="!joining" @submit="JoinRoom">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              v-model="roomCode"
+              placeholder="Room code"
+              aria-label="The code to join the room"
+            />
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary btn-sm">Join</button>
+            </div>
+          </div>
+        </form>
+        <div v-else class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <p>Trying to join...</p>
+        </div>
       </div>
     </div>
     <Footer />
@@ -23,6 +43,9 @@ import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
 import Footer from "../components/Footer.vue";
 import NewsLetter from "../components/NewsLetter.vue";
+import axios from 'axios';
+
+// TODO: idea? Interface between server and client that specify the methods we can call? Axios on client side?
 
 @Component({
   components: {
@@ -31,5 +54,25 @@ import NewsLetter from "../components/NewsLetter.vue";
     NewsLetter
   }
 })
-export default class Join extends Vue {}
+// TODO: make the input convert to uppercase on the fly?
+export default class Join extends Vue {
+  roomCode = "";
+  error = "";
+  joining = false;
+  JoinRoom(e: Event){
+    e.preventDefault(); // don't let the form submit
+    if (this.joining) {
+      return; // Don't try to join while we are joining
+    }
+    if (this.roomCode.length != 5) {
+      this.error = "This is an invalid room code"; //STRING
+      return;
+    }
+    this.error = "";
+    this.roomCode = this.roomCode.toUpperCase();
+    console.log("Attempting to join room "+ this.roomCode);
+    //Should we do this via the server? Or should I do this via redirect?
+    this.joining = true;
+  }
+}
 </script>
