@@ -100,7 +100,9 @@ else {
       comp_load = 'component: () => import(/* webpackChunkName: "' + route_name + '" */ "' + route_comp + '")'
     }
     else {
-      imports.push('import ' + route_name + ' from "' + route_comp + '";')
+      const import_statement = 'import ' + route_name + ' from "' + route_comp + '";'
+      // Check to make sure it isn't already in there
+      if (imports.indexOf(import_statement) == -1) imports.push(import_statement);
     }
 
     var route_texts = [];

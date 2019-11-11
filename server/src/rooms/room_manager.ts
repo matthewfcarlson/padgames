@@ -28,7 +28,7 @@ export default class RoomManager {
     private GetUnusedRoomId(): RoomId {
         let potentialRoomCodeIndex = -1;
         let iterationCount = 0;
-        while (potentialRoomCodeIndex === -1) {
+        while (potentialRoomCodeIndex === -1 && iterationCount < 1000) {
             potentialRoomCodeIndex = Math.floor(Math.random() * room_codes.length);
             if (this.DoesRoomExist(room_codes[potentialRoomCodeIndex])) {
                 potentialRoomCodeIndex = -1;
@@ -38,6 +38,11 @@ export default class RoomManager {
                 // TODO: have a list of unused room codes?
             }
             iterationCount += 1;
+        }
+        if (potentialRoomCodeIndex == -1){
+            // This is an error case - not sure what to do here.
+            RootLogger.error("Unable to generate a room ID");
+            return "ERROR";
         }
         return room_codes[potentialRoomCodeIndex].toUpperCase();
     }
@@ -79,6 +84,19 @@ export default class RoomManager {
             return null;
         }
         return this.roomStore.get(id) || null;
+    }
+
+    /**
+     * Gets the url for this particular room
+     * @param id the room id
+     * @returns the url to go to or null if the game doesn't exist
+     */
+    public GetRoomUrl(id: RoomId): string | null {
+        if (!this.DoesRoomExist(id)) {
+            return null;
+        }
+        // How do I get the route for this?
+        return "/game/passphrase/" + id;
     }
 
     /**

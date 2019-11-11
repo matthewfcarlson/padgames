@@ -37,8 +37,18 @@
     "component": "./src/views/Host.vue"
   },
   {
+    "path": "/host/:gameid",
+    "name": "HostGame",
+    "component": "./src/views/Host.vue"
+  },
+  {
     "path": "/join",
     "name": "Join",
+    "component": "./src/views/Join.vue"
+  },
+  {
+    "path": "/join/:roomid",
+    "name": "JoinGame",
     "component": "./src/views/Join.vue"
   },
   {

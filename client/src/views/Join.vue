@@ -3,7 +3,7 @@
     <NavBar />
     <div class="container text-center">
       <div class="jumbotron">
-        <img alt="happy sushi" class="w-25 img-center" src="~assets/undraw_under_construction.svg" />
+        <img alt="happy sushi" class="w-25 img-center" src="~assets/undraw_happy_feeling.svg" />
         <h1>Joining Game</h1>
         <p class="lead">
           You'll need the room code to join.
@@ -30,7 +30,7 @@
           <div class="spinner-border" role="status">
             <span class="sr-only">Loading...</span>
           </div>
-          <p>Trying to join...</p>
+          <p>Trying to join {{roomCode}}...</p>
         </div>
       </div>
     </div>
@@ -59,11 +59,17 @@ export default class Join extends Vue {
   roomCode = "";
   error = "";
   joining = false;
-  JoinRoom(e: Event){
-    e.preventDefault(); // don't let the form submit
+  mounted () {
+    console.log(this.$route.params);
+    if (this.$route.params.roomid != undefined) this.roomCode = this.$route.params.roomid;
+    if (this.roomCode != "") this.JoinRoom(null);
+  }
+  JoinRoom(e: Event|null){
+    if (e != null) e.preventDefault(); // don't let the form submit
     if (this.joining) {
       return; // Don't try to join while we are joining
     }
+    console.log(this.roomCode);
     if (this.roomCode.length != 5) {
       this.error = "This is an invalid room code"; //STRING
       return;

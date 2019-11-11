@@ -40,15 +40,16 @@ function RoomJoinMiddleware(request: express.Request, response: express.Response
     const roomExists =  GetRoomManager().DoesRoomExist(roomID);
     
     if (roomExists) {
-        // TODO: look up the game that we care about
-        // TODO: redirect to proper game
-        const url = "/game/" + roomID;
-        if (!isApi) {
-            response.redirect("/game/" + roomID);
+        const game = GetRoomManager().GetRoom(roomID);
+        const url = GetRoomManager().GetRoomUrl(roomID);
+        if (!isApi && url != null) {
+            response.redirect(url);
         }
-        else 
-        {
+        else if (isApi){
             response.json({"url": url});
+        }
+        else {
+            response.sendStatus(404);
         }
     }
     else {
