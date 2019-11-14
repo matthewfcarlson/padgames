@@ -45,6 +45,7 @@ else {
   const imports = [];
   const routes = [];
   const games = [];
+  imports.push("import {RouteConfig} from \"vue-router\";")
   console.log("Generating dynamic routes");
   // 1. glob the file system looking for *routes.json
   let glob_options = {
@@ -140,13 +141,13 @@ else {
   }
   // 5. Generate the strings based on the inputs
   var code_array = imports;
-  code_array.push("const AllRoutes = [");
+  code_array.push("const DynamicRoutes: RouteConfig[] = [");
   code_array.push(routes.join(",\n"));
   code_array.push("];")
   code_array.push("const AllGames = [");
   code_array.push(games.join(",\n"));
   code_array.push("];");
-  code_array.push("export {AllRoutes, AllGames};");
+  code_array.push("export {DynamicRoutes, AllGames};");
   const code = code_array.join("\n");
 
   //TODO figure out what to do the games vs the routes

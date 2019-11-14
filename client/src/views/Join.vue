@@ -43,7 +43,7 @@ import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
 import Footer from "../components/Footer.vue";
 import NewsLetter from "../components/NewsLetter.vue";
-import axios from 'axios';
+import axios from "axios";
 
 // TODO: idea? Interface between server and client that specify the methods we can call? Axios on client side?
 
@@ -59,12 +59,13 @@ export default class Join extends Vue {
   roomCode = "";
   error = "";
   joining = false;
-  mounted () {
+  mounted() {
     console.log(this.$route.params);
-    if (this.$route.params.roomid != undefined) this.roomCode = this.$route.params.roomid;
+    if (this.$route.params.roomid != undefined)
+      this.roomCode = this.$route.params.roomid;
     if (this.roomCode != "") this.JoinRoom(null);
   }
-  JoinRoom(e: Event|null){
+  JoinRoom(e: Event | null) {
     if (e != null) e.preventDefault(); // don't let the form submit
     if (this.joining) {
       return; // Don't try to join while we are joining
@@ -76,8 +77,25 @@ export default class Join extends Vue {
     }
     this.error = "";
     this.roomCode = this.roomCode.toUpperCase();
-    console.log("Attempting to join room "+ this.roomCode);
+    console.log("Attempting to join room " + this.roomCode);
     //Should we do this via the server? Or should I do this via redirect?
+    const request_url = location.origin + "/api/join/" + this.roomCode;
+    console.log(request_url);
+    const self = this;
+    axios
+      .get(request_url)
+      .then(response => {
+        const url = response.data.url;
+        console.log(response);
+        location.href = url;
+      })
+      .catch(reason => {
+        self.error = "We couldn't find that room code"; //STRING
+        console.log(reason);
+      })
+      .finally(() => {
+        self.joining = false;
+      });
     this.joining = true;
   }
 }
