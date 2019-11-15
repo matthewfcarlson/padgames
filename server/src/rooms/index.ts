@@ -20,17 +20,24 @@ function RoomHostMiddleware(request: express.Request, response: express.Response
     RootLogger.info("Host");
     // First we create a game
     const isApi = request.path.startsWith("/api");
-    const newRoomID = GetRoomManager().CreateNewRoom(request.params["roomId"]);
-    console.log(newRoomID);
+    RootLogger.info(request.params);
+    // TODO figure out if the user can create this room (if they need to buy it)
+    const newRoomID = GetRoomManager().CreateNewRoom(request.params["gameType"]);
     if (newRoomID == null) {
         // We weren't able to create a new room
-        if (isApi) response.redirect("/host?error=1");
-        else response.sendStatus(404);
+        if (!isApi) {
+            response.redirect("/host?error=1");
+        } else {
+            response.sendStatus(404);
+        }
     }
     const url = "/join/" + newRoomID;
     // TODO: should we redirect directly to the game
-    if (isApi) response.json({"url": url}); 
-    else response.redirect(url);
+    if (isApi) {
+        response.json({"url": url}); 
+    } else {
+        response.redirect(url);
+    }
 }
 
 function RoomJoinMiddleware(request: express.Request, response: express.Response, next: any) {
@@ -44,19 +51,15 @@ function RoomJoinMiddleware(request: express.Request, response: express.Response
         const url = GetRoomManager().GetRoomUrl(roomID);
         if (!isApi && url != null) {
             response.redirect(url);
-        }
-        else if (isApi){
-            response.json({"url": url});
-        }
-        else {
+        } else if (isApi) {
+            response.json({url: url});
+        } else {
             response.sendStatus(404);
         }
-    }
-    else {
+    } else {
         if (!isApi) {
             next();
-        }
-        else {
+        } else {
             response.sendStatus(404);
         }
     }
@@ -65,11 +68,11 @@ function RoomJoinMiddleware(request: express.Request, response: express.Response
 // This is the middleware that express uses to setup the
 export function RoomManagerMiddleware(app: express.Express) {
     // setup the /join and /host options to do the appropiate things
-    app.get("/host/:gameId", RoomHostMiddleware);
+    app.get("/host/:gameType", RoomHostMiddleware);
     app.get("/join/:roomId", RoomJoinMiddleware);
 
     // Also setup the api for those routes
-    app.get("/api/host/:gameId", RoomHostMiddleware);
+    app.get("/api/host/:gameType", RoomHostMiddleware);
     app.get("/api/join/:roomId", RoomJoinMiddleware);
     // Also expose some testing endpoints if we are in dev mode?
     if (process.env.NODE_ENV !== "production") {

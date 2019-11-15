@@ -2,6 +2,7 @@ import { IRoom, RoomId, GameType } from "../../../common/rooms/IRoom";
 import room_codes from "./room_codes";
 import { RootLogger } from "../../../common/util/logger";
 import { ServerRoom } from "./server_room";
+import { AllGames } from "../../../games/games.dynamic";
 
 // This handles all the room systems
 // This also handles communication with other servers?
@@ -11,7 +12,14 @@ import { ServerRoom } from "./server_room";
 export default class RoomManager {
 
     // TODO figure how to do a map in typescript
-    private roomStore: Map<RoomId, IRoom> = new Map();
+    private roomStore: Map<RoomId, ServerRoom> = new Map();
+    private gameUrlMap: Map<GameType, string> = new Map(); // A map that converts a game type to a url
+
+    public constructor() {
+        for (const item of AllGames) {
+            this.gameUrlMap.set(item["id"], item["url"]);
+        }
+    }
 
     /**
      * Figures out if a given game ID already exists
@@ -39,13 +47,14 @@ export default class RoomManager {
             }
             iterationCount += 1;
         }
-        if (potentialRoomCodeIndex == -1){
+        if (potentialRoomCodeIndex == -1) {
             // This is an error case - not sure what to do here.
             RootLogger.error("Unable to generate a room ID");
             return "ERROR";
         }
         return room_codes[potentialRoomCodeIndex].toUpperCase();
     }
+
 
     /**
      * Creates a game of the game type on this server
@@ -54,6 +63,10 @@ export default class RoomManager {
      * @retval the id of the game that is created or null if we were unable to create one
      */
     public CreateNewRoom(game: GameType): RoomId | null {
+        // Make sure this is a good type of phone
+        if (!this.gameUrlMap.has(game)) {
+            return null;
+        }
         // Get an ID that isn't used
         const id = this.GetUnusedRoomId();
         // Create a new room of the type specified
@@ -79,7 +92,7 @@ export default class RoomManager {
      * @param id the room to get
      * @retval the room object if it exists or
      */
-    public GetRoom(id: RoomId): IRoom | null {
+    public GetRoom(id: RoomId): ServerRoom | null {
         if (this.DoesRoomExist(id)) {
             return null;
         }
@@ -92,11 +105,15 @@ export default class RoomManager {
      * @returns the url to go to or null if the game doesn't exist
      */
     public GetRoomUrl(id: RoomId): string | null {
-        if (!this.DoesRoomExist(id)) {
+        const room = this.roomStore.get(id);
+        if (room == null) {
             return null;
         }
+        const type = room.GetGameType();
+        RootLogger.info("Found room of type " + type);
+        const urlBase = this.gameUrlMap.get(type);
         // How do I get the route for this?
-        return "/game/passphrase/" + id;
+        return urlBase + "/" + id;
     }
 
     /**

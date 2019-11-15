@@ -33,11 +33,12 @@
 const fs = require("fs");
 const glob = require("glob");
 const path = require("path");
-const outputFile = "./client/src/routes.dynamic.ts";
+const routeOutputFile = "./client/src/routes.dynamic.ts";
+const gameOutputFile = "./games/games.dynamic.ts";
 const gamesFolder = "./games";
 
-if (fs.existsSync(outputFile) && fs.statSync(outputFile).size > 0) { //TODO figure out if we're in development- if we're doing prod we should be running this every time
-  console.log(fs.statSync(outputFile).size);
+if (fs.existsSync(routeOutputFile) && fs.statSync(routeOutputFile).size > 0 && fs.existsSync(gameOutputFile)) { //TODO figure out if we're in development- if we're doing prod we should be running this every time
+  console.log(fs.statSync(routeOutputFile).size);
   console.log("Skipping generation of dynamic routes to speed up compile time");
   module.exports = -1;
 } 
@@ -45,6 +46,7 @@ else {
   const imports = [];
   const routes = [];
   const games = [];
+  const game_info = [];
   imports.push("import {RouteConfig} from \"vue-router\";")
   console.log("Generating dynamic routes");
   // 1. glob the file system looking for *routes.json
@@ -53,7 +55,7 @@ else {
   };
   let files = glob.sync("./**/*routes.json", glob_options);
   let all_routes = [];
-  const output_dir = path.dirname(path.resolve(outputFile));
+  const output_dir = path.dirname(path.resolve(routeOutputFile));
   // 2. Read in each file and add to the list of routes
   for (var file_index in files) {
     const file_path = files[file_index];
@@ -130,9 +132,13 @@ else {
       game_texts.push('color: "' + game_color + '"');
       game_texts.push('description: "' + game_description + '"');
       game_texts.push('logo: require("./' + logo_path + '")');
+
+      var game_data = game_texts.slice(0, -2);
       
       var game_text = "{\n  " + game_texts.join(",\n  ") + "\n}";
+      var game_data_text = "{\n  " + game_data.join(",\n  ") + "\n}";
       games.push(game_text);
+      game_info.push(game_data_text);
     }
 
     // finish the route
@@ -147,15 +153,28 @@ else {
   code_array.push("const AllGames = [");
   code_array.push(games.join(",\n"));
   code_array.push("];");
+  
   code_array.push("export {DynamicRoutes, AllGames};");
   const code = code_array.join("\n");
 
   //TODO figure out what to do the games vs the routes
 
   // 6. output the file
-  fs.writeFile(outputFile, code, err => {
+  fs.writeFile(routeOutputFile, code, err => {
     if (err) throw err;
-    console.log("Saved dynamic route file to ", outputFile);
+    console.log("Saved dynamic route file to ", routeOutputFile);
+  });
+
+  var game_code_array = [];
+  game_code_array.push("const AllGames = [");
+  game_code_array.push(game_info.join(",\n"));
+  game_code_array.push("];");
+  game_code_array.push("export {AllGames};");
+  const game_code = game_code_array.join("\n");
+  
+  fs.writeFile(gameOutputFile, game_code, err => {
+    if (err) throw err;
+    console.log("Saved dynamic game info file to ", gameOutputFile);
   });
 
   module.exports = routes.length;

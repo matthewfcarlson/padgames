@@ -21,6 +21,7 @@ export class ServerRoom implements IRoom {
         // TODO figure out which game type I need to create
         RootLogger.info("Creating game of type " + game);
         this.foriegn = foriegn;
+        this.gameType = game;
     }
 
     public GetGameType(): GameType {

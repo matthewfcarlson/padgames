@@ -11,8 +11,8 @@ function SetupPassport(pass: passport.Authenticator) {
 export default function AuthorizationSetup(app: express.Application) {
     RootLogger.info("Setting up authorization");
 
-    const passport_config = new passport.Passport();
-    SetupPassport(passport_config);
+    const passportConfig = new passport.Passport();
+    SetupPassport(passportConfig);
 
     // Express session
     app.use(
@@ -24,6 +24,6 @@ export default function AuthorizationSetup(app: express.Application) {
     );
 
     // Passport middleware
-    app.use(passport_config.initialize());
-    app.use(passport_config.session());
+    app.use(passportConfig.initialize());
+    app.use(passportConfig.session());
 }
