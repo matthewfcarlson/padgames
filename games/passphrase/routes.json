@@ -6,13 +6,14 @@
     "description": "One clue, one number. That's all you have to guess all the passphrases in this game.",
     "displayName": "Passphrase",
     "gameLogo": "./client/assets/passphrase_logo.svg",
-    "chunk": "#226699",
+    "color": "#226699",
     "ready": true
 },
 {
-    "path": "/game/passphrase/:gameId",
+    "path": "/game/passphrase/:roomId",
     "name": "passphrase_game",
     "chunk": true,
-    "component": "./client/game.vue"
+    "component": "./client/game.vue",
+    "color": "#226699"
 }
 ]

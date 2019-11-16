@@ -37,7 +37,7 @@
     "component": "./src/views/Host.vue"
   },
   {
-    "path": "/host/:gameid",
+    "path": "/host/:gameType",
     "name": "HostGame",
     "component": "./src/views/Host.vue"
   },
