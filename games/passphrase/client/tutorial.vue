@@ -1,17 +1,20 @@
 <template>
-<!-- TODO should this be moved to common code and use slots ?? -->
-  <div class="tutorial">
-    <transition name="fade" mode="out-in" class="text-center">
-      <div v-if="step == 1" key="1">
-        <h1> Passphrase </h1>
-        <h2> A game of clever thinking </h2>
-        <p> This game requires at least 3 people.</p>
-        <p> Feel fre to skip this tutorial if you already know how to play </p>
-      </div>
-      <div v-else-if="step == 2" key="2">Step 2</div>
-      <div v-else-if="step == 3" key="3">Step 3</div>
-      <div v-else-if="step == 4" key="4">Step 4</div>
-    </transition>
+  <!-- TODO should this be moved to common code and use slots ?? -->
+  <div class>
+    <div class="text-center tutorial">
+      <transition name="fade" mode="out-in">
+        <div v-if="step == 1" key="1">
+          <img src="./assets/passphrase_logo.svg" alt="game logo for the game" class="game-logo" />
+          <h1>Passphrase</h1>
+          <h2>A game of clever thinking</h2>
+          <p>This game requires at least 3 people.</p>
+          <p>Feel fre to skip this tutorial if you already know how to play</p>
+        </div>
+        <div v-else-if="step == 2" key="2">Step 2</div>
+        <div v-else-if="step == 3" key="3">Step 3</div>
+        <div v-else-if="step == 4" key="4">Step 4</div>
+      </transition>
+    </div>
     <div class="row">
       <div class="col">
         <button class="btn btn-warning btn-lg" @click="prev" v-if="step > 1">Back</button>
@@ -56,7 +59,16 @@ export default class Tutorial extends Vue {
   width: 15em;
 }
 .tutorial {
-    padding-top: 4em;
+  padding-top: 4em;
+  min-height: 60vh;
+}
+.game-logo {
+  max-height: 30vh;
+}
+h1 {
+  text-shadow: 1px 1px #fe4902, 
+                2px 2px #fe4902, 
+                3px 3px #fe4902;
 }
 </style>
 
