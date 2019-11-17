@@ -20,10 +20,10 @@ export default class RoomCodeBox extends Vue {
     border-radius: 0.5em;
     color: white;
     background-color: black;
-    padding:1em;
+    padding:1rem;
 }
 .roomcode-box .code {
-    font-size: 2em;
+    font-size: 2rem;
     text-transform: uppercase;
 }
 </style>

@@ -8,7 +8,7 @@
           <h1>Passphrase</h1>
           <h2>A game of clever thinking</h2>
           <p>This game requires at least 3 people.</p>
-          <p>Feel fre to skip this tutorial if you already know how to play</p>
+          <p>Feel free to skip this tutorial if you already know how to play</p>
         </div>
         <div v-else-if="step == 2" key="2">
           <img src="./assets/passphrase_logo.svg" alt="team description" class="game-logo" />
@@ -69,8 +69,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Tutorial extends Vue {
-  step = 7;
-  max_steps = 4;
+  step = 1;
+  max_steps = 7;
 
   prev() {
     if (this.step > 1) this.step -= 1;

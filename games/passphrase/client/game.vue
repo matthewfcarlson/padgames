@@ -84,6 +84,7 @@ export default class PhasePhraseGame extends Vue {
   overflow-x: hidden;
 }
 .roomcode {
+  // TODO: only do this on large screens. For small screens make it small and at the top
   position: absolute;
   top: 0;
   right: 0;
