@@ -47,7 +47,7 @@ export default class RoomManager {
             }
             iterationCount += 1;
         }
-        if (potentialRoomCodeIndex == -1) {
+        if (potentialRoomCodeIndex === -1) {
             // This is an error case - not sure what to do here.
             RootLogger.error("Unable to generate a room ID");
             return "ERROR";
