@@ -1,7 +1,7 @@
 <template>
   <!-- TODO should this be moved to common code and use slots ?? -->
   <div class>
-    <div class="text-center tutorial">
+    <div class="text-center tutorial mb-3">
       <transition name="fade" mode="out-in">
         <div v-if="step == 1" key="1">
           <img src="./assets/passphrase_logo.svg" alt="game logo for the game" class="game-logo" />
@@ -95,7 +95,7 @@ export default class Tutorial extends Vue {
   width: 15em;
 }
 .tutorial {
-  padding-top: 4em;
+  padding-top: 3em;
   min-height: 60vh;
   font-size:1.75em;
 }

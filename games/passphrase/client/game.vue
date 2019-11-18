@@ -4,13 +4,13 @@
       <div class="roomcode">
         <RoomCodeBox :code="roomCode" />
       </div>
-      <Tutorial v-if="doTutorial" @done="finishTutorial" />
-      <div v-else>
-        PASSPHRASE GAMEPLAY
-        <div class="row">
-          <div v-for="word in words" class="col" :key="word"><CodeCard :word="word" @click="clickCard"/></div>
+      <div class="content">
+        <Tutorial v-if="doTutorial" @done="finishTutorial" />
+        <div v-else>
+          <h1>PassPhrase</h1>
+          <GameBoard :words="cards" :status="status" @click="clickCard"/>
+          <a @click="restartTutorial">Help, I need the tutorial for me</a>
         </div>
-        <a @click="restartTutorial">Help, I need the tutorial for me</a>
       </div>
       <!-- End -->
     </div>
@@ -21,19 +21,20 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import RoomCodeBox from "Client/components/RoomCode";
 import Tutorial from "./tutorial";
-import CodeCard from "./card";
+import GameBoard from "./gameboard";
 
 @Component({
   components: {
     RoomCodeBox,
     Tutorial,
-    CodeCard
+    GameBoard
   }
 })
 export default class PhasePhraseGame extends Vue {
   @Prop({ default: "#226699" }) color!: string;
   roomCode = "";
-  words = [
+  status = []; //the status of each card
+  cards = [
     "week",
     "weight",
     "wendys",
@@ -52,7 +53,8 @@ export default class PhasePhraseGame extends Vue {
     "wonder",
     "wood",
     "wool",
-    "workforce"
+    "workforce",
+    "worms"
   ];
   // todo load from local storage whether we need to do the tutorial
   doTutorial = true;
@@ -72,7 +74,7 @@ export default class PhasePhraseGame extends Vue {
   restartTutorial() {
     this.doTutorial = true;
   }
-  clickCard (e: Event) {
+  clickCard(index: number) {
     // figure out what card was pressed?
   }
 }
@@ -82,14 +84,35 @@ export default class PhasePhraseGame extends Vue {
 .fullscreen-app {
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
 }
-.roomcode {
-  // TODO: only do this on large screens. For small screens make it small and at the top
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 1em;
-}
+// grab the mixins from bootstrap
+@import "~bootstrap/scss/bootstrap";
 
+.roomcode {
+  @include media-breakpoint-up("lg") {
+    // TODO: only do this on large screens. For small screens make it small and at the top
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1em;
+  }
+  @include media-breakpoint-down("md") {
+    // TODO: only do this on large screens. For small screens make it small and at the top
+    margin: 0.5em;
+    * {
+      padding:0.25em;
+    }
+  }
+}
+.content {
+  position: absolute;
+  top: 50%;
+  width:100%;
+  left:0;
+  transform: translateY(-50%);
+  padding-left:15px;
+  padding-right:15px;
+}
 </style>
 

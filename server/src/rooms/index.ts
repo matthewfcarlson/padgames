@@ -20,7 +20,6 @@ function RoomHostMiddleware(request: express.Request, response: express.Response
     RootLogger.info("Host");
     // First we create a game
     const isApi = request.path.startsWith("/api");
-    RootLogger.info(request.params);
     // TODO figure out if the user can create this room (if they need to buy it)
     const newRoomID = GetRoomManager().CreateNewRoom(request.params["gameType"]);
     if (newRoomID == null) {

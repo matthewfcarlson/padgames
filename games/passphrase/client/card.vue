@@ -1,6 +1,6 @@
 
 <template>
-  <div class="card panel-default text-center">
+  <div class="card panel-default text-center" @click="click">
     <div class="card-header upsidedown"> {{word}}</div>
     <div class="card-block">
       <b>{{word}}</b>
@@ -14,20 +14,13 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class CodeCard extends Vue {
   @Prop({ default: "???" }) word!: string;
+  click(e: Event){
+    this.$emit("click", e);
+  }
 }
 </script>
 
 <style scoped lang="scss">
-.code-box {
-  border-radius: 0.5em;
-  color: white;
-  background-color: black;
-  padding: 1em;
-}
-.code-box .code {
-  font-size: 2em;
-  text-transform: uppercase;
-}
 .upsidedown {
   -webkit-transform: rotate(-180deg);
   -moz-transform: rotate(-180deg);
@@ -62,10 +55,13 @@ export default class CodeCard extends Vue {
   color: white;
   background-color: #222;
 }
-.card-block b {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 2vw;
+.card-block{
+  padding: 0.75em;
+  b {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 2vw;
+  }
 }
 .card-block span {
   font-size: 2vw;
