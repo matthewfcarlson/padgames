@@ -11,19 +11,19 @@
           <p>Feel free to skip this tutorial if you already know how to play</p>
         </div>
         <div v-else-if="step == 2" key="2">
-          <img src="./assets/passphrase_logo.svg" alt="team description" class="game-logo" />
+          <img src="./assets/teams.svg" alt="team description" class="game-logo" />
           <h2>This game has two teams:<br/>Red team and Blue Team</h2>
           <p>There are also two code masters, one for each team</p>
           <p>The code masters will have a phones and the rest of the team will use the centeral screen</p>
         </div>
         <div v-else-if="step == 3" key="3">
-          <img src="./assets/passphrase_logo.svg" alt="game board description" class="game-logo" />
+          <img src="./assets/cards.svg" alt="game board description" class="game-logo" />
           <h2>There will be words on the center screen that the team has to guess</h2>
           <p>The code masters have their teams words as well as the other team's words</p>
           <p>The code masters are trying to get their team to guess one or more of their team's words by using only one word and one number</p>
         </div>
         <div v-else-if="step == 4" key="4">
-          <img src="./assets/passphrase_logo.svg" alt="how codemasters give clues" class="game-logo" />
+          <img src="./assets/codemaster.svg" alt="how codemasters give clues" class="game-logo" />
           <h2>Cat + Brush = Hair 2</h2>
           <p> For example, as a codemaster you might try to get your team to guess Cat and Brush. </p>
           <p> You might say <b>"Hair, 2"</b></p>
