@@ -95,7 +95,6 @@ export default class Tutorial extends Vue {
   width: 15em;
 }
 .tutorial {
-  padding-top: 3em;
   min-height: 60vh;
   font-size:1.75em;
 }

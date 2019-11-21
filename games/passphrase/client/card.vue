@@ -35,6 +35,12 @@ export default class CodeCard extends Vue {
 .codeword {
   margin-top: 0.5em;
 }
+.card {
+  cursor: pointer;
+  :hover {
+    border: 3pt solid purple;
+  }
+}
 .card.red {
   border: 2px solid darkred;
   color: white;
