@@ -106,13 +106,15 @@ export default class PhasePhraseGame extends Vue {
   }
 }
 .content {
-  position: absolute;
-  top: 50%;
-  width:100%;
-  left:0;
-  transform: translateY(-50%);
-  padding-left:15px;
-  padding-right:15px;
+  @include media-breakpoint-up("lg") {
+    position: absolute;
+    top: 50%;
+    width:100%;
+    left:0;
+    transform: translateY(-50%);
+    padding-left:15px;
+    padding-right:15px;
+  }
 }
 </style>
 

@@ -37,7 +37,7 @@
           <p> You can elect as a team to end your turn voluntarily. If you flip a neutral card or a card for the other team, your turn is over automatically</p>
         </div>
         <div v-else-if="step == 6" key="6">
-          <img src="./assets/passphrase_logo.svg" alt="the death card" class="game-logo" />
+          <img src="./assets/death_card.svg" alt="the death card" class="game-logo" />
           <h2> Watch out for the death card </h2>
           <p> There is one card out there that will instantly end the game and you will lose</p>
           <p> So very a tad cautious when you are flipping cards. You never know which one might be certain death</p>
@@ -100,7 +100,9 @@ export default class Tutorial extends Vue {
   font-size:1.75em;
 }
 .game-logo {
-  max-height: 30vh;
+  max-height: 50vh;
+  max-width: 100%;
+  height: auto;
 }
 h2 {
   font-size:2.2em;
