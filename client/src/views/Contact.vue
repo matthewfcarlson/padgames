@@ -63,6 +63,12 @@ import NavBar from "../components/NavBar.vue"; // @ is an alias to /src
 import Footer from "../components/Footer.vue";
 import axios from "axios";
 
+interface GithubIssue {
+  body?: string;
+  title?: string;
+  id: number;
+}
+
 @Component({
   components: {
     NavBar,
@@ -76,11 +82,19 @@ export default class Contact extends Vue {
     this.issues = [];
     const request_url = `https://api.github.com/repos/matthewfcarlson/padgames/issues`;
     var self = this;
-    axios
-      .get(request_url)
+    const body_limit = 120;
+    axios.get(request_url)
       .then(response => {
         console.log(response);
-        self.issues = response.data;
+        let issues = response.data.map( (x:GithubIssue) => {
+          if (x.body != undefined && x.body.length >= body_limit) {
+            x.body = x.body.substring(0, body_limit) + "...";
+          }
+          return x;
+        });
+        console.log(issues);
+        self.issues = issues;
+
       })
       .catch(e => {
         self.error = e;

@@ -38,7 +38,6 @@
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.3",
     "vue-scroll": "^2.1.12",
-    "vue-socket.io": "^3.0.7",
     "vuex": "^3.1.1"
   },
   "main": "dist_server/server/src/main.js",
@@ -130,8 +129,10 @@
     "vue": "^2.6.10",
     "vue-jest": "^3.0.4",
     "vue-loader": "^15.7.1",
+    "vue-socket.io": "^3.0.7",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.10",
+    "vue2-filters": "^0.8.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7",
     "webpack-virtual-modules": "^0.1.11"

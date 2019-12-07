@@ -26,8 +26,11 @@
           <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
         </div>
         <div v-else class="jumbotron">
-          <h3>PadGames isn't quite ready yet.<br/>Want to be the first to hear about it?</h3>
-          <NewsLetter :showText=false />
+          <h3>
+            PadGames isn't quite ready yet.
+            <br />Want to be the first to hear about it?
+          </h3>
+          <NewsLetter :showText="false" />
         </div>
       </div>
     </div>
@@ -54,35 +57,44 @@
       </div>
     </div>
     <!-- Game choices -->
-    <div class="container py-5">
-      <div class="row">
-        <div class="col-md-4 col-lg-6 col-sm-12">
-          <h2 class="font-weight-bold">A wide choice of games</h2>
+    <div class="container-fluid" style="overflow:hidden">
+      <div class="container py-5">
+        <div class="row">
+          <div class="col-md-4 col-lg-6 col-sm-12">
+            <h2 class="font-weight-bold">A wide choice of games</h2>
+          </div>
+          <div
+            class="col-md-8 col-lg-6 col-sm-12 text-muted"
+          >Ever been sitting around with your family or friends in the room, all on your phones, not talking? Padgames is designed to help you communicate and have fun together.</div>
         </div>
-        <div
-          class="col-md-8 col-lg-6 col-sm-12 text-muted"
-        >Ever been sitting around with your family or friends in the room, all on your phones, not talking? Padgames is designed to help you communicate and have fun together.</div>
-      </div>
-      <br />
-      <div class="row">
-        <!-- TODO move all this into CSS classes -->
-        <!-- TODO make this a component? -->
-        <div v-for="game in games" :key="game.name" class="col-sm-3 col-xs-6 p-1">
-          <router-link tag="div" class="rounded p-2 game-logo" :to="game.url" v-bind:style="{ backgroundColor: game.color}">
-            <img
-              :src="game.logo"
-              alt="game logo"
-              class="game-logo"
-            />
-            <span class="text-white">{{game.name}}</span>
-          </router-link>
+        <br />
+        <div class="row" style="position:relative">
+          <div class="side-button align-middle position-absolute">
+            <router-link tag="span" class="fa-stack fa-2x" to="/games" style="vertical-align: top;">
+              <i class="far fa-circle fa-stack-2x hidden"></i>
+              <i class="fas fa-arrow-right fa-stack-1x"></i>
+            </router-link>
+          </div>
+          <!-- TODO move all this into CSS classes -->
+          <!-- TODO make this a component? -->
+          <div v-for="game in games" :key="game.name" class="col-sm-3 col-xs-6 p-1">
+            <router-link
+              tag="div"
+              class="rounded p-2 game-logo"
+              :to="game.url"
+              v-bind:style="{ backgroundColor: game.color}"
+            >
+              <img :src="game.logo" alt="game logo" class="game-logo" />
+              <span class="text-white">{{game.name}}</span>
+            </router-link>
+          </div>
         </div>
+        <router-link to="/games">
+          See more games or suggest a game yourself
+          <i class="fas fa-arrow-right"></i>
+        </router-link>
+        <br />
       </div>
-      <router-link to="/games">
-        See more games or suggest a game yourself
-        <i class="fas fa-arrow-right"></i>
-      </router-link>
-      <br />
     </div>
     <div class="bg-dark escape-gutters py-5">
       <div class="container">
@@ -204,7 +216,7 @@
             </div-->
             <div class="faq_q">
               <div class="lead">I found a bug or have an idea!</div>
-              <router-link to="/contact">Contact us</router-link> or open a
+              <router-link to="/contact">Contact us</router-link>or open a
               <a href="/issues">github issue</a>
               I'd love to hear from you.
               Alternatively, if you have a fully formed game that you want on the padgames platforms (I will need to vet the quality of the code), you can submit a PR to padgames. Your game will be free as I don't want to charge for other's work.
@@ -236,10 +248,10 @@ import { AllGames } from "../routes.dynamic";
   }
 })
 export default class Home extends Vue {
-  games_ready= false;
+  games_ready = false;
 
-  get games(){
-    return AllGames.slice(0,4); //create a copy of the first four games
+  get games() {
+    return AllGames.slice(0, 4); //create a copy of the first four games
   }
 }
 </script>
@@ -262,5 +274,22 @@ export default class Home extends Vue {
   position: absolute;
   bottom: 0;
   font-size: 1.5em;
+}
+* > .side-button {
+  position: relative;
+}
+.side-button {
+  position: absolute;
+  right: 0;
+  transform: translateX(100%) translateY(-50%);
+  top: 50%;
+  cursor:pointer;
+}
+.side-button .hidden {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.side-button:hover .hidden {
+  opacity: 1;
 }
 </style>
