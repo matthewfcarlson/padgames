@@ -11,7 +11,7 @@
     </div>
     <div class="container py-1">
       <div class="jumbotron text-center bg-transparent mb-0 pb-2 pt-1">
-        <h1 class="display-4 font-weight-bold">
+        <h1 class="font-weight-bold">
           Play Games Together
           <br />Anywhere You Are
         </h1>
@@ -26,11 +26,29 @@
           <router-link class="btn btn-success btn-lg" to="/join" role="button">Join a Game</router-link>
         </div>
         <div v-else class="jumbotron">
-          <h3>
-            PadGames isn't quite ready yet.
-            <br />Want to be the first to hear about it?
-          </h3>
-          <NewsLetter :showText="false" />
+          <h3>Get started!</h3>
+          <button class="btn btn-info btn-xl btn-block" role="button" data-toggle="modal" data-target="#newsletter_modal">Play a Game</button>
+          <div class="modal fade" id="newsletter_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">We're not ready</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h3>
+                    PadGames isn't quite ready yet.
+                    <br/><small>Want to be the first to hear about it?</small>
+                  </h3>
+                  <div> Sign up for our newsletter to get updates and submit feedback!</div>
+                  <NewsLetter :showText="false" />
+                </div>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>

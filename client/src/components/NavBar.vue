@@ -1,6 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light container" role="navigation">
-    <a class="navbar-brand font-weight-bold ml-lg-4" href="/">padgames</a>
+    <a class="navbar-brand font-weight-bold ml-lg-4" href="/">
+      <img alt="padgames logo" class="img-center" style="height:1.3rem" src="~assets/logo_plain.png" />
+    </a>
     <button
       class="navbar-toggler"
       type="button"

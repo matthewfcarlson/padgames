@@ -28,6 +28,13 @@ $spacers: (
   font-size:0.8rem;
 }
 
+.btn-xl, .btn-group-xl > .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 1.5rem;
+    line-height: 1.75;
+    border-radius: 0.3rem;
+}
+
 .bg-black {
   background-color:#111;
   color:white;
