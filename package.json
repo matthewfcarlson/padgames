@@ -27,8 +27,7 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "npm run build && npm run start",
-    "build-old": "node build/build.js",
-    "build": "webpack",
+    "build": "node build/build.js",
     "e2e": "node test/e2e/runner.js",
     "test": "jest --config test/unit/jest.conf.js"
   },
