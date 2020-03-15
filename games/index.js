@@ -4,7 +4,7 @@ import CWClient from "./codewords/client/CodeWords";
 import GoSLobby from "./stuff/client/lobby";
 import GoSGame from "./stuff/client/game";
 import TestAI from "./codewords/client/TestAI";
-import ArgueLobby from "./arguable/client/ArgueLobby"
+import ArgueLobby from "./arguable/client/argueLobby"
 //import ArgueGame from "./arguable/client/ArgueGameView"
 import DixitLobby from "./dixit/client/DixitLobby"
 //import DixitGame from "./dixit/client/DixitGame"
@@ -38,7 +38,7 @@ export const GameRoutes = [
     name: "Arguable-Game",
     title: "Arguable",
     isGame: false,
-    component: () => import("./arguable/client/ArgueGameView") // ArgueGame
+    component: () => import("./arguable/client/argueGameView") // ArgueGame
   },
   {
     path: "/sushi/:gameID",

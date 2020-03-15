@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import keyboard from './keyboard'
+import keyboard from './Keyboard'
 import { 
   closest, 
   panDetect
