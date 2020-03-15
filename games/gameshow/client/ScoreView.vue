@@ -26,4 +26,5 @@ export default {
   //players is the list of all the players and available is a list of the index of all avaiable players
   props: ["teams"]
 };
+
 </script>

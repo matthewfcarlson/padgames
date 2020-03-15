@@ -68,7 +68,7 @@ import VueSocketio from "vue-socket.io";
 import Konami from "./konami";
 import TeamList from "./TeamList";
 import QuestionView from "./QuestionView";
-import Scores from "./Scores";
+import Scores from "./ScoreView";
 
 Vue.use(VueSocketio, window.location.origin);
 

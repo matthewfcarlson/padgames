@@ -119,7 +119,7 @@ import VueQrcode from "@chenfengyuan/vue-qrcode";
 import DixitGame from "../common/dixit";
 import LobbyPlayerList from "./LobbyPlayerList";
 import CardPicker from "./CardPicker";
-import Scores from "./Scores";
+import Scores from "./ScoreView";
 import Reveal from "./Reveal";
 
 Vue.use(VueSocketio, window.location.origin);

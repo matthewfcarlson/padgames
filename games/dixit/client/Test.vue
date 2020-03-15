@@ -18,7 +18,7 @@
 </template>
 <script>
 import Vue from "vue";
-import Scores from "./Scores";
+import Scores from "./ScoreView";
 
 export default {
   name: "Reveal",
