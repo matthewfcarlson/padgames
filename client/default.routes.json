@@ -16,22 +16,50 @@
     "component": "./src/views/Contact.vue"
   },
   {
-    "path": "/construct",
-    "name": "Construction",
+    "path": "/games",
+    "name": "Games",
+    "component": "./src/views/Games.vue"
+  },
+  {
+    "path": "/pricing",
+    "name": "Pricing",
+    "component": "./src/views/Pricing.vue"
+  },
+  {
+    "path": "/blog",
+    "name": "Blog",
+    "component": "./src/views/Blog.vue"
+  },
+  {
+    "path": "/privacy",
+    "name": "Privacy",
     "chunk": true,
-    "component": "./src/views/Construction.vue"
+    "component": "./src/views/Privacy.vue"
   },
   {
     "path": "/host",
-    "name": "Construction",
-    "chunk": true,
-    "component": "./src/views/Construction.vue"
+    "name": "Host",
+    "component": "./src/views/Host.vue"
+  },
+  {
+    "path": "/host/:gameType",
+    "name": "HostGame",
+    "component": "./src/views/Host.vue"
   },
   {
     "path": "/join",
-    "name": "Construction",
-    "chunk": true,
-    "component": "./src/views/Construction.vue"
+    "name": "Join",
+    "component": "./src/views/Join.vue"
+  },
+  {
+    "path": "/join/:roomid",
+    "name": "JoinGame",
+    "component": "./src/views/Join.vue"
+  },
+  {
+    "path": "/error",
+    "name": "ServerError",
+    "component": "./src/views/500.vue"
   },
   {
     "path": "*",
@@ -39,4 +67,5 @@
     "name": "NotFound",
     "component": "./src/views/404.vue"
   }
+
 ]

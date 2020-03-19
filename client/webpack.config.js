@@ -4,11 +4,10 @@ var webpack = require('webpack')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const output_dir = path.resolve(__dirname, '../dist_client')
 const src_dir = path.resolve(__dirname, './src')
-const public_src_dir = path.resolve(__dirname, "./public")
+const games_dir = path.resolve(__dirname, '../games')
+const public_src_dir = path.resolve(__dirname, "./assets")
 const public_out_dir = path.join(output_dir, "public")
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
-const PrerenderSPAPlugin = require('prerender-spa-plugin')
 const DynamicRoutes = require('./webpack.dynamic')
 
 console.log("Generated "+DynamicRoutes+" routes")
@@ -18,9 +17,8 @@ module.exports = {
   output: {
     path: output_dir,
     publicPath: "/",
-    filename: 'js/[name].[hash].js',
-    chunkFilename: 'js/[name].[hash].js',
-    filename: 'build.js'
+    filename: 'public/js/[name].[hash].js',
+    chunkFilename: 'public/js/[name].[hash].js',
   },
   module: {
     rules: [
@@ -47,13 +45,6 @@ module.exports = {
         }
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]'
-        }
-      },
-      {
         test: /\.css$/,
         use: [
           'vue-style-loader',
@@ -71,10 +62,13 @@ module.exports = {
     fs: 'empty'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.vue', '.json', '.html'],
+    extensions: ['.ts', '.js', '.vue', '.json', '.html', ".svg", "."],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
-    }
+      'vue$': 'vue/dist/vue.esm.js',
+      Client: src_dir,
+      Games: games_dir,
+      'assets': public_src_dir
+    },
   },
   performance: {
     hints: false
@@ -84,17 +78,9 @@ module.exports = {
     // make sure to include the plugin for the magic
     new VueLoaderPlugin(),
     new NamedModulesPlugin(),
-    new CopyWebpackPlugin([{
-        from: public_src_dir,
-        to: public_out_dir
-      } ]),
-    new PrerenderSPAPlugin({
-        // Required - The path to the webpack-outputted app to prerender.
-        staticDir: output_dir,
-        indexPath: path.join(output_dir, 'app.html'),
-
-        // Required - Routes to render.
-        routes: [ '/', '/about', '/contact', '/host', '/join'],
-    })
+    // new CopyWebpackPlugin([{
+    //     from: public_src_dir,
+    //     to: public_out_dir
+    //   } ])
   ]
 }

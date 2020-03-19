@@ -3,7 +3,7 @@
     <NavBar />
     <div class="container text-center">
       <div class="jumbotron">
-        <img alt="happy sushi" class="w-25 img-center" src="/public/default_sushi.png" />
+        <img alt="happy sushi" class="w-25 img-center" src="~assets/undraw_under_construction.svg" />
         <h1>Under Construction</h1>
         <p class="lead">
           padgames is still under construction.

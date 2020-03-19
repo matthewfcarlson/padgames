@@ -1,14 +1,19 @@
 [{
-    "path": "/passphrase",
+    "path": "/game/passphrase",
     "name": "passphrase",
-    "chunk": true,
-    "component": "./client/index.vue"
+    "component": "./client/index.vue",
+    "isGame": true,
+    "description": "One clue, one number. That's all you have to guess all the passphrases in this game.",
+    "displayName": "Passphrase",
+    "gameLogo": "./client/assets/passphrase_logo.svg",
+    "color": "#226699",
+    "ready": true
 },
 {
-    "path": "/passphrase/:gameId",
+    "path": "/game/passphrase/:roomId",
     "name": "passphrase_game",
     "chunk": true,
-    "isGame": true,
-    "component": "./client/game.vue"
+    "component": "./client/game.vue",
+    "color": "#226699"
 }
 ]

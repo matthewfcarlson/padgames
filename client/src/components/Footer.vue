@@ -1,19 +1,34 @@
 <template>
-  <div class="bg-dark escape-gutters text-white py-5 text-sm">
+  <div class="bg-black escape-gutters text-white py-5 text-sm">
     <div class="container">
       <div class="row">
-        <div class="col">
-          Made with love by Matthew Carlson
+        <div class="col-md col-sm-12">
+          Made with love by Matthew Carlson<br/>
           ©2019 | All rights reserved
         </div>
-        <div class="col">
-          <ul class="list-unstyled">
+        <div class="col-md col-sm-12">
+          <ul class="list-unstyled link-white">
             <li>
               <a href="https://ko-fi.com/padgames">Donate</a>
             </li>
+            <li>
+              <router-link to="about">About</router-link>
+            </li>
+            <li>
+              <router-link to="contact">Contact Us</router-link>
+            </li>
+            <li>
+              <a href="https://github.com/matthewfcarlson/padgames">Github</a>
+            </li>
+            <li>
+              <router-link to="privacy">Privacy Policy</router-link>
+            </li>
+            <li>
+              <a href="/sitemap.xml">Sitemap</a>
+            </li>
           </ul>
         </div>
-        <div class="col" v-if="showNewsletter">
+        <div class="col-md col-sm-12" v-if="showNewsletter">
           <NewsLetter />
         </div>
       </div>

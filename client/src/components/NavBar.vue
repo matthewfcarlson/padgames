@@ -1,6 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light container" role="navigation">
-    <a class="navbar-brand font-weight-bold ml-lg-4" href="/">padgames</a>
+    <a class="navbar-brand font-weight-bold ml-lg-4" href="/">
+      <img alt="padgames logo" class="img-center" style="height:1.3rem" src="~assets/logo_plain.png" />
+    </a>
     <button
       class="navbar-toggler"
       type="button"
@@ -25,21 +27,22 @@
             <a class="nav-link" :href="href" @click="navigate">{{ curr_route }}</a>
           </li>
         </router-link>
-        <li class="nav-item">
+        <!-- TODO finish authentication -->
+        <!--li class="nav-item">
           <router-link class="nav-link" to="/login">login</router-link>
-        </li>
+        </li-->
       </ul>
     </div>
   </nav>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Mixins } from "vue-property-decorator";
 
 @Component
 export default class NavBar extends Vue {
   //TODO read in data from routes.dynamic.ts
-  routes = ["games", "faq", "about"];
+  routes = ["join", "games", "about", "donate", "blog"];
   //TODO figure out if we're logged in?
 }
 </script>
