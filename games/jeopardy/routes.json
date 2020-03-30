@@ -1,0 +1,19 @@
+[{
+    "path": "/game/jeopardy",
+    "name": "jeopardy",
+    "component": "./client/index.vue",
+    "isGame": true,
+    "description": "Jeopardy! is a classic game show -- with a twist. The answers are given first, and the contestants supply the questions.",
+    "displayName": "Jeopardy",
+    "gameLogo": "./client/assets/logo.svg",
+    "color": "#060CE9",
+    "ready": true
+},
+{
+    "path": "/game/jeopardy/:roomId",
+    "name": "jeopardy_game",
+    "chunk": true,
+    "component": "./client/game.vue",
+    "color": "#060CE9"
+}
+]

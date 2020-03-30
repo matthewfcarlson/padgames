@@ -80,12 +80,7 @@ export default class PhasePhraseGame extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.fullscreen-app {
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
-}
+<style lang="scss">
 // grab the mixins from bootstrap
 @import "~bootstrap/scss/bootstrap";
 
