@@ -1,0 +1,8 @@
+{
+    "name": "Seminary Games",
+    "short_name": "SG",
+    "lang": "en-US",
+    "start_url": "https://sg.matthewc.dev",
+    "display": "standalone",
+    "theme_color": "#f3f8f8"
+  }
