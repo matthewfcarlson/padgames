@@ -1,9 +1,0 @@
-
-node_modules/*
-*.bat
-*.key.txt
-/.vscode
-.vscode/
-/dist_client
-/dist_server
-*.dynamic.ts
