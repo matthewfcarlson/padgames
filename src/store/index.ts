@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { mainModule } from "@/store/main.store";
 import { createComposable, createMapper, createStore, Module } from 'vuex-smart-module';
+import clientSideSocketPlugin from './client.plugin';
+import { KeeypStoreModule, GAME_NAME } from '../../common/keeyp2d_store';
 
 // setup vuex
 Vue.use(Vuex);
@@ -11,15 +13,18 @@ Vue.use(Vuex);
 const rootModule = new Module({
     modules: {
         mainModule,
+        [GAME_NAME]:KeeypStoreModule
     }
 })
 
 export const storeMapper = createMapper(mainModule);
 
+export const keeypMapper = createMapper(KeeypStoreModule);
+
 export const store = createStore(
     rootModule,
     {
-        //plugins: [clientSideSocketPlugin],
+        plugins: [clientSideSocketPlugin],
         strict: process.env.NODE_ENV !== 'production'
     }
 )

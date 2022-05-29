@@ -1,6 +1,5 @@
 import Vue from 'vue'
 //import VueCompositionAPI from '@vue/composition-api'
-//import { PiniaPlugin, createPinia } from 'pinia';
 import router from "./router"
 import App from "./App.vue"
 import axios, { AxiosStatic } from 'axios';

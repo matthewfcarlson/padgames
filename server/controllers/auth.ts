@@ -1,146 +1,231 @@
 import { Express } from "express";
-import { DataBase, DbUser, getDateStr } from "../db/types";
-import { sign as JwtSign, verify as JwtVerify, decode as JwtDecode, JsonWebTokenError } from 'jsonwebtoken';
+import { DataBase, DataBaseItem, DbUser, getDateStr, User } from "../db/db_types";
+import { sign as JwtSign, verify as JwtVerify, decode as JwtDecode } from 'jsonwebtoken';
 import { compareSync } from 'bcrypt';
-import { JwtUser } from '../../common/types';
-const JWT_SECRET = "SeminaryGamesSecretKey2022";
+import { JwtUser } from '../../common/store_types';
+import { shuffleArray } from '../../common/utils';
+import { ApiEndpoints, ApiEndpointRoot } from '../../common/endpoints';
+import { sendMagicCodeEmail } from "../sendgrid";
+const JWT_SECRET = "yourSecretKey";
 
-export function DecodeJwtToken(token:string): JwtUser|null  {
+export function DecodeJwtToken(token: string): JwtUser | null {
+    const results = (JwtDecode(token) as any);
+    if (results == null) return null;
+    const user: JwtUser = {
+        name: results.name,
+        _id: results._id,
+        temporary: results.temporary,
+    };
+    return user;
+}
+
+function GiveToken(token_user: JwtUser, res: any, message: string, temporary?: boolean) {
+    if (temporary == undefined || temporary == null) temporary = false;
+    const expireInHours = temporary ? 24 : 10000; // about a year
+    const token = JwtSign(token_user, JWT_SECRET, {
+        expiresIn: expireInHours + 'h'
+    });
+    res.cookie('token', token, { maxAge: 1000 * 60 * 60 * expireInHours });
+    if (message != '') {
+        res.json({
+            token,
+            message
+        });
+    }
+}
+
+function GenerateMagicCode() {
+    const magic_key_length = 25;
+    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let result = Array(magic_key_length).fill('').map((x)=>characters.charAt(Math.floor(Math.random() * charactersLength))).join('');
+    return result;
+}
+
+const noun_parts = ['dad', 'shirt', 'week', 'year', 'gate', 'disk', 'way', 'two', 'throat', 'flight', 'month', 'death', 'pie', 'growth', 'tooth', 'mall', 'hair', 'cell', 'heart', 'skill', 'bread', 'thanks', 'fact', 'role', 'scene', 'gene', 'tale', 'depth', 'world', 'speech', 'height', 'dad', 'love', 'sir', 'lake', 'wealth', 'goal', 'drawer', 'son', 'chest', 'hat', 'clothes', 'news', 'phone', 'thing', 'health', 'map', 'truth', 'mom', 'mood', 'guest', 'beer', 'art', 'song', 'bath', 'road', 'actor', 'bonus', 'river', 'basket', 'honey', 'sword', 'club', 'axe', 'monster'];
+const adj_parts = ['pretty', 'green', 'red', 'blue', 'yellow', 'purple', 'wood', 'dark', 'brown', 'plucky', 'lean', 'decent', 'majestic', 'cynical', 'ruddy', 'funny', 'rich', 'cuddly', 'mighty', 'rapid', 'strong', 'puzzled', 'flippant', 'exotic',];
+function RandomName() {
+    let noun_indexes = Array.from(noun_parts.keys());
+    shuffleArray(noun_indexes, Math.floor(Math.random() * 100000))
+    const noun1 = noun_parts[noun_indexes[0]];
+    const noun2 = noun_parts[noun_indexes[1]];
+    const adj = adj_parts[Math.floor(Math.random() * adj_parts.length)];
+    return [adj, noun1, noun2].join(" ")
+}
+
+// Attempt to login a user with the magic plaintext
+async function LoginUserWithMagic(db: DataBase, user: DbUser, magic_plaintext: string): Promise<DbUser | null> {
     try {
-        const results = (JwtVerify(token, JWT_SECRET) as any);
-        if (results == null) return null;
-        const user: JwtUser = {
-            name: results.name,
-            _id: results._id,
-            isHost: results.isHost,
-            isSpectator: results.isSpectator,
-            groupId: results.groupId,
-        };
-        return user;
+        return null;
     }
     catch (e) {
-        console.error("Invalid token")
+        console.error("LoginUserWithMagic error:" + e);
         return null;
     }
 }
 
-async function LoginUser(db: DataBase, user: DbUser, plain_text: string): Promise<DbUser | null> {
+function validateEmail(email: string) {
+    const res = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return res.test(String(email).toLowerCase());
+}
+
+// Attempt to login a given email, if they already exist then 
+async function AttemptLoginOrRegister(db: DataBase, email: string): Promise<DbUser | null | 'email'> {
     try {
-        if (user.hashedPassword == undefined && user.admin == true) {
-            console.error("User " + user.name + user._id + " is an admin but doens't have a password set");
-            return null;
+        if (email == '') return null;
+        // Step 1: check if the user already exists, if so return email
+        const user = await db.userFind(email, null);
+        // The user exists, set their magic code and return
+        if (user != null) {
+            // TODO: generate a magic thing and set it into their user
+            const magic_code = GenerateMagicCode();
+            user.magicCode = magic_code;
+            sendMagicCodeEmail(user, magic_code);
+            console.log("http://localhost:3000"+ApiEndpointRoot+ApiEndpoints.LOGIN_MAGIC+"?code="+magic_code+"&id="+user._id);
+            await db.userUpdate(user);
+            return 'email';
         }
-        if (user.hashedPassword == undefined && plain_text.length > 0) {
-            console.error("User " + user.name + user._id + " doesn't have a password but one was provided");
-            return null;
+        const name_parts = email.split('@');
+        const name = name_parts[0];
+        // Step 2: the user doesn't exist so we need to create them
+        const new_user_data: User = {
+            email,
+            name,
         }
-        if (user.hashedPassword != undefined) {
-            if (plain_text.length == 0) return null;
-            // authenticate with a 
-            if (!compareSync(plain_text, user.hashedPassword)) {
-                console.error("Invalid password for " + user._id);
-                return null;
-            }
-        }
-        // next check if our last login was today, if so fail.
-        // otherwise, update our last login to be recently
-        else if (user.lastLogin != undefined && user.lastLogin == getDateStr()) {
-            console.error("User " + user.name + user._id + " has already tried to login in today");
-            return null;
-        }
-        const updated_user = await db.updateLoginTime(user);
-        return updated_user;
+        let new_user = await db.userAdd(new_user_data);
+        if (new_user == null) return null;
+        return new_user;
     }
     catch (e) {
-        console.error("LoginUser error:" + e);
-        throw e;
+        console.error("AttemptLoginOrRegister error:" + e);
         return null;
     }
 }
 
 export default function RegisterEndPoints(app: Express, db: DataBase) {
-    app.post('/api/login', async (req, res) => {
-        const password = (req.body['password'] == undefined) ? '' : req.body['password'];
-        if (req.body['user_id'] == undefined) {
-            res.status(300).send("User ID missing");
-            return;
-        }
-        if (req.body['group_id'] == undefined) {
-            res.status(300).send("Group ID missing");
-            return;
-        }
-        // Group
-        const group_id = parseInt(req.body['group_id']);
-        const group = await db.findGroup(null, group_id);
-        let token_user:JwtUser|null = null;
-        if (group == null) {
-            res.sendStatus(404);
-            return;
-        }
-        // User
-        const user_id = parseInt(req.body['user_id']);
-        if (user_id == -1) {
-            // we're trying to do a spectator
-            const spec_id = Math.floor(Math.random()*-10000000); // give them a random id
-            token_user = { 
-                groupId: group_id,
-                isHost: false,
-                isSpectator: true,
-                _id:spec_id,
-                name: 'Spectator'+spec_id,
-            };
-        }
-        else {
-            const user = await db.findUser(null, user_id);
-            const loggedin_user = await LoginUser(db, user, password);
-            if (loggedin_user == null) {
-                res.sendStatus(403);
+    app.post(ApiEndpointRoot + ApiEndpoints.LOGIN_TEMP, async (req, res) => {
+        try {
+            const new_user_data: User = {
+                email: '',
+                name: RandomName(),
+                temporary: true,
+            }
+            let new_user = await db.userAdd(new_user_data);
+            if (new_user == null) {
+                res.status(500).send("Unable to create temporary user");
                 return;
             }
-            const { hashedPassword, ...simplified_user } = user;
-            token_user = { 
-                _id: user._id,
-                name: user.name,
-                groupId: group_id,
-                isHost: simplified_user.admin || false,
-                isSpectator: false,
+            const token_user: JwtUser = {
+                _id: new_user._id,
+                name: new_user.name,
+                temporary: true,
             };
-        }
-        if (token_user == null) {
-            res.sendStatus(500);
+            GiveToken(token_user, res, "Created new temp account", true);
             return;
         }
-        const expireTime = (token_user.isHost || token_user.isSpectator) ? "7d" : "24h";
+        catch (e) {
+            console.error("LoginUserTemp error:" + e);
+            res.status(500).send("Not implemented");
+        }
+    });
+
+    // magic link login
+    app.get(ApiEndpointRoot + ApiEndpoints.LOGIN_MAGIC, async (req, res) => {
+        if (req.query['code'] == undefined) {
+            res.status(300).send("Code missing");
+            return;
+        }
+        if (req.query['id'] == undefined) {
+            res.status(300).send("id missing");
+            return;
+        }
+        const id = parseInt(req.query['id'].toString());
+        const user = await db.userFind(null, id);
+        if (user == null) {
+            res.status(300).send("user not found");
+            return;
+        }
+        const magic = req.query['code'];
+        const curr_magic = user.magicCode;
+        // erase the magic code
+        if (user.magicCode != '') {
+            user.magicCode = '';
+            db.userUpdate(user);
+        }
+        // check if they don't have a magic code
+        if (curr_magic == null || curr_magic == undefined || user.temporary || curr_magic == '' || magic !=curr_magic) {
+            res.status(300).send("Magic code doesn't match");
+            // TODO: erase magic code?
+            return;
+        }
         
-        const token = JwtSign(token_user, JWT_SECRET , {
-            expiresIn: expireTime
-        });
-        res.cookie('token', token, {maxAge: 1000* 60 * 60 * 24});
-        res.json({
-            token,
-            message: "create user successfully"
-        });
+        const token_user: JwtUser = {
+            _id: user._id,
+            name: user.name,
+            temporary: user.temporary || false,
+        };
+        res.status(200)
+        GiveToken(token_user, res, "");
+        //res.send("<script>window.location.replace('/');</script>")
+        res.redirect("/")
+        return
+    });
+    // Attempt to login a user
+    app.post(ApiEndpointRoot + ApiEndpoints.LOGIN, async (req, res) => {
+        if (req.body['email'] == undefined) {
+            res.status(300).send("Email missing");
+            return;
+        }
+        const email = req.body['email'];
+        if (req.body['email'] == '') {
+            res.status(300).send("Email blank");
+            return;
+        }
+        const valid_email = validateEmail(email);
+        if (!valid_email) {
+            res.status(300).send("Email is not valid");
+            return;
+        }
+
+        let user = await AttemptLoginOrRegister(db, email);
+
+        if (user == null) {
+            res.status(300).send("Unable to create new account");
+            return;
+        }
+        if (user == 'email') {
+            // tell the user to check their email
+            res.send("Check email");
+            return;
+        }
+
+        const token_user: JwtUser = {
+            _id: user._id,
+            name: user.name,
+            temporary: user.temporary || false,
+        };
+        GiveToken(token_user, res, "created user");
     });
 
     // check if we're logged in
     app.use(async (req, res, next) => {
         const path = req.path;
-        if (path == '/favicon.ico' || path.startsWith('/js/') || path.startsWith('/img/') || path.startsWith('/css/')|| path == '/login' || path.indexOf('.') != -1) {
+        if (path == '/favicon.ico' || path.startsWith('/js/') || path.startsWith('/img/') || path.startsWith('/css/') || path == '/login' || path.indexOf('.') != -1) {
             return next();
         }
         try {
             //console.error("Checking auth for "+ path);
             const token = (req.cookies) ? req.cookies['token'] : req.headers.authorization?.split("Bearer ")[1];
             if (!token) throw new Error("No Authorization Header");
-            const results = (JwtVerify(token,JWT_SECRET) as any);
+            await JwtVerify(token, JWT_SECRET);
+            res.locals.token = token;
+            const results = (JwtDecode(token) as any);
+            // TODO: check if the user actually exists?
             res.locals.user = results;
             return next();
         }
-        catch (e){
-            if (path != '/logout' && e instanceof JsonWebTokenError) {
-                console.error("Auth check failed, JWT is invalid");
-                return res.redirect('/logout');
-            }
+        catch (e) {
+            //console.error("Auth check", e);
         }
         // TODO: redirect to login page if we're on a page that needs it
         if (path.startsWith('/api/') || path == '/logout') {
@@ -149,13 +234,24 @@ export default function RegisterEndPoints(app: Express, db: DataBase) {
         // redirect to login
         console.error("Redirecting from " + req.path + " to /login");
         return res.redirect('/login');
-        
+
     });
 
-    app.get("/logout", (req, res)=> {
+    app.get(ApiEndpointRoot + ApiEndpoints.LOGOUT, (req, res) => {
         // clear the login token
         res.clearCookie('token');
-        // TODO: clear player's last login time
         res.redirect("/");
     });
+    app.get(ApiEndpoints.LOGOUT, (req, res) => {
+        // clear the login token
+        res.clearCookie('token');
+        res.redirect("/");
+    });
+    const env = process.env.NODE_ENV || 'development';
+    if (env === "development") {
+        app.get("/api/dump", (req, res) => {
+            db.dumpData();
+            res.send("Data");
+        })
+    }
 }

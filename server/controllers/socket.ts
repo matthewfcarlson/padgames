@@ -1,81 +1,33 @@
 import { Server, Socket } from "socket.io";
-import { MatchupPhase, MatchupStoreModule, MatchupStoreState } from "../../common/matchup_store";
-import { SloganStoreModule } from "../../common/slogan_store";
-import { ActionPacket, ActionSource, GameTypes, isActionExtraPayload, isActionSource, JwtUser, MutationPacket, SocketEvents, SocketUser } from "../../common/types";
-import { DataBase } from "../db/types";
+import { ActionPacket, ActionSource, isActionExtraPayload, isActionSource, JwtUser, MutationPacket, SocketEvents, SocketUser } from "../../common/store_types";
+
+import { DataBase } from "../db/db_types";
 import { DecodeJwtToken } from "./auth";
 import http from "http";
 import { createStore } from "../store/store";
 import { CommonGameContext, CommonModule, SyncedGameActions, SyncedGameGetters, SyncedGameMutations, SyncedGameState } from "../../common/common_store";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-
+import { GAME_NAME } from '../../common/keeyp2d_store';
+import { addPlayerToRoom, canPlayerJoin, getGameState, removePlayerFromRoom, setIoSocketCallback, setPlayerConnectedStatusInRoom } from "../db/room_manager";
 
 type SocketId = string;
 const socket_map = new Map<SocketId, JwtUser>();
-interface ServerRoom {
-    currentGame: string;
-    connected_sockets: Set<SocketId>;
-    groupId: number;
-    gameStarted: boolean;
-    gameState?: CommonGameContext;
-}
-
-
-const room_info = new Map<string, ServerRoom>();
-
-function getRoomString(user: number | JwtUser): string {
-    if (typeof (user) == "number") return "group" + user;
-    return "group" + user.groupId;
-}
-
-function createGame(room:ServerRoom, game:string, room_socket?:any): CommonGameContext{
-    if (GameTypes.indexOf(game) == -1){
-        console.error("We don't support non matchup games yet");
-        throw new Error("We don't support non matchup games");
-    }
-    const module = ((game == 'matchup')? MatchupStoreModule.clone(): SloganStoreModule.clone()) as any as CommonModule;
-    const gameCallback = (room_socket) ? ((mutation:any, state:SyncedGameState, getters:SyncedGameGetters<SyncedGameState>) => {
-        if (mutation.type.includes("Server")) return; // any mutation that has server in the name is skipped
-        const stateHash = getters.stateHash * 1;
-        console.log("SERVER MUTATION", mutation, stateHash);
-        const packet: MutationPacket = {
-            resultHash: stateHash,
-            type: game + '/' + mutation.type,
-            payload: mutation.payload
-        }
-        room_socket.emit(SocketEvents.SERVER_MUTATION, packet);
-    }) : null;
-    const gameState = createStore(module, gameCallback);
-    gameState.mutations.setIsServer(true);
-    
-    // reset the store
-    gameState.actions.reset({
-        _id:0,
-        name: 'Server',
-        socket_id: '',
-        isHost:true,
-        isSpectator:true
-    });
-    // add all the players
-    room.connected_sockets.forEach((x)=>{
-        const player = socket_map.get(x);
-        if (player == null) return;
-        if (player.isHost || player.isSpectator) return;
-        gameState.mutations.addPlayer({
-            socket_id: x,
-            _id: player._id,
-            name: player.name,
-            isHost:player.isHost,
-            isSpectator: player.isSpectator
-        });
-    });
-    
-    return gameState;
-}
+// TODO: encoding expiration information in the user room map?
+// Otherwise it will never get cleared
+const user_room_map = new Map<number, string>();
+const server_user:SocketUser = {
+    _id: 0,
+    name: 'Server',
+    socket_id: '',
+    connected: true,
+};
 
 export default function SetupWebsocket(server: http.Server, db: DataBase) {
 
     const io = new Server(server);
+    console.log("WebSocket Initialized")
+
+    setIoSocketCallback((code:string)=>io.to(code));
 
     io.on('connection', (socket) => {
         const token = socket.handshake.auth.token;
@@ -84,118 +36,124 @@ export default function SetupWebsocket(server: http.Server, db: DataBase) {
             console.error("Bad token from socket " + socket.id, token)
             return;
         }
-        console.log('a user connected ' + socket.id + " "+ user.name + ", "+ user._id);
+        console.log('a user connected ' + socket.id + " " + user.name + ", " + user._id);
         socket_map.set(socket.id, user);
-        const roomName = getRoomString(user);
-        // Create the room if it doesn't exist
-        if (!room_info.has(roomName)) {
-            room_info.set(roomName, { currentGame: "", groupId: user.groupId, gameStarted: false, connected_sockets: new Set() });
+
+        // Check if we already think this user is joined to a game already?
+        if (user_room_map.has(user._id)) {
+            console.log(`attempting to rejoin ${user.name} to room`);
+            const room_id = user_room_map.get(user._id);
+            if (room_id == null || room_id == undefined) return;
+            let gameState = getGameState(room_id);
+            if (gameState == null) return;
+            // let the user know they're in the room
+            setPlayerConnectedStatusInRoom(user, socket.id, room_id, true);
+            socket.emit(SocketEvents.JOIN_ROOM, room_id);
+            // join the player to the socket
+            socket.join(room_id);
+            // TODO: check if the room has this player in it already?
+            sendResyncPacket(socket, gameState);
+            console.log(`rejoined ${user.name} to room`);
         }
-        // Add the user to the room
-        {
-            let room = room_info.get(roomName);
-            if (room != undefined && user != null) {
-                room.connected_sockets.add(socket.id);
-                socket.emit(SocketEvents.SET_GAME, room.currentGame);
-                if (room.gameState != undefined) {
-                    const new_connection = {
-                        _id: user._id,
-                        socket_id: socket.id,
-                        name: user.name,
-                        isHost: user.isHost,
-                        isSpectator: user.isSpectator,
-                    };
-                    // add the new connection to the game's list of users
-                    if (!user.isHost && !user.isSpectator) room.gameState.mutations.addPlayer(new_connection);
-                    console.log("Sending resync packet "+ socket.id, user.name);
-                    sendResyncPacket(socket, room.gameState);
-                }
+
+        socket.on(SocketEvents.JOIN_ROOM, (room_id:string)=>{
+            if (user == null) return;
+            // TODO: sanitize input?
+            console.log("Attempted to join room", room_id, user.name)
+            const can_join = canPlayerJoin(user, room_id) && !user_room_map.has(user._id);
+            if (!can_join) {
+                console.log("Unable to join", room_id, user.name);
+                return;
             }
-        }
-        // Join the socket to the room
-        socket.join(roomName);
-        // Handle disconnections
-        socket.on('disconnect', () => {
-            console.log('user disconnected ' + socket.id + " " + user?.name || "");
-            let room = room_info.get(roomName);
-            if (room != undefined) {
-                room.connected_sockets.delete(socket.id);
-                const state = room.gameState;
-                if (state != undefined) {
-                    state.mutations.removePlayer({
-                        _id: user?._id||-1,
-                        socket_id: socket.id,
-                        name: user?.name || '',
-                        isHost: user?.isHost || false,
-                        isSpectator: user?.isSpectator || false,
-                    });
-                }
-                // TODO: check if the room is empty and delete it
-            }
-            socket_map.delete(socket.id);
+            let gameState = getGameState(room_id);
+            if (gameState == null) return;
+            // let the user know they're in the room
+            socket.emit(SocketEvents.JOIN_ROOM, room_id);
+            // join the player to the socket
+            socket.join(room_id);
+            // Add the user to the room
+            addPlayerToRoom(user, socket.id, room_id);
+            // Resync them with everything that has happened so far
+            sendResyncPacket(socket, gameState);
+            user_room_map.set(user._id, room_id);
         });
-        // When an admin sets the game
-        socket.on(SocketEvents.SET_GAME, (game: unknown) => {
-            if (user == undefined) {
-                console.error("User required");
-                return;
-            }
-            if (!user.isHost) {
-                console.error("Need to be admin");
-                return;
-            }
-            if (typeof (game) != 'string') return;
-            if (game != "" && GameTypes.indexOf(game) == -1) {
-                console.error("Invalid game " + game);
-                return;
-            }
-            // TODO check if the game name is valid
-            // TODO set the room state
-            io.to(roomName).emit(SocketEvents.SET_GAME, game);
-            let room = room_info.get(roomName);
-            if (room != undefined) {
-                
-                room.currentGame = game;
-                delete room.gameState;
-                // Get the correct module
-                const gameState = createGame(room, game,io.to(roomName));
-                room.gameState = gameState;
-                room_info.set(roomName, room);
-            }
+        socket.on(SocketEvents.LEAVE_ROOM, ()=>{
+            if (user == null) return;
+            // TODO: sanitize input?
+            console.log("USER LEAVING ROOM", user.name)
+            const room_id = user_room_map.get(user._id);
+            if (room_id == null || room_id == undefined) return;
+            socket.leave(room_id);
+            socket.emit(SocketEvents.LEAVE_ROOM);
+            user_room_map.delete(user._id);
+            // let other players know that the player has left
+            removePlayerFromRoom(user, socket.id, room_id);
         });
+
         socket.on(SocketEvents.CLIENT_ACTION, (packet: ActionPacket) => {
             if (user == null) return;
             // TODO: how do I inject the correct user into the packet?
             const action_name = packet.type.split("/")[1];
             let payload = packet.payload;
-            const source = {...user, socket_id:socket.id} as ActionSource;
+            const source = {...user, socket_id:socket.id, connected:true} as ActionSource;
             if (!isActionSource(payload) && isActionExtraPayload(payload)) {
                 payload.source = source;
             }
             else {
                 payload = source;
             }
-            console.log("Action from player "+ user.name +": " + action_name, packet.payload);
-
-            let room = room_info.get(roomName);
-            if (room != null && room.gameState != undefined) {
-                room.gameState.dispatch(action_name as any, payload);
+            console.log("Action from player "+ user.name +": " + action_name, JSON.stringify(packet.payload));
+            const room_id = user_room_map.get(user._id);
+            if (room_id == null || room_id == undefined) return;
+            let gameState = getGameState(room_id);
+            if (gameState != undefined && gameState != null) {
+                gameState.dispatch(action_name as any, payload);
             }
         });
 
-        socket.on(SocketEvents.GAME_SYNC, ()=> {
-            let room = room_info.get(roomName);
-            if (room == null || room.gameState == null) return;
-            console.log("User requested resync packet "+ socket.id, user?.name||'unknown');
-            sendResyncPacket(socket, room.gameState);
+        socket.on(SocketEvents.GAME_SYNC, () => {
+            // TODO: use our user lookup array
+            let all_rooms = Array.from(socket.rooms.values());
+            console.log("RESYNC", all_rooms);
+            const rooms = all_rooms.filter(x=>x.length < 10);
+            if (rooms.length != 1) return;
+            const room_id = rooms[0];
+            let gameState = getGameState(room_id);
+            if (gameState == null) return;
+            console.log("User requested resync packet " + socket.id, user?.name || 'unknown');
+            sendResyncPacket(socket, gameState);
+        });
+
+        socket.on('reconnect', () => {
+            if (user == null) return;
+            console.log('user reconnected ' + socket.id + " " + user?.name || "");
+            const code = user_room_map.get(user._id);
+            // If we don't know where they're supposed to go?
+            // TODO: some way to check what rooms they are in and make sure it matches what we expect
+            if (code == null || code == undefined) return;
+
+            // TODO tell them to leave the room if it no longer exists
+            
+        });
+
+        socket.on('disconnect', () => {
+            if (user == null) return;
+            console.log('user disconnected ' + socket.id + " " + user?.name || "");
+            const code = user_room_map.get(user._id);
+            // TODO: how to tell when a player is gone for good?
+            // Perhaps some sort of timeout?
+            if (code == null || code == undefined) return;
+            socket_map.delete(socket.id);
+            setPlayerConnectedStatusInRoom(user, socket.id, code, false);
         });
     });
 }
 function sendResyncPacket(socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>, gameState: CommonGameContext) {
-    const packet:MutationPacket = {
+    // TODO: we assume that there is only one game type here, should we make this work better?
+    const packet: MutationPacket = {
         resultHash: gameState.getters.stateHash,
-        type: 'matchup/setState',
-        payload: gameState.state // TODO: implement a getter that gets the public state to prevent cheating?
+        type: GAME_NAME + '/setState', // TODO: figure out what game we're playing?
+        payload: gameState.state // TODO: implement a getter that gets the public state to only send what that player needs
     }
     socket.emit(SocketEvents.SERVER_MUTATION, packet);
 }

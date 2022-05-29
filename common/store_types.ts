@@ -1,17 +1,27 @@
 export interface JwtUser {
     name: string,
     _id: number,
-    isHost: boolean,
-    isSpectator:boolean,
-    groupId: number
+    temporary:boolean,
 }
+
+export interface RoomAdvert {
+    players_connected: number,
+    code:string,
+    hosted_by:string, // the player that we're being hosted by
+    public:boolean, // if the game is public or not
+}
+export enum RoomVisibility {
+    FRIENDS_ONLY,
+    PRIVATE,
+    PUBLIC
+}
+
 
 export interface SocketUser {
     name: string,
     _id: number,
     socket_id: string,
-    isHost: boolean,
-    isSpectator:boolean,
+    connected:boolean
 }
 export type ActionSource = SocketUser; // TODO: eventually add the server as a source of actions
 
@@ -43,21 +53,10 @@ export function isActionExtraPayload(arg: any): arg is ActionExtraPayload {
 export interface MutationPacket extends ActionPacket {
     resultHash: number;
 }
-
-export interface User {
-    name: string,
-    _id: number,
-    admin: boolean,
-    password: boolean,
-    loggedIn: boolean,
-}
-
 export enum SocketEvents {
     CLIENT_ACTION = 'client_action',
-    SET_GAME = 'set_game',
     GAME_SYNC = 'game_sync',
     SERVER_MUTATION = 'server_mutation',
+    JOIN_ROOM = 'JOIN_ROOM',
+    LEAVE_ROOM = 'LEAVE_ROOM'
 }
-
-export const GameTypes = [
-]
