@@ -6,13 +6,7 @@
   </div>
 </template>
 
-<script lang='ts'>
-
-import { Component, Prop, Vue, Watch } from "vue-property-decorator"
-import { mapGetters } from "vuex";
-
-export default class App extends Vue {
-}
+<script setup>
 </script>
 
 <style lang="scss">

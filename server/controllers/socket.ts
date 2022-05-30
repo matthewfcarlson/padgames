@@ -4,10 +4,9 @@ import { ActionPacket, ActionSource, isActionExtraPayload, isActionSource, JwtUs
 import { DataBase } from "../db/db_types";
 import { DecodeJwtToken } from "./auth";
 import http from "http";
-import { createStore } from "../store/store";
-import { CommonGameContext, CommonModule, SyncedGameActions, SyncedGameGetters, SyncedGameMutations, SyncedGameState } from "../../common/common_store";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { GAME_NAME } from '../../common/keeyp2d_store';
+//import { createStore } from "../store/store";
+//import { CommonGameContext, CommonModule, SyncedGameActions, SyncedGameGetters, SyncedGameMutations, SyncedGameState } from "../../common/common_store";
+//import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { addPlayerToRoom, canPlayerJoin, getGameState, removePlayerFromRoom, setIoSocketCallback, setPlayerConnectedStatusInRoom } from "../db/room_manager";
 
 type SocketId = string;
@@ -21,6 +20,8 @@ const server_user:SocketUser = {
     socket_id: '',
     connected: true,
 };
+
+type CommonGameContext = any;
 
 export default function SetupWebsocket(server: http.Server, db: DataBase) {
 
@@ -148,11 +149,12 @@ export default function SetupWebsocket(server: http.Server, db: DataBase) {
         });
     });
 }
-function sendResyncPacket(socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>, gameState: CommonGameContext) {
+function sendResyncPacket(socket: Socket, gameState: CommonGameContext) {
     // TODO: we assume that there is only one game type here, should we make this work better?
     const packet: MutationPacket = {
         resultHash: gameState.getters.stateHash,
-        type: GAME_NAME + '/setState', // TODO: figure out what game we're playing?
+        //type: GAME_NAME + '/setState', // TODO: figure out what game we're playing?
+        type: '/setState', // TODO: figure out what game we're playing?
         payload: gameState.state // TODO: implement a getter that gets the public state to only send what that player needs
     }
     socket.emit(SocketEvents.SERVER_MUTATION, packet);

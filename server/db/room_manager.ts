@@ -1,14 +1,15 @@
 // This manages all the rooms
 import { ActionPacket, ActionSource, isActionExtraPayload, isActionSource, JwtUser, MutationPacket, RoomAdvert, RoomVisibility, SocketEvents, SocketUser } from "../../common/store_types";
-import { CommonGameContext, CommonModule, SyncedGameActions, SyncedGameGetters, SyncedGameMutations, SyncedGameState } from "../../common/common_store";
+//import { CommonGameContext, CommonModule, SyncedGameActions, SyncedGameGetters, SyncedGameMutations, SyncedGameState } from "../../common/common_store";
 import { DataBaseID, DbUser } from "./db_types";
 import { DataBase } from "../db/db_types";
 import http from "http";
-import { createStore } from "../store/store";
+//import { createStore } from "../store/store";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { GAME_NAME, KeeypStoreModule } from '../../common/keeyp2d_store';
 
 export const MAX_PLAYERS = 6;
+
+type CommonGameContext = any;
 
 type SocketId = string;
 export interface ServerRoom {
@@ -70,43 +71,44 @@ export function createRoom(creator: JwtUser, visibility: RoomVisibility): RoomAd
     }
     if (code == null) return null;
     if (ioSocketCallback == null) return null;
-    const room_socket = ioSocketCallback(code);
-    const module = (KeeypStoreModule.clone() as any as CommonModule);
-    const gameCallback = (room_socket) ? ((mutation: any, state: SyncedGameState, getters: SyncedGameGetters<SyncedGameState>) => {
-        if (mutation.type.includes("Server")) return; // any mutation that has server in the name is skipped
-        const stateHash = getters.stateHash * 1;
-        console.log("SERVER MUTATION on ", code, JSON.stringify(mutation), stateHash);
-        const packet: MutationPacket = {
-            resultHash: stateHash,
-            type: GAME_NAME + '/' + mutation.type,
-            payload: mutation.payload
-        }
-        room_socket.emit(SocketEvents.SERVER_MUTATION, packet);
-    }) : null;
-    const gameState = createStore(module, gameCallback);
-    gameState.mutations.setIsServer(true);
+    return null;
+    //const room_socket = ioSocketCallback(code);
+    // const module = (KeeypStoreModule.clone() as any as CommonModule);
+    // const gameCallback = (room_socket) ? ((mutation: any, state: SyncedGameState, getters: SyncedGameGetters<SyncedGameState>) => {
+    //     if (mutation.type.includes("Server")) return; // any mutation that has server in the name is skipped
+    //     const stateHash = getters.stateHash * 1;
+    //     console.log("SERVER MUTATION on ", code, JSON.stringify(mutation), stateHash);
+    //     const packet: MutationPacket = {
+    //         resultHash: stateHash,
+    //         type: GAME_NAME + '/' + mutation.type,
+    //         payload: mutation.payload
+    //     }
+    //     room_socket.emit(SocketEvents.SERVER_MUTATION, packet);
+    // }) : null;
+    // const gameState = createStore(module, gameCallback);
+    // gameState.mutations.setIsServer(true);
 
-    // reset the store
-    gameState.actions.reset(server_user);
+    // // reset the store
+    // gameState.actions.reset(server_user);
 
-    if (!room_info.has(code)) {
-        // TODO: figure out expiration date
-        room_info.set(code, { gameCode: code,gameStarted: false, player_count: 0, expires:0, visibility, roomHost:creator });
-    }
-    const room = room_info.get(code);
-    if (room == null || room == undefined) return null;
-    room.gameState = gameState;
-    room_info.set(code, room);
+    // if (!room_info.has(code)) {
+    //     // TODO: figure out expiration date
+    //     room_info.set(code, { gameCode: code,gameStarted: false, player_count: 0, expires:0, visibility, roomHost:creator });
+    // }
+    // const room = room_info.get(code);
+    // if (room == null || room == undefined) return null;
+    // room.gameState = gameState;
+    // room_info.set(code, room);
 
-    public_games.add(code);
-    room_owner_lookup.set(creator._id, code);
+    // public_games.add(code);
+    // room_owner_lookup.set(creator._id, code);
 
-    return {
-        code,
-        players_connected: 0,
-        hosted_by: creator.name,
-        public: visibility == RoomVisibility.PUBLIC
-    };
+    // return {
+    //     code,
+    //     players_connected: 0,
+    //     hosted_by: creator.name,
+    //     public: visibility == RoomVisibility.PUBLIC
+    // };
 }
 
 export function requestVisibleGames(user: JwtUser): RoomAdvert[] {

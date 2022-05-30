@@ -1,24 +1,20 @@
-import Vue from "vue"
-import VueRouter, { RouteConfig } from "vue-router"
-import Home from "../views/Home.vue"
-import Login from "../views/Login.vue"
 import NotFound from "../views/404.vue";
 import AccessDenied from "../views/403.vue";
-import { store } from "@/store";
-// Get the store and check if we're logged in
+import { createRouter, RouteRecordRaw, createWebHistory } from "vue-router";
 
-Vue.use(VueRouter)
-
-const routes: Array<RouteConfig> = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: "/login",
     name: "Login",
-    component: Login,
+    component: NotFound,
   },
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: AccessDenied,
+    meta: {
+      requiresLogin:true
+    } 
   },
   {
     path: "/403",
@@ -26,30 +22,29 @@ const routes: Array<RouteConfig> = [
     component: AccessDenied,
   },
   {
-    path: '*',
+    path: '/:pathMatch(.*)*',
     name: '404',
     component: NotFound
   },
   
 ]
 
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(),
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  const toNeedsLogin = to.matched.some((record) => record.meta.requiresLogin);
-  const fromNeedsLogin = from.matched.some((record) => record.meta.requiresLogin);
-  if (toNeedsLogin && !store.getters.loggedIn) {
-    if (fromNeedsLogin) router.push({ name: 'Login' });
-    return;
-  }
-  next() // does not require auth, make sure to always call next()!
-});
-router.afterEach((to,from)=>{
-  document.title = "Padgames " + (to.name || '');
-})
+// router.beforeEach((to, from, next) => {
+//   const toNeedsLogin = to.matched.some((record) => record.meta.requiresLogin);
+//   const fromNeedsLogin = from.matched.some((record) => record.meta.requiresLogin);
+//   if (toNeedsLogin && !store.getters.loggedIn) {
+//     if (fromNeedsLogin) router.push({ name: 'Login' });
+//     return;
+//   }
+//   next() // does not require auth, make sure to always call next()!
+// });
+// router.afterEach((to,from)=>{
+//   document.title = "Padgames " + (to.name || '');
+// })
 
 export default router

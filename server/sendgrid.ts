@@ -2,7 +2,7 @@ import sg_mail from '@sendgrid/mail';
 import { ApiEndpointRoot, ApiEndpoints } from '../common/endpoints';
 import { DbUser } from './db/db_types';
 const API_KEY = process.env.SENDGRID_API_KEY || ''
-sg_mail.setApiKey(API_KEY)
+//sg_mail.setApiKey(API_KEY)
 export async function sendMagicCodeEmail(to:DbUser, code:string) {
     if (API_KEY == '') return false;
     const link = 'padgames.matthewc.dev/'+ApiEndpointRoot+ApiEndpoints.LOGIN_MAGIC+"?code="+code+"&id="+to._id
