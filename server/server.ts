@@ -7,6 +7,7 @@ import fs from 'fs';
 import { GetDB } from "./db";
 import WebSocketController from './controllers/socket';
 import AuthController from './controllers/auth';
+import FriendController from './controllers/friend';
 import RoomController from './controllers/rooms';
 
 const cookieParser = require('cookie-parser')
@@ -42,8 +43,10 @@ app.set("port", process.env.PORT || 3000);
 // Serve static content
 const server = http.createServer(app);
 WebSocketController(server, db);
-AuthController(app, db);
+
+AuthController(app, db); // This one comes first since it handle auth for the rest
 RoomController(app, db);
+FriendController(app, db);
 app.use(express.static(client_folder));
 
 app.get("/api/*", (req,res)=>{
@@ -67,33 +70,22 @@ server.listen(app.get("port"), () => {
   console.log("Press CTRL-C to stop\n");
 });
 const env = process.env.NODE_ENV || 'development';
+
+let exiting = false;
+function gracefulExit(event: any) {
+  if (exiting) return;
+  exiting = true;
+  console.log('About to exit, waiting for remaining connections to complete', event);
+  // Write the database to file
+  db.serialize();
+  //server.close();
+  process.exit();
+}
 if (env === "development") {
-  let exiting = false;
-  process.on('exit', function () {
-    if (exiting) return;
-    exiting = true;
-    console.log('About to exit, waiting for remaining connections to complete');
-    // Write the database to file
-    db.serialize();
-    //server.close();
-  });
-  process.on('SIGINT', function () {
-    if (exiting) return;
-    exiting = true;
-    console.log('SIGINT: About to exit, waiting for remaining connections to complete');
-    // Write the database to file
-    db.serialize();
-    process.exit(0);
-    //server.close();
-  })
-  process.on('SIGTERM', function () {
-    if (exiting) return;
-    exiting = true;
-    console.log('SIGTERM: About to exit, waiting for remaining connections to complete');
-    // Write the database to file
-    db.serialize();
-    //server.close();
-  })
+  
+  process.on('uncaughtException', gracefulExit );
+  process.on('SIGINT', gracefulExit );
+  process.on('SIGUSR2', gracefulExit );
 }
 
 export default app;

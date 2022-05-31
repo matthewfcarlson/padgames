@@ -150,7 +150,13 @@ export default function RegisterEndPoints(app: Express, db: DataBase) {
         // erase the magic code
         if (user.magicCode != '') {
             user.magicCode = '';
+            user.active = getDateStr();
             db.userUpdate(user);
+        }
+        else {
+            res.status(300).send("Magic code doesn't match");
+            // TODO: erase magic code?
+            return;
         }
         // check if they don't have a magic code
         if (curr_magic == null || curr_magic == undefined || user.temporary || curr_magic == '' || magic !=curr_magic) {
@@ -221,14 +227,17 @@ export default function RegisterEndPoints(app: Express, db: DataBase) {
             res.locals.token = token;
             const results = (JwtDecode(token) as any);
             // TODO: check if the user actually exists?
-            res.locals.user = results;
+            const user = await db.userFind('',results._id);
+            if (!user) throw new Error("This user doesn't actually exist");
+            res.locals.user = user;
             return next();
         }
         catch (e) {
             //console.error("Auth check", e);
+            res.clearCookie('token');
         }
         // TODO: redirect to login page if we're on a page that needs it
-        if (path.startsWith('/api/') || path == '/logout') {
+        if (path.startsWith('/api/') || path == '/logout' || path == '/about') {
             return next();
         }
         // redirect to login
@@ -240,11 +249,24 @@ export default function RegisterEndPoints(app: Express, db: DataBase) {
     app.get(ApiEndpointRoot + ApiEndpoints.LOGOUT, (req, res) => {
         // clear the login token
         res.clearCookie('token');
+        const user = res.locals.user;
+        if (user == null || user == undefined) {
+            res.status(402);
+        }
+        else {
+            const dbUser = user as DbUser;
+            delete dbUser.active;
+            db.userUpdate(dbUser);
+        }
         res.redirect("/");
     });
     app.get(ApiEndpoints.LOGOUT, (req, res) => {
         // clear the login token
         res.clearCookie('token');
+        const user = res.locals.user;
+        if (user == null || user == undefined) {
+            res.status(402);
+        }
         res.redirect("/");
     });
     const env = process.env.NODE_ENV || 'development';

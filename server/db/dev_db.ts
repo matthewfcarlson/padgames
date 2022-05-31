@@ -46,6 +46,7 @@ export class DevDB implements DataBase {
     async userAdd(user: User): Promise<DbUser|null>{
         const _id = this._users.reduce(findMaxId, 0) + 1;
         user.creationDate = getDateStr();
+        user.active = getDateStr();
         user.magicCode = "";
         user.validated = false;
         const existing_user = await this.userFind(user.email, null);
