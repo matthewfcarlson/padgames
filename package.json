@@ -37,7 +37,7 @@
     "@vue/cli-plugin-router": "^5.0.4",
     "@vue/cli-plugin-typescript": "^5.0.4",
     "@vue/cli-plugin-vuex": "^5.0.4",
-    "@vue/cli-service": "^5.0.4",
+    "@vue/cli-service": "^5.0.8",
     "concurrently": "^7.2.1",
     "jsonwebtoken-esm": "^1.0.3",
     "nodemon": "^2.0.16",
