@@ -40,7 +40,7 @@
     "@vue/cli-service": "^5.0.4",
     "concurrently": "^7.2.1",
     "jsonwebtoken-esm": "^1.0.3",
-    "nodemon": "^2.0.16",
+    "nodemon": "^2.0.20",
     "sass": "^1.52.1",
     "sass-loader": "^13.0.0",
     "vite": "^2.9.9",
